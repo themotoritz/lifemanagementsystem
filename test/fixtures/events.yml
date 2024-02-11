@@ -1,0 +1,13 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  type: 
+  start_time: 2024-02-08 21:56:51
+  duration: 1
+  fixed: false
+
+two:
+  type: 
+  start_time: 2024-02-08 21:56:51
+  duration: 1
+  fixed: false
