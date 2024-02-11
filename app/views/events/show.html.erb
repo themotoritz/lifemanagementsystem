@@ -2,6 +2,7 @@
     <thead>
       <tr>
         <th class="border-b dark:border-slate-600 font-medium p-4 pl-8 pt-0 pb-3 text-slate-400 dark:text-slate-200 text-left">Type</th>
+        <th class="border-b dark:border-slate-600 font-medium p-4 pt-0 pb-3 text-slate-400 dark:text-slate-200 text-left">Description</th>
         <th class="border-b dark:border-slate-600 font-medium p-4 pt-0 pb-3 text-slate-400 dark:text-slate-200 text-left">Start time</th>
         <th class="border-b dark:border-slate-600 font-medium p-4 pt-0 pb-3 text-slate-400 dark:text-slate-200 text-left">Duration</th>
         <th class="border-b dark:border-slate-600 font-medium p-4 pt-0 pb-3 text-slate-400 dark:text-slate-200 text-left">Fixed</th>
@@ -14,6 +15,12 @@
           <td class="border-b border-slate-100 dark:border-slate-700 p-4 pl-8 text-slate-500 dark:text-slate-400">
             <p>
               <%= @event.type || "Event" %>
+            </p>
+          </td>
+
+          <td class="border-b border-slate-100 dark:border-slate-700 p-4 text-slate-500 dark:text-slate-400">
+            <p>
+              <%= @event.description %>
             </p>
           </td>
 
@@ -35,16 +42,16 @@
             </p>
           </td>
           <td class="border-b border-slate-100 dark:border-slate-700 p-4 text-slate-500 dark:text-slate-400">
-            <div>
-              <%= link_to "Edit this event", edit_event_path(@event), class: "underline" %>
-              <%= button_to "Destroy this event", @event, method: :delete, class: "underline" %>
-            </div>
+            <%= link_to "Edit this event", edit_event_path(@event), class: "underline" %>
+            <%= button_to "Destroy this event", @event, method: :delete, class: "underline text-left" %>
           </td>     
         </div>
       </tr>
     </tbody>
 </table>
 
-<button class="bg-transparent hover:bg-blue-500 text-blue-500 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded mt-12">
-  <%= link_to "Back to events", events_path %>
-</button>
+<%= link_to events_path do %>
+  <button class="bg-transparent hover:bg-blue-500 text-blue-500 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded mt-12">
+    Back to events
+  </button>
+<% end %>
