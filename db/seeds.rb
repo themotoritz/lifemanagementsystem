@@ -1,23 +1,35 @@
-# This file should ensure the existence of records required to run the application in every environment (production,
-# development, test). The code here should be idempotent so that it can be executed at any point in every environment.
-# The data can then be loaded with the bin/rails db:seed command (or created alongside the database with db:setup).
-#
-# Example:
-#
-#   ["Action", "Comedy", "Drama", "Horror"].each do |genre_name|
-#     MovieGenre.find_or_create_by!(name: genre_name)
-#   end
-
-
 timeslot_size = 15
 length_of_day_in_minutes = 60*24
 amount_of_timeslots_each_day = length_of_day_in_minutes / timeslot_size
 
-["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"].each do |day_of_the_week|#
+remaining_minutes_til_midnight = (Time.zone.now.end_of_day - Time.zone.now)/60
+remaining_minutes_til_midnight = remaining_minutes_til_midnight.round(0)
+amount_of_timeslots_today = remaining_minutes_til_midnight/timeslot_size
+
+minutes_since_beginning_of_day = (Time.zone.now - Time.zone.now.beginning_of_day)/60
+past_timeslots = (minutes_since_beginning_of_day/timeslot_size).floor
+next_timeslot = past_timeslots+1
+
+(next_timeslot..amount_of_timeslots_each_day-1).each do |timeslot|
+  next_timeslot_time = Time.zone.now.beginning_of_day + timeslot*timeslot_size.minutes
+  start_time = next_timeslot_time
+  end_time = next_timeslot_time + timeslot_size.minutes
+
+  Timeslot.create!(start_time: start_time, end_time: end_time, size: timeslot_size)
+end
+
+# ---
+
+days_of_week = ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"]
+current_day = Date.today.strftime('%A').downcase
+current_day_index = days_of_week.index(current_day)
+sorted_days = days_of_week.rotate(current_day_index)
+
+sorted_days.each do |day_of_the_week|
   amount_of_timeslots_each_day.times do |i|
-    start_time = Date.today.next_week(day_of_the_week.to_sym).to_datetime + i*15.minutes
-    end_time = Date.today.next_week(day_of_the_week.to_sym).to_datetime + i*15.minutes + 15.minutes
-    
+    start_time = Date.today.next_occurring(day_of_the_week.to_sym).in_time_zone + i*timeslot_size.minutes
+    end_time = Date.today.next_occurring(day_of_the_week.to_sym).in_time_zone + i*timeslot_size.minutes + timeslot_size.minutes
+
     Timeslot.create!(start_time: start_time, end_time: end_time, size: timeslot_size)
   end
 end
