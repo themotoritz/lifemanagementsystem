@@ -1,0 +1,66 @@
+<div class="not-prose relative bg-slate-50 rounded-xl overflow-hidden dark:bg-slate-800/25">
+  <div style="background-position:10px 10px" class="absolute inset-0 bg-grid-slate-100 dark:bg-grid-slate-700/25">
+  </div>
+  <div class="relative rounded-xl overflow-auto p-8">
+    <div class="grid grid-cols-7 gap-4 font-mono text-white text-sm text-center font-bold leading-6 bg-stripes-fuchsia rounded-lg">      
+        <div class="p-4 rounded-lg shadow-lg bg-fuchsia-500"><u>Montag</u>
+          <% events.where(start_time: Date.today.beginning_of_week.beginning_of_day..Date.today.beginning_of_week.end_of_day).each do |event| %>
+            <p>
+              <%= event.start_time.strftime('%H:%M') %>:
+              <%= event.description.truncate(10) %>
+            </p>
+          <% end %>    
+        </div>
+        <div class="p-4 rounded-lg shadow-lg bg-fuchsia-500"><u>Dienstag</u>
+          <% events.where(start_time: Date.today.beginning_of_week.next_occurring(:tuesday).beginning_of_day..Date.today.beginning_of_week.next_occurring(:tuesday).end_of_day).each do |event| %>
+            <p>
+              <%= event.start_time.strftime('%H:%M') %>:
+              <%= event.description.truncate(10) %>
+            </p>
+          <% end %>
+        </div>
+        <div class="p-4 rounded-lg shadow-lg bg-fuchsia-500"><u>Mittwoch</u>
+          <% events.where(start_time: Date.today.beginning_of_week.next_occurring(:wednesday).beginning_of_day..Date.today.beginning_of_week.next_occurring(:wednesday).end_of_day).each do |event| %>
+            <p>
+              <%= event.start_time.strftime('%H:%M') %>:
+              <%= event.description.truncate(10) %>
+            </p>
+          <% end %>
+        </div>
+        <div class="p-4 rounded-lg shadow-lg bg-fuchsia-500"><u>Donnerstag</u>
+          <% events.where(start_time: Date.today.beginning_of_week.next_occurring(:thursday).beginning_of_day..Date.today.beginning_of_week.next_occurring(:thursday).end_of_day).each do |event| %>
+            <p>
+              <%= event.start_time.strftime('%H:%M') %>:
+              <%= event.description.truncate(10) %>
+            </p>
+          <% end %>
+        </div>
+        <div class="p-4 rounded-lg shadow-lg bg-fuchsia-500"><u>Freitag</u>
+          <% events.where(start_time: Date.today.beginning_of_week.next_occurring(:friday).beginning_of_day..Date.today.beginning_of_week.next_occurring(:friday).end_of_day).each do |event| %>
+            <p>
+              <%= event.start_time.strftime('%H:%M') %>:
+              <%= event.description.truncate(10) %>
+            </p>
+          <% end %>
+        </div>
+        <div class="p-4 rounded-lg shadow-lg bg-fuchsia-500"><u>Samstag</u>
+          <% events.where(start_time: Date.today.beginning_of_week.next_occurring(:saturday).beginning_of_day..Date.today.beginning_of_week.next_occurring(:saturday).end_of_day).each do |event| %>
+            <p>
+              <%= event.start_time.strftime('%H:%M') %>:
+              <%= event.description.truncate(10) %>
+            </p>
+          <% end %>
+        </div>
+        <div class="p-4 rounded-lg shadow-lg bg-fuchsia-500"><u>Sonntag</u>
+          <% events.where(start_time: Date.today.beginning_of_week.next_occurring(:sunday).beginning_of_day..Date.today.beginning_of_week.next_occurring(:sunday).end_of_day).each do |event| %>
+            <p>
+              <%= event.start_time.strftime('%H:%M') %>:
+              <%= event.description.truncate(10) %>
+            </p>
+          <% end %>
+        </div>
+    </div>
+  </div>
+  <div class="absolute inset-0 pointer-events-none border border-black/5 rounded-xl dark:border-white/5">
+</div>
+</div>
