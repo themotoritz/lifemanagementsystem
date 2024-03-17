@@ -3,7 +3,8 @@
   </div>
   <div class="relative rounded-xl overflow-auto p-8">
     <div class="grid grid-cols-7 gap-4 font-mono text-white text-sm text-center font-bold leading-6 bg-stripes-fuchsia rounded-lg">      
-        <div class="p-4 rounded-lg shadow-lg bg-fuchsia-500"><u>Montag</u>
+        <div class="p-4 rounded-lg shadow-lg bg-fuchsia-500">
+          <p class="text-lg pb-4"><%= Date.today.beginning_of_week.next_occurring(:monday).strftime("%A %d.%m") %></p>
           <% events.where(start_time: Date.today.beginning_of_week.beginning_of_day..Date.today.beginning_of_week.end_of_day).each do |event| %>
             <p>
               <%= event.start_time.strftime('%H:%M') %>:
@@ -11,7 +12,8 @@
             </p>
           <% end %>    
         </div>
-        <div class="p-4 rounded-lg shadow-lg bg-fuchsia-500"><u>Dienstag</u>
+        <div class="p-4 rounded-lg shadow-lg bg-fuchsia-500">
+          <p class="text-lg pb-4"><%= Date.today.beginning_of_week.next_occurring(:tuesday).strftime("%A %d.%m") %></p>
           <% events.where(start_time: Date.today.beginning_of_week.next_occurring(:tuesday).beginning_of_day..Date.today.beginning_of_week.next_occurring(:tuesday).end_of_day).each do |event| %>
             <p>
               <%= event.start_time.strftime('%H:%M') %>:
@@ -19,7 +21,8 @@
             </p>
           <% end %>
         </div>
-        <div class="p-4 rounded-lg shadow-lg bg-fuchsia-500"><u>Mittwoch</u>
+        <div class="p-4 rounded-lg shadow-lg bg-fuchsia-500">
+          <p class="text-lg pb-4"><%= Date.today.beginning_of_week.next_occurring(:wednesday).strftime("%A %d.%m") %></p>
           <% events.where(start_time: Date.today.beginning_of_week.next_occurring(:wednesday).beginning_of_day..Date.today.beginning_of_week.next_occurring(:wednesday).end_of_day).each do |event| %>
             <p>
               <%= event.start_time.strftime('%H:%M') %>:
@@ -27,7 +30,8 @@
             </p>
           <% end %>
         </div>
-        <div class="p-4 rounded-lg shadow-lg bg-fuchsia-500"><u>Donnerstag</u>
+        <div class="p-4 rounded-lg shadow-lg bg-fuchsia-500">
+          <p class="text-lg pb-4"><%= Date.today.beginning_of_week.next_occurring(:thursday).strftime("%A %d.%m") %></p>
           <% events.where(start_time: Date.today.beginning_of_week.next_occurring(:thursday).beginning_of_day..Date.today.beginning_of_week.next_occurring(:thursday).end_of_day).each do |event| %>
             <p>
               <%= event.start_time.strftime('%H:%M') %>:
@@ -35,7 +39,8 @@
             </p>
           <% end %>
         </div>
-        <div class="p-4 rounded-lg shadow-lg bg-fuchsia-500"><u>Freitag</u>
+        <div class="p-4 rounded-lg shadow-lg bg-fuchsia-500">
+          <p class="text-lg pb-4"><%= Date.today.beginning_of_week.next_occurring(:friday).strftime("%A %d.%m") %></p>
           <% events.where(start_time: Date.today.beginning_of_week.next_occurring(:friday).beginning_of_day..Date.today.beginning_of_week.next_occurring(:friday).end_of_day).each do |event| %>
             <p>
               <%= event.start_time.strftime('%H:%M') %>:
@@ -43,7 +48,8 @@
             </p>
           <% end %>
         </div>
-        <div class="p-4 rounded-lg shadow-lg bg-fuchsia-500"><u>Samstag</u>
+        <div class="p-4 rounded-lg shadow-lg bg-fuchsia-500">
+          <p class="text-lg pb-4"><%= Date.today.beginning_of_week.next_occurring(:saturday).strftime("%A %d.%m") %></p>
           <% events.where(start_time: Date.today.beginning_of_week.next_occurring(:saturday).beginning_of_day..Date.today.beginning_of_week.next_occurring(:saturday).end_of_day).each do |event| %>
             <p>
               <%= event.start_time.strftime('%H:%M') %>:
@@ -51,11 +57,12 @@
             </p>
           <% end %>
         </div>
-        <div class="p-4 rounded-lg shadow-lg bg-fuchsia-500"><u>Sonntag</u>
+        <div class="p-4 rounded-lg shadow-lg bg-fuchsia-500">
+          <p class="text-lg pb-4"><%= Date.today.beginning_of_week.next_occurring(:sunday).strftime("%A %d.%m") %></p>
           <% events.where(start_time: Date.today.beginning_of_week.next_occurring(:sunday).beginning_of_day..Date.today.beginning_of_week.next_occurring(:sunday).end_of_day).each do |event| %>
             <p>
               <%= event.start_time.strftime('%H:%M') %>:
-              <%= event.description.truncate(10) %>
+              <%= link_to event.description.truncate(10), event_path(event), class: "underline" %>
             </p>
           <% end %>
         </div>
