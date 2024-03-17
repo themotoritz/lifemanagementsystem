@@ -12,16 +12,24 @@
 
   <div>
     <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-3 px-3 rounded">
-      <span class="material-symbols-outlined inline-block align-middle" title="Ansicht heute">calendar_today</span>
+      <%= link_to events_path(view: "today") do %>
+        <span class="material-symbols-outlined inline-block align-middle" title="Ansicht heute">calendar_today</span>
+      <% end %>
     </button>
     <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-3 px-3 rounded">
-      <span class="material-symbols-outlined inline-block align-middle" title="Ansicht diese Woche">calendar_view_week</span>
+      <%= link_to events_path(view: "this_week") do %>
+        <span class="material-symbols-outlined inline-block align-middle" title="Ansicht diese Woche">calendar_view_week</span>
+      <% end %>
     </button>
     <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-3 px-3 rounded">
-      <span class="material-symbols-outlined inline-block align-middle" title="Ansicht dieser Monat">calendar_month</span>
+      <%= link_to events_path(view: "this_month") do %>
+        <span class="material-symbols-outlined inline-block align-middle" title="Ansicht dieser Monat">calendar_month</span>
+      <% end %>
     </button>
     <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-3 px-3 rounded">
-      <p class="inline-block align-middle" title="Ansicht dieses Jahr"><%= Date.today.year %></p>
+      <%= link_to events_path(view: "this_year") do %>
+        <p class="inline-block align-middle" title="Ansicht dieses Jahr"><%= Date.today.year %></p>
+      <% end %>
     </button>
   </div>
 </div>
