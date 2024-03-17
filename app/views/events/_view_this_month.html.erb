@@ -9,8 +9,8 @@
           <p class="text-lg pb-4"><%= Date.new(Time.now.year, Time.now.month, i+1).strftime("%A %d.%m") %></p>
           <% events.where(start_time: Date.new(Time.now.year, Time.now.month, i+1).beginning_of_day..Date.new(Time.now.year, Time.now.month, i+1).end_of_day).each do |event| %>
             <p>
-              <%= events.last.start_time.strftime('%H:%M') %>:
-              <%= events.last.description.truncate(10) %>
+              <%= event.start_time.strftime('%H:%M') %>:
+              <%= event.description.truncate(10) %>
             </p>
           <% end %>      
         </div>
