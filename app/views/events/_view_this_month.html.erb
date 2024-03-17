@@ -7,10 +7,12 @@
       <% Time.days_in_month(Time.now.month, Time.now.year).times do |i| %>
         <div class="p-4 rounded-lg shadow-lg bg-fuchsia-500">
           <p class="text-lg pb-4"><%= Date.new(Time.now.year, Time.now.month, i+1).strftime("%A %d.%m") %></p>
-          <p>
-            <%= events.last.start_time.strftime('%H:%M') %>:
-            <%= events.last.description.truncate(10) %>
-          </p>
+          <% events.where(start_time: Date.new(Time.now.year, Time.now.month, i+1).beginning_of_day..Date.new(Time.now.year, Time.now.month, i+1).end_of_day).each do |event| %>
+            <p>
+              <%= events.last.start_time.strftime('%H:%M') %>:
+              <%= events.last.description.truncate(10) %>
+            </p>
+          <% end %>      
         </div>
       <% end %>
     </div>
