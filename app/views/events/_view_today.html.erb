@@ -12,7 +12,7 @@
     </thead>
     <tbody class="bg-white dark:bg-slate-800">
       <% events.each_with_index do |event, i| %> 
-        <% if event.start_time > event.start_time.beginning_of_day || (@events[i-1].start_time < event.start_time.beginning_of_day || @events[i-1].start_time.to_datetime == @events[i-1] ) %>
+        <% if event.start_time >= event.start_time.beginning_of_day && @events[i-1].start_time < event.start_time.beginning_of_day %>
           <tr class=" bg-sky-500/100">
             <div class="my-2 bg-sky-500/100">
               <td class="border-b border-slate-100 dark:border-slate-700 p-4 pl-8 text-black text-xl">
