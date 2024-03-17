@@ -1,5 +1,5 @@
 class Event < ApplicationRecord
-  has_many :timeslots
+  has_many :timeslots, dependent: :nullify
 
   before_save :set_defaults
   
