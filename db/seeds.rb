@@ -22,7 +22,7 @@ end
 
 days_of_week = ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"]
 current_day = Date.today.strftime('%A').downcase
-current_day_index = days_of_week.index(current_day)
+current_day_index = days_of_week.index(current_day) + 1
 sorted_days = days_of_week.rotate(current_day_index)
 
 sorted_days.each do |day_of_the_week|
