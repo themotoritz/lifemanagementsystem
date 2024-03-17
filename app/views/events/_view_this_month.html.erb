@@ -1,0 +1,20 @@
+<div class="not-prose relative bg-slate-50 rounded-xl overflow-hidden dark:bg-slate-800/25">
+  <div style="background-position:10px 10px" class="absolute inset-0 bg-grid-slate-100 dark:bg-grid-slate-700/25">
+  </div>
+  <div class="relative rounded-xl overflow-auto p-8">
+    <div class="pb-4 text-xl"><%= Date.today.strftime("%B") %></div>
+    <div class="grid grid-cols-7 gap-4 font-mono text-white text-sm text-center font-bold leading-6 bg-stripes-fuchsia rounded-lg">
+      <% Time.days_in_month(Time.now.month, Time.now.year).times do |i| %>
+        <div class="p-4 rounded-lg shadow-lg bg-fuchsia-500">
+          <p class="text-lg pb-4"><%= Date.new(Time.now.year, Time.now.month, i+1).strftime("%A %d.%m") %></p>
+          <p>
+            <%= events.last.start_time.strftime('%H:%M') %>:
+            <%= events.last.description.truncate(10) %>
+          </p>
+        </div>
+      <% end %>
+    </div>
+  </div>
+  <div class="absolute inset-0 pointer-events-none border border-black/5 rounded-xl dark:border-white/5">
+  </div>
+</div>
