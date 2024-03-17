@@ -1,0 +1,48 @@
+<div id="events">
+  <table class="border-collapse table-auto w-full text-sm">
+    <thead>
+      <tr>
+        <th class="border-b dark:border-slate-600 font-medium p-4 pl-8 pt-0 pb-3 text-slate-400 dark:text-slate-200 text-left">Type</th>
+        <th class="border-b dark:border-slate-600 font-medium p-4 pt-0 pb-3 text-slate-400 dark:text-slate-200 text-left">Description</th>
+        <th class="border-b dark:border-slate-600 font-medium p-4 pt-0 pb-3 text-slate-400 dark:text-slate-200 text-left">Start time</th>
+        <th class="border-b dark:border-slate-600 font-medium p-4 pt-0 pb-3 text-slate-400 dark:text-slate-200 text-left">Duration</th>
+        <th class="border-b dark:border-slate-600 font-medium p-4 pt-0 pb-3 text-slate-400 dark:text-slate-200 text-left">Fixed</th>
+        <th class="border-b dark:border-slate-600 font-medium p-4 pt-0 pb-3 text-slate-400 dark:text-slate-200 text-left">Action</th>
+      </tr>
+    </thead>
+    <tbody class="bg-white dark:bg-slate-800">
+      <% events.each_with_index do |event, i| %> 
+        <% if event.start_time > event.start_time.beginning_of_day || (@events[i-1].start_time < event.start_time.beginning_of_day || @events[i-1].start_time.to_datetime == @events[i-1] ) %>
+          <tr class=" bg-sky-500/100">
+            <div class="my-2 bg-sky-500/100">
+              <td class="border-b border-slate-100 dark:border-slate-700 p-4 pl-8 text-black text-xl">
+                <%= event.start_time.strftime("%A") %>
+              </td>
+              <td class="border-b border-slate-100 dark:border-slate-700 p-4">
+                <%= event.start_time.to_date %> (KW <%= event.start_time.strftime('%V') %>)
+              </td>
+              <td class="border-b border-slate-100 dark:border-slate-700 p-4 pl-8 text-slate-500 dark:text-slate-400">                
+              </td>
+              <td class="border-b border-slate-100 dark:border-slate-700 p-4 pl-8 text-slate-500 dark:text-slate-400">
+              </td>
+              <td class="border-b border-slate-100 dark:border-slate-700 p-4 pl-8 text-slate-500 dark:text-slate-400">
+              </td>
+              <td class="border-b border-slate-100 dark:border-slate-700 p-4 pl-8 text-slate-500 dark:text-slate-400">
+              </td>
+            </div>
+          </tr>
+        <% end %>
+        <tr>
+          <div class="my-2">
+            <%= render event %>
+            <td class="border-b border-slate-100 dark:border-slate-700 p-4 pr-8 text-slate-500 dark:text-slate-400">
+              <p>
+                <%= link_to "Show this event", event %>
+              </p>
+            </td>
+          </div>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>
