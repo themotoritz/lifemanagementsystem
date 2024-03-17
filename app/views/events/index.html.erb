@@ -40,4 +40,6 @@
   <%= render "view_this_week", events: @events %>
 <% elsif @view == "view_this_month" %>
   <%= render "view_this_month", events: @events %>
+<% elsif @view == "view_this_year" %>
+  <%= render "view_this_year", events: @events %>
 <% end %>

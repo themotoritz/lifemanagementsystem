@@ -1,0 +1,22 @@
+<div class="not-prose relative bg-slate-50 rounded-xl overflow-hidden dark:bg-slate-800/25">
+  <div style="background-position:10px 10px" class="absolute inset-0 bg-grid-slate-100 dark:bg-grid-slate-700/25">
+  </div>
+  <div class="relative rounded-xl overflow-auto p-8">
+    <div class="pb-4 text-xl"><%= Date.today.strftime('%Y') %></div>
+    <div class="grid grid-cols-3 gap-4 font-mono text-white text-sm text-center font-bold leading-6 bg-stripes-fuchsia rounded-lg">      
+      <% 12.times do |index| %>
+        <div class="p-4 rounded-lg shadow-lg bg-fuchsia-500">
+          <p class="text-lg pb-4"><%= Date.new(Date.today.year, index+1, 1).strftime("%B") %></p>
+          <% events.where(start_time: Date.new(Date.today.year, index+1, 1).beginning_of_day..Date.new(Date.today.year, index+1, Date.new(Date.today.year, index+1, 1).end_of_month.day).end_of_day).each do |event| %>
+            <p>
+              <%= event.start_time.strftime('%D %H:%M') %>:
+              <%= link_to event.title, event_path(event), class: "underline" %>
+            </p>
+          <% end %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+  <div class="absolute inset-0 pointer-events-none border border-black/5 rounded-xl dark:border-white/5">
+  </div>  
+</div>
