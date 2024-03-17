@@ -9,7 +9,7 @@
           <% events.where(start_time: Date.today.beginning_of_week.beginning_of_day..Date.today.beginning_of_week.end_of_day).each do |event| %>
             <p>
               <%= event.start_time.strftime('%H:%M') %>:
-              <%= event.description.truncate(10) %>
+              <%= event.title %>
             </p>
           <% end %>    
         </div>
@@ -18,7 +18,7 @@
           <% events.where(start_time: Date.today.beginning_of_week.next_occurring(:tuesday).beginning_of_day..Date.today.beginning_of_week.next_occurring(:tuesday).end_of_day).each do |event| %>
             <p>
               <%= event.start_time.strftime('%H:%M') %>:
-              <%= event.description.truncate(10) %>
+              <%= event.title %>
             </p>
           <% end %>
         </div>
@@ -27,7 +27,7 @@
           <% events.where(start_time: Date.today.beginning_of_week.next_occurring(:wednesday).beginning_of_day..Date.today.beginning_of_week.next_occurring(:wednesday).end_of_day).each do |event| %>
             <p>
               <%= event.start_time.strftime('%H:%M') %>:
-              <%= event.description.truncate(10) %>
+              <%= event.title %>
             </p>
           <% end %>
         </div>
@@ -36,7 +36,7 @@
           <% events.where(start_time: Date.today.beginning_of_week.next_occurring(:thursday).beginning_of_day..Date.today.beginning_of_week.next_occurring(:thursday).end_of_day).each do |event| %>
             <p>
               <%= event.start_time.strftime('%H:%M') %>:
-              <%= event.description.truncate(10) %>
+              <%= event.title %>
             </p>
           <% end %>
         </div>
@@ -45,7 +45,7 @@
           <% events.where(start_time: Date.today.beginning_of_week.next_occurring(:friday).beginning_of_day..Date.today.beginning_of_week.next_occurring(:friday).end_of_day).each do |event| %>
             <p>
               <%= event.start_time.strftime('%H:%M') %>:
-              <%= event.description.truncate(10) %>
+              <%= event.title %>
             </p>
           <% end %>
         </div>
@@ -54,7 +54,7 @@
           <% events.where(start_time: Date.today.beginning_of_week.next_occurring(:saturday).beginning_of_day..Date.today.beginning_of_week.next_occurring(:saturday).end_of_day).each do |event| %>
             <p>
               <%= event.start_time.strftime('%H:%M') %>:
-              <%= event.description.truncate(10) %>
+              <%= event.title %>
             </p>
           <% end %>
         </div>
@@ -63,7 +63,7 @@
           <% events.where(start_time: Date.today.beginning_of_week.next_occurring(:sunday).beginning_of_day..Date.today.beginning_of_week.next_occurring(:sunday).end_of_day).each do |event| %>
             <p>
               <%= event.start_time.strftime('%H:%M') %>:
-              <%= link_to event.description.truncate(10), event_path(event), class: "underline" %>
+              <%= link_to event.title, event_path(event), class: "underline" %>
             </p>
           <% end %>
         </div>

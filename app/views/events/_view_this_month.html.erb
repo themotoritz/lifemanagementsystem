@@ -10,7 +10,7 @@
           <% events.where(start_time: Date.new(Time.now.year, Time.now.month, i+1).beginning_of_day..Date.new(Time.now.year, Time.now.month, i+1).end_of_day).each do |event| %>
             <p>
               <%= event.start_time.strftime('%H:%M') %>:
-              <%= event.description.truncate(10) %>
+              <%= event.title %>
             </p>
           <% end %>      
         </div>

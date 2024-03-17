@@ -3,9 +3,9 @@ class EventsController < ApplicationController
 
   # GET /events or /events.json
   def index
-    #@view = "view_this_week"
+    @view = "view_this_week"
     #@view = "view_today"
-    @view = "view_this_month"
+    #@view = "view_this_month"
     @events = Event.all.order(:start_time)
   end
 
@@ -68,6 +68,6 @@ class EventsController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def event_params
-      params.require(:event).permit(:type, :start_time, :duration, :fixed)
+      params.require(:event).permit(:type, :start_time, :duration, :fixed, :title)
     end
 end
