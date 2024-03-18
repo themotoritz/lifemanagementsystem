@@ -9,7 +9,7 @@
         <% events.where(start_time: Date.today.beginning_of_week.beginning_of_day..Date.today.beginning_of_week.end_of_day).each do |event| %>
           <p>
             <%= event.start_time.strftime('%H:%M') %>:
-            <%= event.title %>
+            <%= link_to event.title, event_path(event), class: "underline" %>
           </p>
         <% end %>    
       </div>
@@ -42,7 +42,7 @@
           <% events.where(start_time: Date.commercial(Date.today.year, number_of_week, 1).beginning_of_week.beginning_of_day..Date.commercial(Date.today.year, number_of_week, 1).beginning_of_week.end_of_day).each do |event| %>
             <p>
               <%= event.start_time.strftime('%H:%M') %>:
-              <%= event.title %>
+              <%= link_to event.title, event_path(event), class: "underline" %>
             </p>
           <% end %>    
         </div>
