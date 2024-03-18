@@ -12,6 +12,8 @@ class EventsController < ApplicationController
       @view = "view_this_month"
     when "this_year" 
       @view = "view_this_year"
+    else
+      @view = "view_this_week"
     end
     
     @events = Event.all.order(:start_time)
