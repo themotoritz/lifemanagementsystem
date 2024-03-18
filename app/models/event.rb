@@ -3,6 +3,9 @@ class Event < ApplicationRecord
 
   before_save :set_defaults
   
+  def end_time
+    start_time + duration
+  end
 
   private  
   
