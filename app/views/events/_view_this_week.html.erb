@@ -3,8 +3,8 @@
   </div>
   <div class="relative rounded-xl overflow-auto p-8">
     <div class="pb-4 text-xl">KW <%= Date.today.strftime('%V') %></div>
-    <div class="grid grid-cols-7 gap-4 font-mono text-white text-sm text-center font-bold leading-6 bg-stripes-fuchsia rounded-lg">      
-      <div class="p-4 rounded-lg shadow-lg bg-fuchsia-500">
+    <div class="grid grid-cols-7 gap-4 font-mono text-white text-sm text-center font-bold leading-6 bg-stripes-fuchsia rounded-lg text-slate-700">
+      <div class="p-4 rounded-lg shadow-lg bg-white">
         <p class="text-lg pb-4"><%= Date.today.beginning_of_week.strftime("%A %d.%m") %></p>
         <% events.where(start_time: Date.today.beginning_of_week.beginning_of_day..Date.today.beginning_of_week.end_of_day).each do |event| %>
           <p>
@@ -14,7 +14,7 @@
         <% end %>    
       </div>
       <% [:tuesday, :wednesday, :thursday, :friday, :saturday, :sunday].each do |day| %>
-        <div class="p-4 rounded-lg shadow-lg bg-fuchsia-500">
+        <div class="p-4 rounded-lg shadow-lg bg-white text-slate-700">
           <p class="text-lg pb-4"><%= Date.today.beginning_of_week.next_occurring(day).strftime("%A %d.%m") %></p>
           <% events.where(start_time: Date.today.beginning_of_week.next_occurring(day).beginning_of_day..Date.today.beginning_of_week.next_occurring(day).end_of_day).each do |event| %>
             <p>
@@ -36,8 +36,8 @@
     </div>
     <div class="relative rounded-xl overflow-auto p-8">
       <div class="pb-4 text-xl">KW <%= number_of_week %></div>
-      <div class="grid grid-cols-7 gap-4 font-mono text-white text-sm text-center font-bold leading-6 bg-stripes-fuchsia rounded-lg">      
-        <div class="p-4 rounded-lg shadow-lg bg-fuchsia-500">
+      <div class="grid grid-cols-7 gap-4 font-mono text-white text-sm text-center font-bold leading-6 bg-stripes-fuchsia rounded-lg text-slate-700">
+        <div class="p-4 rounded-lg shadow-lg bg-white">
           <p class="text-lg pb-4"><%= Date.commercial(Date.today.year, number_of_week, 1).beginning_of_week.strftime("%A %d.%m") %></p>
           <% events.where(start_time: Date.commercial(Date.today.year, number_of_week, 1).beginning_of_week.beginning_of_day..Date.commercial(Date.today.year, number_of_week, 1).beginning_of_week.end_of_day).each do |event| %>
             <p>
@@ -47,7 +47,7 @@
           <% end %>    
         </div>
         <% [:tuesday, :wednesday, :thursday, :friday, :saturday, :sunday].each do |day| %>
-          <div class="p-4 rounded-lg shadow-lg bg-fuchsia-500">
+          <div class="p-4 rounded-lg shadow-lg bg-white text-slate-700">
             <p class="text-lg pb-4"><%= Date.commercial(Date.today.year, number_of_week, 1).beginning_of_week.next_occurring(day).strftime("%A %d.%m") %></p>
             <% events.where(start_time: Date.commercial(Date.today.year, number_of_week, 1).beginning_of_week.next_occurring(day).beginning_of_day..Date.commercial(Date.today.year, number_of_week, 1).beginning_of_week.next_occurring(day).end_of_day).each do |event| %>
               <p>

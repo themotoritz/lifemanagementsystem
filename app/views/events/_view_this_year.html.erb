@@ -5,7 +5,7 @@
     <div class="pb-4 text-xl"><%= Date.today.strftime('%Y') %></div>
     <div class="grid grid-cols-3 gap-4 font-mono text-white text-sm text-center font-bold leading-6 bg-stripes-fuchsia rounded-lg">      
       <% 12.times do |index| %>
-        <div class="p-4 rounded-lg shadow-lg bg-fuchsia-500">
+        <div class="p-4 rounded-lg shadow-lg bg-white text-slate-700">
           <p class="text-lg pb-4"><%= Date.new(Date.today.year, index+1, 1).strftime("%B") %></p>
           <% events.where(start_time: Date.new(Date.today.year, index+1, 1).beginning_of_day..Date.new(Date.today.year, index+1, Date.new(Date.today.year, index+1, 1).end_of_month.day).end_of_day).each do |event| %>
             <p>
