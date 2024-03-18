@@ -7,14 +7,14 @@ class Event < ApplicationRecord
   private  
   
   def set_defaults
-    self.duration ||= 15
-    self.fixed ||= false
+    duration ||= 15
+    fixed ||= false
 
-    if self.start_time.present?
-      self.timeslots << Timeslot.find_by(start_time: start_time)
+    if start_time.present?
+      timeslots << Timeslot.find_by(start_time: start_time)
     else
-      self.timeslots << find_next_free_timeslots
-      self.start_time = self.timeslots.first.start_time
+      timeslots << find_next_free_timeslots
+      start_time = timeslots.first.start_time
     end
   end
 
