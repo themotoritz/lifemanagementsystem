@@ -35,6 +35,7 @@ class EventsController < ApplicationController
   # POST /events or /events.json
   def create
     @event = Event.new(event_params)
+    @event.duration = event_params[:duration].to_i*60 if event_params[:duration].present?
 
     respond_to do |format|
       if @event.save
@@ -78,6 +79,6 @@ class EventsController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def event_params
-      params.require(:event).permit(:type, :start_time, :duration, :fixed, :title)
+      params.require(:event).permit(:kind, :start_time, :duration, :fixed, :title, :end_time, :description)
     end
 end
