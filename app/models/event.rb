@@ -6,11 +6,19 @@ class Event < ApplicationRecord
 
   before_validation :schedule
   validate :start_time_not_in_the_past
+  validate :start_time_before_end_time
   validate :duration_positiv
   validate :no_overlapping_events_exist
   validate :free_timeslot_available
+  after_destroy :merge_surrounding_timeslots
 
   private
+
+  def start_time_before_end_time
+    if start_time.present? && end_time.present? && start_time >= end_time
+      errors.add(:start_time, "start time must be prior to end time")
+    end
+  end
 
   def duration_positiv
     if duration.present? && duration < 0
@@ -69,9 +77,11 @@ class Event < ApplicationRecord
 
   def find_free_timeslot
     if start_time.present?
-      Timeslot.order(:start_time).where("size > ?", duration).where("start_time <= ?", start_time).first
+      Timeslot.order(:start_time).where("size > ?", duration).where("start_time <= ?", start_time).where("end_time >= ?", end_time).first
+    elsif duration.present?
+      Timeslot.order(:start_time).where("size > ?", duration).where("start_time >= ?", Time.now).first
     else
-      Timeslot.order(:start_time).where("size > ?", duration).first
+      raise "FATAL: case not covered"
     end
   end
 
@@ -81,5 +91,14 @@ class Event < ApplicationRecord
 
     timeslot.update(end_time: start_time-1.second, size: start_time-1.second - timeslot_start_time)
     Timeslot.create(start_time: end_time+1.second, end_time: timeslot_end_time, size: timeslot_end_time - start_time+1.second)
+  end
+
+  def merge_surrounding_timeslots
+    closest_previous_timeslot = Timeslot.where("end_time < ?", start_time).order(:start_time).last
+    closest_subsequent_timeslot = Timeslot.where("start_time > ?", end_time).order(:start_time).first
+
+    new_end_time = closest_subsequent_timeslot.end_time
+    closest_subsequent_timeslot.destroy
+    closest_previous_timeslot.update(end_time: new_end_time)
   end
 end
