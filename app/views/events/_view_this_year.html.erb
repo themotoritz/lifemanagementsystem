@@ -9,7 +9,7 @@
           <p class="text-lg pb-4"><%= Date.new(Date.today.year, index+1, 1).strftime("%B") %></p>
           <% events.where(start_time: Date.new(Date.today.year, index+1, 1).beginning_of_day..Date.new(Date.today.year, index+1, Date.new(Date.today.year, index+1, 1).end_of_month.day).end_of_day).each do |event| %>
             <p>
-              <%= event.start_time.strftime('%D %H:%M') %>:
+              <%= event.start_time.strftime('%d.%m %H:%M') %>:
               <%= link_to event.title, event_path(event), class: "underline" %>
             </p>
           <% end %>
@@ -18,5 +18,5 @@
     </div>
   </div>
   <div class="absolute inset-0 pointer-events-none border border-black/5 rounded-xl dark:border-white/5">
-  </div>  
+  </div>
 </div>
