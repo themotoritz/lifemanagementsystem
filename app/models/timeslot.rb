@@ -4,4 +4,10 @@ class Timeslot < ApplicationRecord
   validates :size, :start_time, :end_time, presence: true
 
   scope :is_free, -> { where(event_id: nil) }
+
+  before_save :update_size
+
+  def update_size
+    self.size = end_time - start_time
+  end
 end

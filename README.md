@@ -5,8 +5,8 @@
 - Sequenz hinzufügen: täglich, wöchentlich, etc..
 - Blockierte Aufgaben
 - Legende (mit Farben)
-- Blockierte Zeiten hinzufügen (nachts, auf arbeit)
+- Blockierte Zeiten hinzufügen (nachts, auf arbeit) (background job um die alle zu erstellen)
 - reschedule tasks
-- task in bestimmte "zone" schedulen, z.B. nur Mo-Fr von 15 - 18 Uhr
+- task in bestimmte "zone" schedulen, z.B. nur Mo-Fr von 15 - 18 Uhr, schedule between times
 - destroy timeslots with size 0
 - destroy all past timeslots

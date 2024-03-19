@@ -6,7 +6,7 @@ class EventsController < ApplicationController
     session[:current_view] = params[:current_view] if params[:current_view].present?
     session[:current_view] = "view_this_week" unless session[:current_view].present? 
 
-    @events = Event.all.order(:start_time)
+    @events = Event.where.not(kind: "blocking").order(:start_time)
   end
 
   # GET /events/1 or /events/1.json
