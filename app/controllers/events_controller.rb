@@ -5,15 +5,15 @@ class EventsController < ApplicationController
   def index
     case params[:view]
     when "today"
-      @view = "view_today"
+      session[:current_view] = "view_today"
     when "this_week"
-      @view = "view_this_week"
+      session[:current_view] = "view_this_week"
     when "this_month"
-      @view = "view_this_month"
+      session[:current_view] = "view_this_month"
     when "this_year" 
-      @view = "view_this_year"
+      session[:current_view] = "view_this_year"
     else
-      @view = "view_this_week"
+      session[:current_view] = "view_this_week"
     end
     
     @events = Event.all.order(:start_time)
