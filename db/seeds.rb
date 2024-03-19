@@ -1,4 +1,28 @@
-Timeslot.create(start_time: Time.now, end_time: 100.years.from_now.end_of_day, size: 100.years.from_now.end_of_day - Time.now)
+Timeslot.create(start_time: Time.now, end_time: 10.years.from_now.end_of_day, size: 101.years.from_now.end_of_day - Time.now)
+
+
+start_time = Time.zone.parse("11:00 PM")
+end_time = Time.zone.parse("7:00 AM").tomorrow
+
+# Define the duration of one day
+one_day = 1.day
+
+# Define the number of years for which you want to create events
+years = 10
+
+# Loop through each day for the next 100 years and create the event
+(0..(365 * years)).each do |day_offset|
+  start_datetime = start_time + day_offset.days
+  end_datetime = end_time + day_offset.days
+
+  Event.create!(
+    title: "Sleeping Hours",
+    description: "Sleeping Hours",
+    start_time: start_datetime,
+    duration: 8.hours,
+    kind: "blocking"
+  )
+end
 
 
 # timeslot_size = 15
