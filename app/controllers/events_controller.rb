@@ -3,19 +3,9 @@ class EventsController < ApplicationController
 
   # GET /events or /events.json
   def index
-    case params[:view]
-    when "today"
-      session[:current_view] = "view_today"
-    when "this_week"
-      session[:current_view] = "view_this_week"
-    when "this_month"
-      session[:current_view] = "view_this_month"
-    when "this_year" 
-      session[:current_view] = "view_this_year"
-    else
-      session[:current_view] = "view_this_week"
-    end
-    
+    session[:current_view] = params[:current_view] if params[:current_view].present?
+    session[:current_view] = "view_this_week" unless session[:current_view].present? 
+
     @events = Event.all.order(:start_time)
   end
 

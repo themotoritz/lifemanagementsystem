@@ -11,22 +11,22 @@
   </div>
 
   <div>
-    <%= link_to events_path(view: "today") do %>
+    <%= link_to events_path(current_view: "today") do %>
       <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-3 px-3 rounded">
         <span class="material-symbols-outlined inline-block align-middle" title="Ansicht heute">calendar_today</span>
       </button>
     <% end %>
-    <%= link_to events_path(view: "this_week") do %>
+    <%= link_to events_path(current_view: "this_week") do %>
      <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-3 px-3 rounded">
         <span class="material-symbols-outlined inline-block align-middle" title="Ansicht diese Woche">calendar_view_week</span>
       </button>
     <% end %>
-    <%= link_to events_path(view: "this_month") do %>
+    <%= link_to events_path(current_view: "this_month") do %>
       <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-3 px-3 rounded">
         <span class="material-symbols-outlined inline-block align-middle" title="Ansicht dieser Monat">calendar_month</span>
       </button>
     <% end %>
-    <%= link_to events_path(view: "this_year") do %>
+    <%= link_to events_path(current_view: "this_year") do %>
       <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-3 px-3 rounded">
         <p class="inline-block align-middle" title="Ansicht dieses Jahr"><%= Date.today.year %></p>
       </button>
@@ -34,13 +34,13 @@
   </div>
 </div>
 
-<% if session[:current_view] == "view_today" %>
+<% if session[:current_view] == "today" %>
   <%= render "view_today", events: @events %>
-<% elsif session[:current_view] == "view_this_week" %>
+<% elsif session[:current_view] == "this_week" %>
   <%= render "view_this_week", events: @events %>
-<% elsif session[:current_view] == "view_this_month" %>
+<% elsif session[:current_view] == "this_month" %>
   <%= render "view_this_month", events: @events %>
-<% elsif session[:current_view] == "view_this_year" %>
+<% elsif session[:current_view] == "this_year" %>
   <%= render "view_this_year", events: @events %>
 <% else %>
   <%= render "view_this_week", events: @events %>
