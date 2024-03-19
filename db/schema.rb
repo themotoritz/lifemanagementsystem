@@ -17,6 +17,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_02_08_212445) do
   create_table "events", force: :cascade do |t|
     t.string "kind"
     t.datetime "start_time"
+    t.datetime "end_time"
     t.integer "duration"
     t.boolean "fixed"
     t.text "description"
@@ -26,7 +27,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_02_08_212445) do
   end
 
   create_table "timeslots", force: :cascade do |t|
-    t.integer "size"
+    t.bigint "size"
     t.datetime "start_time"
     t.datetime "end_time"
     t.bigint "event_id"
