@@ -4,8 +4,8 @@ class Event < ApplicationRecord
   # before_save :find_free_timeslot
   # validate start_time before end_time
 
-  before_validation :schedule
   validate :start_time_not_in_the_past
+  validate :schedule
   validate :start_time_before_end_time
   validate :duration_positiv
   validate :no_overlapping_events_exist
@@ -36,7 +36,7 @@ class Event < ApplicationRecord
     if start_time.present?
       overlapping_events = Event.where.not(id: id).where("start_time < ? AND end_time > ?", end_time, start_time)
       if overlapping_events.any?
-        errors.add(:start_time, "is within another event's time frame")
+        errors.add(:start_time, "is within another event's time frame: #{overlapping_events.pluck(:title)}")
         self.start_time = self.end_time = self.duration = nil
       end
     end
@@ -64,27 +64,28 @@ class Event < ApplicationRecord
     if start_time.nil? && end_time.nil? && duration.nil?
       self.duration = 15.minutes
       timeslot = find_free_timeslot
-      self.start_time = timeslot.start_time
-      self.end_time = start_time + duration
+      self.start_time = timeslot.start_time if timeslot.present?
     elsif start_time.nil? && end_time.nil? && duration.present?
       timeslot = find_free_timeslot
-      self.start_time = timeslot.start_time
-      self.end_time = start_time + duration
+      self.start_time = timeslot.start_time if timeslot.present?
     elsif start_time.present? && end_time.nil? && duration.nil?
       self.duration = 15.minutes
       timeslot = find_free_timeslot
-      self.end_time = start_time + duration
     elsif start_time.present? && end_time.nil? && duration.present?
       timeslot = find_free_timeslot
-      self.end_time = start_time + duration
     # elsif start_time.present? && end_time.present? && duration.nil?
     #   self.duration = end_time - start_time
     end
 
+    self.end_time = start_time + duration if start_time.present? && duration.present?
+
     if timeslot.present?
       udpate_timeslots(timeslot)
     else
-      raise "FATAL: case not covered"
+      overlapping_events = Event.where.not(id: id).where("start_time < ? AND end_time > ?", end_time, start_time)
+      errors.add(:start_time, "Keinen freien Time Slot gefunden, blocked by: #{overlapping_events.pluck(:title)}")
+
+      self.start_time = self.end_time = self.duration = nil
     end
   end
 
@@ -95,11 +96,6 @@ class Event < ApplicationRecord
       timeslot = Timeslot.order(:start_time).where("size > ?", duration).where("end_time >= ?", Time.now).first
     else
       raise "FATAL: case not covered"
-    end
-
-    unless timeslot.present?
-      errors.add(:start_time, "Keinen freien Time Slot gefunden")
-      self.start_time = self.end_time = self.duration = nil
     end
 
     timeslot
