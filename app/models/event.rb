@@ -99,7 +99,6 @@ class Event < ApplicationRecord
 
     unless timeslot.present?
       errors.add(:start_time, "Keinen freien Time Slot gefunden")
-      byebug
       self.start_time = self.end_time = self.duration = nil
     end
 
