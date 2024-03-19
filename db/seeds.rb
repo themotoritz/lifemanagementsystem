@@ -1,4 +1,4 @@
-Timeslot.create(start_time: Time.now, end_time: 100.years.from_now, size: 100.years.from_now - Time.now)
+Timeslot.create(start_time: Time.now, end_time: 100.years.from_now.end_of_day, size: 100.years.from_now.end_of_day - Time.now)
 
 
 # timeslot_size = 15
