@@ -15,12 +15,19 @@
       </div>
       <% [:tuesday, :wednesday, :thursday, :friday, :saturday, :sunday].each do |day| %>
         <div class="p-4 rounded-lg shadow-lg <%= Date.today.strftime("%A").downcase.to_sym == day ? 'bg-fuchsia-500' : 'bg-white text-slate-700' %>">
-          <p class="text-lg pb-4"><%= Date.today.beginning_of_week.next_occurring(day).strftime("%A %d.%m") %></p>
+          <div class="flex">
+            <p class="text-lg pb-4"><%= Date.today.beginning_of_week.next_occurring(day).strftime("%A %d.%m") %></p>
+          </div>
           <% events.where(start_time: Date.today.beginning_of_week.next_occurring(day).beginning_of_day..Date.today.beginning_of_week.next_occurring(day).end_of_day).each do |event| %>
-            <p>
-              <%= event.start_time.strftime('%H:%M') %>:
-              <%= link_to event.title, event_path(event), class: "underline" %>
-            </p>
+            <div class="flex">
+              <p class="mr-2">
+                <%= event.start_time.strftime('%H:%M') %>:
+                <%= link_to event.title, event_path(event), class: "underline" %>                
+              </p>
+              <% if event.done == true %>
+                <span class="material-symbols-outlined">check_circle</span>
+              <% end %>
+            </div>
           <% end %>
         </div>
       <% end %>
