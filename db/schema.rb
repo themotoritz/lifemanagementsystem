@@ -22,6 +22,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_02_08_212445) do
     t.boolean "fixed"
     t.text "description"
     t.string "title"
+    t.boolean "done"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end

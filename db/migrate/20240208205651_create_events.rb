@@ -8,6 +8,7 @@ class CreateEvents < ActiveRecord::Migration[7.1]
       t.boolean :fixed
       t.text :description
       t.string :title
+      t.boolean :done
 
       t.timestamps
     end
