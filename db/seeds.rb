@@ -1,7 +1,7 @@
 Timeslot.create(start_time: Time.now, end_time: 10.years.from_now.end_of_day, size: 101.years.from_now.end_of_day - Time.now)
 
 
-start_time = Time.zone.parse("11:00 PM")
+start_time = Time.zone.parse("11:30 PM")
 end_time = Time.zone.parse("7:00 AM").tomorrow
 
 # Define the duration of one day
@@ -12,14 +12,18 @@ years = 10
 
 # Loop through each day for the next 100 years and create the event
 (0..(365 * years)).each do |day_offset|
+  current_date = Time.zone.now + day_offset.days
+  # Skip weekends (Saturday and Sunday)
+  next if current_date.friday? || current_date.saturday?
+
   start_datetime = start_time + day_offset.days
   end_datetime = end_time + day_offset.days
 
   Event.create!(
-    title: "Sleeping Hours",
-    description: "Sleeping Hours",
+    title: "Sleeping Hours and Work",
+    description: "Sleeping Hours and Work",
     start_time: start_datetime,
-    duration: 8.hours,
+    duration: 18.hours,
     kind: "blocking"
   )
 end
