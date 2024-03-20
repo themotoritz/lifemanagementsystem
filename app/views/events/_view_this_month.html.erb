@@ -6,12 +6,19 @@
     <div class="grid grid-cols-7 gap-4 font-mono text-white text-sm text-center font-bold leading-6 bg-stripes-fuchsia rounded-lg">
       <% Time.days_in_month(Time.now.month, Time.now.year).times do |i| %>
         <div class="p-4 rounded-lg shadow-lg <%= Date.today.day == i+1 ? 'bg-fuchsia-500' : 'bg-white text-slate-700' %>">
-          <p class="text-lg pb-4"><%= Date.new(Time.now.year, Time.now.month, i+1).strftime("%A %d.%m") %></p>
+          <div class="flex">
+            <p class="text-lg pb-4"><%= Date.new(Time.now.year, Time.now.month, i+1).strftime("%A %d.%m") %></p>
+          </div>
           <% events.where(start_time: Date.new(Time.now.year, Time.now.month, i+1).beginning_of_day..Date.new(Time.now.year, Time.now.month, i+1).end_of_day).each do |event| %>
-            <p>
-              <%= event.start_time.strftime('%H:%M') %>:
-              <%= link_to event.title, event_path(event), class: "underline" %>
-            </p>
+            <div class="flex">
+              <p class="mr-2">
+                <%= event.start_time.strftime('%H:%M') %>:
+                <%= link_to event.title, event_path(event), class: "underline" %>                
+              </p>
+              <% if event.done == true %>
+                <span class="material-symbols-outlined">check_circle</span>
+              <% end %>
+            </div>
           <% end %>
         </div>
       <% end %>
@@ -30,7 +37,9 @@
       <div class="grid grid-cols-7 gap-4 font-mono text-white text-sm text-center font-bold leading-6 bg-stripes-fuchsia rounded-lg">
         <% Time.days_in_month(Date.new(Date.today.year, number_of_month, 1).month, Time.now.year).times do |i| %>
           <div class="p-4 rounded-lg shadow-lg bg-white text-slate-700">
-            <p class="text-lg pb-4"><%= Date.new(Time.now.year, number_of_month, i+1).strftime("%A %d.%m") %></p>
+            <div class="flex">
+              <p class="text-lg pb-4"><%= Date.new(Time.now.year, number_of_month, i+1).strftime("%A %d.%m") %></p>
+            </div>
             <% events.where(start_time: Date.new(Time.now.year, number_of_month, i+1).beginning_of_day..Date.new(Time.now.year, number_of_month, i+1).end_of_day).each do |event| %>
               <p>
                 <%= event.start_time.strftime('%H:%M') %>:

@@ -45,22 +45,36 @@
       <div class="pb-4 text-xl">KW <%= number_of_week %></div>
       <div class="grid grid-cols-7 gap-4 font-mono text-white text-sm text-center font-bold leading-6 bg-stripes-fuchsia rounded-lg text-slate-700">
         <div class="p-4 rounded-lg shadow-lg bg-white text-slate-700">
-          <p class="text-lg pb-4"><%= Date.commercial(Date.today.year, number_of_week, 1).beginning_of_week.strftime("%A %d.%m") %></p>
+          <div class="flex">
+            <p class="text-lg pb-4"><%= Date.commercial(Date.today.year, number_of_week, 1).beginning_of_week.strftime("%A %d.%m") %></p>
+          </div>
           <% events.where(start_time: Date.commercial(Date.today.year, number_of_week, 1).beginning_of_week.beginning_of_day..Date.commercial(Date.today.year, number_of_week, 1).beginning_of_week.end_of_day).each do |event| %>
-            <p>
-              <%= event.start_time.strftime('%H:%M') %>:
-              <%= link_to event.title, event_path(event), class: "underline" %>
-            </p>
+            <div class="flex">
+              <p class="mr-2">
+                <%= event.start_time.strftime('%H:%M') %>:
+                <%= link_to event.title, event_path(event), class: "underline" %>                
+              </p>
+              <% if event.done == true %>
+                <span class="material-symbols-outlined">check_circle</span>
+              <% end %>
+            </div>
           <% end %>    
         </div>
         <% [:tuesday, :wednesday, :thursday, :friday, :saturday, :sunday].each do |day| %>
           <div class="p-4 rounded-lg shadow-lg bg-white text-slate-700">
-            <p class="text-lg pb-4"><%= Date.commercial(Date.today.year, number_of_week, 1).beginning_of_week.next_occurring(day).strftime("%A %d.%m") %></p>
+            <div class="flex">
+              <p class="text-lg pb-4"><%= Date.commercial(Date.today.year, number_of_week, 1).beginning_of_week.next_occurring(day).strftime("%A %d.%m") %></p>
+            </div>
             <% events.where(start_time: Date.commercial(Date.today.year, number_of_week, 1).beginning_of_week.next_occurring(day).beginning_of_day..Date.commercial(Date.today.year, number_of_week, 1).beginning_of_week.next_occurring(day).end_of_day).each do |event| %>
-              <p>
-                <%= event.start_time.strftime('%H:%M') %>:
-                <%= link_to event.title, event_path(event), class: "underline" %>
-              </p>
+              <div class="flex">
+                <p class="mr-2">
+                  <%= event.start_time.strftime('%H:%M') %>:
+                  <%= link_to event.title, event_path(event), class: "underline" %>                
+                </p>
+                <% if event.done == true %>
+                  <span class="material-symbols-outlined">check_circle</span>
+                <% end %>
+              </div>
             <% end %>
           </div>
         <% end %>

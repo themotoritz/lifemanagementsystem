@@ -8,10 +8,15 @@
         <div class="p-4 rounded-lg shadow-lg <%= Date.today.month == index+1 ? 'bg-fuchsia-500' : 'bg-white text-slate-700' %>">
           <p class="text-lg pb-4"><%= Date.new(Date.today.year, index+1, 1).strftime("%B") %></p>
           <% events.where(start_time: Date.new(Date.today.year, index+1, 1).beginning_of_day..Date.new(Date.today.year, index+1, Date.new(Date.today.year, index+1, 1).end_of_month.day).end_of_day).each do |event| %>
-            <p>
-              <%= event.start_time.strftime('%d.%m %H:%M') %>:
-              <%= link_to event.title, event_path(event), class: "underline" %>
-            </p>
+            <div class="flex flex-row">
+              <p class="mr-2">
+                <%= event.start_time.strftime('%H:%M') %>:
+                <%= link_to event.title, event_path(event), class: "underline" %>                
+              </p>
+              <% if event.done == true %>
+                <span class="material-symbols-outlined">check_circle</span>
+              <% end %>
+            </div>
           <% end %>
         </div>
       <% end %>
