@@ -23,7 +23,11 @@ class EventsController < ApplicationController
   end
 
   def reschedule_past_events
-    Event.where.not(kind: "blocking").where("start_time < ?", Time.now).all.update_all(start_time: nil, end_time: nil)
+    Event.where.not(kind: "blocking").where("start_time < ?", Time.now).all.each do |event|
+      event.start_time = nil
+      event.end_time = nil
+      event.save
+    end
 
     redirect_to(events_path)
   end
@@ -47,7 +51,8 @@ class EventsController < ApplicationController
   # PATCH/PUT /events/1 or /events/1.json
   def update
     respond_to do |format|
-      if @event.update(event_params)
+      @event.assign_attributes(event_params)
+      if @event.save(validate: false)
         format.html { redirect_to event_url(@event), notice: "Event was successfully updated." }
         format.json { render :show, status: :ok, location: @event }
       else
