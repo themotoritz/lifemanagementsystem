@@ -1,14 +1,11 @@
 class Event < ApplicationRecord
   has_many :timeslots, dependent: :nullify
 
-  # before_save :find_free_timeslot
-  # validate start_time before end_time
-
-  validate :start_time_not_in_the_past
-  validate :schedule
-  validate :start_time_before_end_time
-  validate :duration_positiv
-  validate :no_overlapping_events_exist
+  validate :start_time_not_in_the_past, on: :create
+  validate :schedule, on: :create
+  validate :start_time_before_end_time, on: :create
+  validate :duration_positiv, on: :create
+  validate :no_overlapping_events_exist, on: :create
   after_destroy :merge_surrounding_timeslots
   after_commit :destroy_obsolete_timeslots
 
