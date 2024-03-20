@@ -1,11 +1,11 @@
 class Event < ApplicationRecord
   has_many :timeslots, dependent: :nullify
 
-  validate :start_time_not_in_the_past, on: :create
-  validate :schedule, on: :create
-  validate :start_time_before_end_time, on: :create
-  validate :duration_positiv, on: :create
-  validate :no_overlapping_events_exist, on: :create
+  validate :start_time_not_in_the_past
+  validate :schedule
+  validate :start_time_before_end_time
+  validate :duration_positiv
+  validate :no_overlapping_events_exist
   after_destroy :merge_surrounding_timeslots
   after_commit :destroy_obsolete_timeslots
 
