@@ -31,6 +31,11 @@
         <p class="inline-block align-middle" title="Ansicht dieses Jahr"><%= Date.today.year %></p>
       </button>
     <% end %>
+    <%= link_to reschedule_past_events_path do %>
+      <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-3 px-3 rounded">
+        <span class="material-symbols-outlined inline-block align-middle" title="Reschedule Past Events">autorenew</span>
+      </button>
+    <% end %>
   </div>
 </div>
 

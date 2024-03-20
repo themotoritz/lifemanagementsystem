@@ -22,6 +22,12 @@ class EventsController < ApplicationController
   def edit
   end
 
+  def reschedule_past_events
+    Event.where.not(kind: "blocking").where("start_time < ?", Time.now).all.update_all(start_time: nil, end_time: nil)
+
+    redirect_to(events_path)
+  end
+
   # POST /events or /events.json
   def create
     @event = Event.new(event_params)
