@@ -140,14 +140,7 @@ class EventsController < ApplicationController
 
     @event.end_time = @event.start_time + @event.duration if @event.start_time.present? && @event.duration.present?
 
-    if timeslot.present?
-      udpate_timeslots(timeslot)
-    else
-      overlapping_events = Event.where.not(id: @event.id).where("start_time < ? AND end_time > ?", @event.end_time, @event.start_time)
-      errors.add(:start_time, "Keinen freien Time Slot gefunden, blocked by: #{overlapping_events.pluck(:title)}")
-
-      @event..start_time = @event..end_time = @event..duration = nil
-    end
+    udpate_timeslots(timeslot) if timeslot.present?
   end
 
   def find_free_timeslot
