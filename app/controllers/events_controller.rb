@@ -1,4 +1,6 @@
 class EventsController < ApplicationController
+  require 'csv'
+  
   before_action :set_event, only: %i[ show edit update destroy ]
 
   # GET /events or /events.json
@@ -77,6 +79,26 @@ class EventsController < ApplicationController
     respond_to do |format|
       format.csv { send_data @exported_records.export_to_csv, filename: "event-records-#{Date.today}.csv" }
     end
+  end
+
+  def import_from_csv    
+    file = params[:file]
+
+    if file.present? && file.content_type == 'text/csv'
+      CSV.foreach(file.path, headers: true) do |row|
+        event = Event.new(row)
+        event.end_time = nil
+        if event.start_time.present? && event.start_time < Time.now + 5.minutes
+          event.start_time = nil
+        end   
+        event.save!
+      end
+      flash[:success] = "Records imported successfully."
+    else
+      flash[:error] = "Please provide a CSV file."
+    end
+
+    redirect_to root_path
   end
 
   private

@@ -8,6 +8,7 @@ Rails.application.routes.draw do
 
   get 'reschedule_past_events', action: :reschedule_past_events, controller: 'events'
   get 'export_events_to_csv', action: :export_to_csv, controller: 'events'
+  post 'import_events_from_csv', action: :import_from_csv, controller: 'events'
 
   root "events#index"
 end
