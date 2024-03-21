@@ -2,9 +2,9 @@ class EventsController < ApplicationController
   before_action :set_event, only: %i[ show edit update destroy ]
 
   # GET /events or /events.json
-  def index
+  def index 
     session[:current_view] = params[:current_view] if params[:current_view].present?
-    session[:current_view] = "view_this_week" unless session[:current_view].present? 
+    session[:current_view] = "this_week" unless session[:current_view].present?
 
     @events = Event.where.not(kind: "blocking").order(:start_time)
   end
@@ -26,9 +26,9 @@ class EventsController < ApplicationController
     Event.where.not(kind: "blocking").where("start_time < ?", Time.now).all.each do |event|
       event.start_time = nil
       event.end_time = nil
-      event.save
+      event.save  
     end
-
+    
     redirect_to(events_path)
   end
 
@@ -69,6 +69,13 @@ class EventsController < ApplicationController
     respond_to do |format|
       format.html { redirect_to events_url, notice: "Event was successfully destroyed." }
       format.json { head :no_content }
+    end
+  end
+
+  def export_to_csv
+    @exported_records = Event.where.not(kind: "blocking") # Adjust the condition as needed
+    respond_to do |format|
+      format.csv { send_data @exported_records.export_to_csv, filename: "event-records-#{Date.today}.csv" }
     end
   end
 

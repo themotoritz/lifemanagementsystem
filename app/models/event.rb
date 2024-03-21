@@ -1,4 +1,6 @@
 class Event < ApplicationRecord
+  require 'csv'
+  
   has_many :timeslots, dependent: :nullify
 
   validate :start_time_not_in_the_past
@@ -8,6 +10,17 @@ class Event < ApplicationRecord
   validate :no_overlapping_events_exist
   after_destroy :merge_surrounding_timeslots
   after_commit :destroy_obsolete_timeslots
+
+  def self.export_to_csv
+    attributes = ["kind", "start_time", "end_time", "duration", "fixed", "description", "title", "done"] 
+    CSV.generate(headers: true) do |csv|
+      csv << attributes
+
+      all.each do |record|
+        csv << attributes.map{ |attr| record.send(attr) }
+      end
+    end
+  end
 
   private
 
