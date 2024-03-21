@@ -122,20 +122,10 @@ class EventsController < ApplicationController
 
     timeslot = nil
 
-    if @event.start_time.nil? && @event.end_time.nil? && @event.duration.nil?
-      @event.duration = 15.minutes
+    if @event.end_time.nil?
+      @event.duration = 15.minutes if @event.duration.nil?
       timeslot = find_free_timeslot
       @event.start_time = timeslot.start_time if timeslot.present?
-    elsif @event.start_time.nil? && @event.end_time.nil? && @event.duration.present?
-      timeslot = find_free_timeslot
-      @event.start_time = timeslot.start_time if timeslot.present?
-    elsif @event.start_time.present? && @event.end_time.nil? && @event.duration.nil?
-      @event.duration = 15.minutes
-      timeslot = find_free_timeslot
-    elsif @event.start_time.present? && @event.end_time.nil? && @event.duration.present?
-      timeslot = find_free_timeslot
-    # elsif start_time.present? && end_time.present? && duration.nil?
-    #   self.duration = end_time - start_time
     end
 
     @event.end_time = @event.start_time + @event.duration if @event.start_time.present? && @event.duration.present?
@@ -144,10 +134,12 @@ class EventsController < ApplicationController
   end
 
   def find_free_timeslot
+    timeslots = Timeslot.order(:start_time).where("size > ?", @event.duration)
+
     if @event.start_time.present? 
-      timeslot = Timeslot.order(:start_time).where("size > ?", @event.duration).where("start_time <= ?", @event.start_time).where("end_time >= ?", @event.end_time || @event.start_time + @event.duration).first
+      timeslot = timeslots.where("start_time <= ?", @event.start_time).where("end_time >= ?", @event.end_time || @event.start_time + @event.duration).first
     elsif @event.duration.present?
-      timeslot = Timeslot.order(:start_time).where("size > ?", @event.duration).where("end_time >= ?", Time.now).first
+      timeslot = timeslots.where("end_time >= ?", Time.now).first
     else
       raise "FATAL: case not covered"
     end
