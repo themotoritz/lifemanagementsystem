@@ -120,8 +120,8 @@ class Event < ApplicationRecord
   end
 
   def merge_surrounding_timeslots
-    closest_previous_timeslot = Timeslot.where("end_time < ?", start_time).order(:start_time).last
-    closest_subsequent_timeslot = Timeslot.where("start_time > ?", end_time).order(:start_time).first
+    closest_previous_timeslot = Timeslot.where("end_time <= ?", start_time).order(:start_time).last
+    closest_subsequent_timeslot = Timeslot.where("start_time >= ?", end_time).order(:start_time).first
 
     new_end_time = closest_subsequent_timeslot.end_time
     closest_subsequent_timeslot.destroy
