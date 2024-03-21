@@ -39,6 +39,8 @@ class EventsController < ApplicationController
     @event = Event.new(event_params)
     @event.duration = event_params[:duration].to_i*60 if event_params[:duration].present?
 
+    schedule_event
+
     respond_to do |format|
       if @event.save
         format.html { redirect_to event_url(@event), notice: "Event was successfully created." }
@@ -99,6 +101,73 @@ class EventsController < ApplicationController
     end
 
     redirect_to root_path
+  end
+
+  def schedule_event
+    if Timeslot.where("start_time < ?", Time.now).where("end_time > ?", Time.now).count > 1
+      raise "FATAL: should not be possible"
+    end
+
+    current_timeslot =  Timeslot.where("start_time < ?", Time.now).where("end_time > ?", Time.now).first
+
+    if current_timeslot.present?
+      if current_timeslot.end_time > Time.now + 5.minutes
+        current_timeslot.update(start_time: Time.now + 5.minutes)
+      elsif current_timeslot.end_time <= Time.now + 5.minutes
+        current_timeslot.destroy
+      else
+        raise "FATAL: case not covered"
+      end
+    end
+
+    timeslot = nil
+
+    if @event.start_time.nil? && @event.end_time.nil? && @event.duration.nil?
+      @event.duration = 15.minutes
+      timeslot = find_free_timeslot
+      @event.start_time = timeslot.start_time if timeslot.present?
+    elsif @event.start_time.nil? && @event.end_time.nil? && @event.duration.present?
+      timeslot = find_free_timeslot
+      @event.start_time = timeslot.start_time if timeslot.present?
+    elsif @event.start_time.present? && @event.end_time.nil? && @event.duration.nil?
+      @event.duration = 15.minutes
+      timeslot = find_free_timeslot
+    elsif @event.start_time.present? && @event.end_time.nil? && @event.duration.present?
+      timeslot = find_free_timeslot
+    # elsif start_time.present? && end_time.present? && duration.nil?
+    #   self.duration = end_time - start_time
+    end
+
+    @event.end_time = @event.start_time + @event.duration if @event.start_time.present? && @event.duration.present?
+
+    if timeslot.present?
+      udpate_timeslots(timeslot)
+    else
+      overlapping_events = Event.where.not(id: @event.id).where("start_time < ? AND end_time > ?", @event.end_time, @event.start_time)
+      errors.add(:start_time, "Keinen freien Time Slot gefunden, blocked by: #{overlapping_events.pluck(:title)}")
+
+      @event..start_time = @event..end_time = @event..duration = nil
+    end
+  end
+
+  def find_free_timeslot
+    if @event.start_time.present? 
+      timeslot = Timeslot.order(:start_time).where("size > ?", @event.duration).where("start_time <= ?", @event.start_time).where("end_time >= ?", @event.end_time || @event.start_time + @event.duration).first
+    elsif @event.duration.present?
+      timeslot = Timeslot.order(:start_time).where("size > ?", @event.duration).where("end_time >= ?", Time.now).first
+    else
+      raise "FATAL: case not covered"
+    end
+
+    timeslot
+  end
+
+  def udpate_timeslots(timeslot)
+    timeslot_start_time = timeslot.start_time
+    timeslot_end_time = timeslot.end_time
+
+    timeslot.update(end_time: @event.start_time, size: @event.start_time - timeslot_start_time)
+    Timeslot.create!(start_time: @event.end_time, end_time: timeslot_end_time, size: timeslot_end_time - @event.start_time)
   end
 
   private
