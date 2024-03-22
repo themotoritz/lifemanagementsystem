@@ -54,9 +54,25 @@ class EventsController < ApplicationController
 
   # PATCH/PUT /events/1 or /events/1.json
   def update
+    @event.end_time = nil
+
+    if @event.duration.to_s != params[:event][:duration]
+      @event.end_time = nil
+      @event.duration = params[:event][:duration].to_i
+    end
+
+    if @event.start_time.to_time != params[:event][:start_time].to_time
+      @event.end_time = nil
+      @event.start_time = params[:event][:start_time].to_time
+    end
+
+    schedule_event
+
+    @event.fixed = params[:event][:fixed]
+    @event.done = params[:event][:done]
+
     respond_to do |format|
-      @event.assign_attributes(event_params)
-      if @event.save(validate: false)
+      if @event.save!
         format.html { redirect_to event_url(@event), notice: "Event was successfully updated." }
         format.json { render :show, status: :ok, location: @event }
       else
@@ -88,12 +104,14 @@ class EventsController < ApplicationController
 
     if file.present? && file.content_type == 'text/csv'
       CSV.foreach(file.path, headers: true) do |row|
-        event = Event.new(row)
-        event.end_time = nil
-        if event.start_time.present? && event.start_time < Time.now + 5.minutes
-          event.start_time = nil
-        end   
-        event.save!
+        @event = Event.new(row)
+        @event.end_time = nil
+        if @event.start_time.present? && @event.start_time < Time.now + 5.minutes
+          @event.start_time = nil
+        end
+
+        schedule_event
+        @event.save!
       end
       flash[:success] = "Records imported successfully."
     else
@@ -125,7 +143,7 @@ class EventsController < ApplicationController
     if @event.end_time.nil?
       @event.duration = 15.minutes if @event.duration.nil?
       timeslot = find_free_timeslot
-      @event.start_time = timeslot.start_time if timeslot.present?
+      @event.start_time = timeslot.start_time if (timeslot.present? && !@event.start_time.present?)
     end
 
     @event.end_time = @event.start_time + @event.duration if @event.start_time.present? && @event.duration.present?

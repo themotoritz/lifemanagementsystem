@@ -29,14 +29,10 @@
         <%= form.label :start_time, style: "display: block", class: "block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"  %>
         <%= form.datetime_field :start_time, class: "appearance-none block bg-gray-200 text-gray-700 border rounded py-3 px-4 mb-2 leading-tight focus:outline-none focus:bg-white" %>
       </div>
-      <%
-=begin%>
- <div class="md:w-1/2 px-3 mb-2">
+      <div class="md:w-1/2 px-3 mb-2">
         <%= form.label :end_time, style: "display: block", class: "block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"  %>
         <%= form.datetime_field :end_time, class: "appearance-none block bg-gray-200 text-gray-700 border rounded py-3 px-4 mb-2 leading-tight focus:outline-none focus:bg-white" %>
       </div> 
-<%
-=end%>
       <div class="px-3 mb-2">
         <%= form.label :duration, style: "display: block", class: "block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" %>
         <%= form.number_field :duration, placeholder: "Standardwert: 15 Minuten", class: "appearance-none block bg-gray-200 text-gray-700 border rounded py-3 px-4 mb-2 leading-tight focus:outline-none focus:bg-white" %>
