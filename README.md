@@ -10,3 +10,4 @@
 - task in bestimmte "zone" schedulen, z.B. nur Mo-Fr von 15 - 18 Uhr, schedule between times
 - destroy timeslots with size 0
 - destroy all past timeslots
+- event auf einen bestimmten tag (auch jährlich) schedulen, aber keine bestimmte uhrzeit, also flexibel je nachdem was an dem Tag noch so frei ist 
