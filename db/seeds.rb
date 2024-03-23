@@ -1,8 +1,8 @@
 Timeslot.create(start_time: Time.now, end_time: 10.years.from_now.end_of_day, size: 101.years.from_now.end_of_day - Time.now)
 
 
-start_time = Time.zone.parse("11:30 PM")
-end_time = Time.zone.parse("7:00 AM").tomorrow
+start_time = Time.zone.parse("00:00 AM")
+# end_time = Time.zone.parse("7:00 AM").tomorrow
 
 # Define the duration of one day
 one_day = 1.day
@@ -17,7 +17,7 @@ years = 10
   next if current_date.friday? || current_date.saturday?
 
   start_datetime = start_time + day_offset.days
-  end_datetime = end_time + day_offset.days
+  # end_datetime = end_time + day_offset.days
 
 
 
@@ -25,7 +25,7 @@ years = 10
     title: "Sleeping Hours and Work",
     description: "Sleeping Hours and Work",
     start_time: start_datetime,
-    duration: 18.hours,
+    duration: 17.hours+30.minutes,
     kind: "blocking",
     fixed: false
   )
