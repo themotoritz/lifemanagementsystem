@@ -57,11 +57,24 @@ class EventsController < ApplicationController
 
   # POST /events or /events.json
   def create
+    date = Date.parse(params[:event][:date])
+    time = Time.parse(params[:event][:time]) if params[:event][:time].present?
+
     @event = Event.new(event_params)
     @event.duration = event_params[:duration].to_i*60 if event_params[:duration].present?
 
-    event_scheduler = EventScheduler.new(@event)
-    @event = event_scheduler.schedule
+    if date.present? && time.present?
+      @event.start_time = DateTime.new(date.year, date.month, date.day, time.hour, time.min, time.sec)
+      
+      event_scheduler = EventScheduler.new(@event)
+      @event = event_scheduler.schedule
+    elsif time.nil? || time.empty?
+      event_scheduler = EventScheduler.new(@event)
+      @event = event_scheduler.schedule_only_day(date)
+    else
+      event_scheduler = EventScheduler.new(@event)
+      @event = event_scheduler.schedule
+    end
 
     respond_to do |format|
       if @event.save
