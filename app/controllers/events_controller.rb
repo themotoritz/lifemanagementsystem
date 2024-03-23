@@ -7,8 +7,23 @@ class EventsController < ApplicationController
   def index 
     session[:current_view] = params[:current_view] if params[:current_view].present?
     session[:current_view] = "this_week" unless session[:current_view].present?
+    
+    if session[:current_view] == "today" || params[:current_view] == "today"  
+      days_of_week = ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"]
+      current_day = Date.today.strftime('%A').downcase
+      current_day_index = days_of_week.index(current_day) + 1
+      @sorted_days = days_of_week.rotate(current_day_index - 1)
 
-    @events = Event.where.not(kind: "blocking").order(:start_time)
+      @events = Event.where("start_time <= ?", 1.week.from_now).order(:start_time)
+    elsif session[:current_view] == "this_week" || params[:current_view] == "this_week"
+      @events = Event.where("start_time <= ?", 1.year.from_now).order(:start_time)
+    elsif session[:current_view] == "this_month" || params[:current_view] == "this_month"
+      @events = Event.where("start_time <= ?", 1.year.from_now).order(:start_time)
+    elsif session[:current_view] == "this_year" || params[:current_view] == "this_year"
+      @events = Event.where.not(kind: "blocking").order(:start_time)
+    end
+
+    @events
   end
 
   # GET /events/1 or /events/1.json
