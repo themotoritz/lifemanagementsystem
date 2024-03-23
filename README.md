@@ -2,7 +2,7 @@
 
 - Benutzereinstellungen (e.g. Standardwerte)
 - Event Typen: Aufgabe, Geburtstag, Reminder
-- Sequenz hinzufügen: täglich, wöchentlich, etc..
+- Sequenz hinzufügen: jährlich, täglich, wöchentlich, etc..
 - Blockierte Aufgaben
 - Legende (mit Farben)
 - Blockierte Zeiten hinzufügen (nachts, auf arbeit) (background job um die alle zu erstellen)
@@ -10,4 +10,3 @@
 - task in bestimmte "zone" schedulen, z.B. nur Mo-Fr von 15 - 18 Uhr, schedule between times
 - destroy timeslots with size 0
 - destroy all past timeslots
-- event auf einen bestimmten tag (auch jährlich) schedulen, aber keine bestimmte uhrzeit, also flexibel je nachdem was an dem Tag noch so frei ist 
