@@ -25,10 +25,15 @@ class EventsController < ApplicationController
   end
 
   def reschedule_past_events
-    Event.where.not(kind: "blocking").where("start_time < ?", Time.now).all.each do |event|
-      event.start_time = nil
-      event.end_time = nil
-      event.save  
+    Event.where.not(kind: "blocking").where.not(done: true).where("start_time < ?", Time.now).all.each do |event|
+      @event = event
+      
+      @event.start_time = nil
+      @event.end_time = nil
+
+      schedule_event
+      
+      @event.save  
     end
     
     redirect_to(events_path)
