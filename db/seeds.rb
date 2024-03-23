@@ -19,13 +19,21 @@ years = 10
   start_datetime = start_time + day_offset.days
   end_datetime = end_time + day_offset.days
 
-  Event.create!(
+
+
+  event = Event.new(
     title: "Sleeping Hours and Work",
     description: "Sleeping Hours and Work",
     start_time: start_datetime,
     duration: 18.hours,
-    kind: "blocking"
+    kind: "blocking",
+    fixed: false
   )
+
+  event_scheduler = EventScheduler.new(event)
+  event = event_scheduler.schedule
+
+  event.save!
 end
 
 
