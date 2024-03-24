@@ -1,8 +1,8 @@
 Timeslot.create(start_time: Time.now, end_time: 10.years.from_now.end_of_day, size: 101.years.from_now.end_of_day - Time.now)
 
 
-start_time = Time.zone.parse("00:00 AM")
-# end_time = Time.zone.parse("7:00 AM").tomorrow
+sleeping_time = Time.zone.parse("00:00 AM")
+lunch_time = Time.zone.parse("12:00 PM")
 
 # Define the duration of one day
 one_day = 1.day
@@ -11,29 +11,52 @@ one_day = 1.day
 years = 10
 
 # Loop through each day for the next 100 years and create the event
-(0..(365 * years)).each do |day_offset|
+(1..(365 * years)).each do |day_offset|
   current_date = Time.zone.now + day_offset.days
+  sleeping_datetime = sleeping_time + day_offset.days
+  lunch_datetime = lunch_time + day_offset.days
+  
   # Skip weekends (Saturday and Sunday)
-  next if current_date.friday? || current_date.saturday?
+  if current_date.saturday? || current_date.sunday?
+    event = Event.new(
+      title: "Schlaf + Frühstück",
+      description: "Sleeping Hours",
+      start_time: sleeping_datetime,
+      duration: 9.hours,
+      kind: "blocking",
+      fixed: false
+    )
 
-  start_datetime = start_time + day_offset.days
-  # end_datetime = end_time + day_offset.days
+    event_scheduler = EventScheduler.new(event)
+    event = event_scheduler.schedule
+    event.save!
 
+    event = Event.new(
+      title: "Mittagspause",
+      description: "Mittagspause",
+      start_time: lunch_datetime,
+      duration: 2.hours,
+      kind: "blocking",
+      fixed: false
+    )
 
+    event_scheduler = EventScheduler.new(event)
+    event = event_scheduler.schedule
+    event.save!
+  else
+    event = Event.new(
+      title: "Sleeping Hours and Work",
+      description: "Sleeping Hours and Work",
+      start_time: sleeping_datetime,
+      duration: 17.hours+30.minutes,
+      kind: "blocking",
+      fixed: false
+    )
 
-  event = Event.new(
-    title: "Sleeping Hours and Work",
-    description: "Sleeping Hours and Work",
-    start_time: start_datetime,
-    duration: 17.hours+30.minutes,
-    kind: "blocking",
-    fixed: false
-  )
-
-  event_scheduler = EventScheduler.new(event)
-  event = event_scheduler.schedule
-
-  event.save!
+    event_scheduler = EventScheduler.new(event)
+    event = event_scheduler.schedule
+    event.save!
+  end
 end
 
 
