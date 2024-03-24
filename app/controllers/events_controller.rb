@@ -126,6 +126,7 @@ class EventsController < ApplicationController
 
     @event.fixed = params[:event][:fixed]
     @event.done = params[:event][:done]
+    @event.description = params[:event][:description]
 
     respond_to do |format|
       if @event.save!
