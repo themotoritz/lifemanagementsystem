@@ -36,7 +36,7 @@
           </tr>
           <% if events.where(start_time: (Date.today+index).beginning_of_day..(Date.today+index).end_of_day).present? %>
             <% events.where(start_time: (Date.today+index).beginning_of_day..(Date.today+index).end_of_day).each_with_index do |event, i| %> 
-              <tr>
+              <tr class="<%= event.kind == 'blocking' ? 'bg-gray-300' : '' %>">
                 <div class="my-2">
                   <%= render event %>
                   <td class="border-b border-slate-100 dark:border-slate-700 p-4 pr-8 text-slate-500 dark:text-slate-400">
