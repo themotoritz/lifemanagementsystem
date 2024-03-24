@@ -6,17 +6,27 @@
     <div class="grid grid-cols-7 gap-4 font-mono text-white text-sm text-center font-bold leading-6 bg-stripes-fuchsia rounded-lg">
       <div class="p-4 rounded-lg shadow-lg <%= Date.today.monday? ? 'bg-fuchsia-500' : 'bg-white text-slate-700' %>">
         <p class="text-lg pb-4"><%= Date.today.beginning_of_week.strftime("%A %d.%m") %></p>
+        <% if Date.today.beginning_of_week >= Date.today %>
+          <%= link_to new_event_path(date_from_today_view: Date.today.beginning_of_week), data: { turbo: false } do %>
+            <span class="material-symbols-outlined">add_box</span>
+          <% end %>
+        <% end %>
         <% events.where(start_time: Date.today.beginning_of_week.beginning_of_day..Date.today.beginning_of_week.end_of_day).each do |event| %>
           <p>
             <%= event.start_time.strftime('%H:%M') %>:
             <%= link_to event.title, event_path(event), class: "underline" %>
           </p>
-        <% end %>    
+        <% end %>
       </div>
       <% [:tuesday, :wednesday, :thursday, :friday, :saturday, :sunday].each do |day| %>
         <div class="p-4 rounded-lg shadow-lg <%= Date.today.strftime("%A").downcase.to_sym == day ? 'bg-fuchsia-500' : 'bg-white text-slate-700' %>">
-          <div class="flex">
+          <div class="flex space-x-2">
             <p class="text-lg pb-4"><%= Date.today.beginning_of_week.next_occurring(day).strftime("%A %d.%m") %></p>
+            <% if Date.today.beginning_of_week.next_occurring(day) >= Date.today %>
+              <%= link_to new_event_path(date_from_today_view: Date.today.beginning_of_week.next_occurring(day)), data: { turbo: false } do %>
+                <span class="material-symbols-outlined">add_box</span>
+              <% end %>
+            <% end %>
           </div>
           <% events.where(start_time: Date.today.beginning_of_week.next_occurring(day).beginning_of_day..Date.today.beginning_of_week.next_occurring(day).end_of_day).each do |event| %>
             <div class="flex">
@@ -45,8 +55,11 @@
       <div class="pb-4 text-xl">KW <%= number_of_week %></div>
       <div class="grid grid-cols-7 gap-4 font-mono text-white text-sm text-center font-bold leading-6 bg-stripes-fuchsia rounded-lg text-slate-700">
         <div class="p-4 rounded-lg shadow-lg bg-white text-slate-700">
-          <div class="flex">
+          <div class="flex space-x-2">
             <p class="text-lg pb-4"><%= Date.commercial(Date.today.year, number_of_week, 1).beginning_of_week.strftime("%A %d.%m") %></p>
+            <%= link_to new_event_path(date_from_today_view: Date.commercial(Date.today.year, number_of_week, 1).beginning_of_week), data: { turbo: false } do %>
+              <span class="material-symbols-outlined">add_box</span>
+            <% end %>
           </div>
           <% events.where(start_time: Date.commercial(Date.today.year, number_of_week, 1).beginning_of_week.beginning_of_day..Date.commercial(Date.today.year, number_of_week, 1).beginning_of_week.end_of_day).each do |event| %>
             <div class="flex">
@@ -62,9 +75,12 @@
         </div>
         <% [:tuesday, :wednesday, :thursday, :friday, :saturday, :sunday].each do |day| %>
           <div class="p-4 rounded-lg shadow-lg bg-white text-slate-700">
-            <div class="flex">
+            <div class="flex space-x-2">
               <p class="text-lg pb-4"><%= Date.commercial(Date.today.year, number_of_week, 1).beginning_of_week.next_occurring(day).strftime("%A %d.%m") %></p>
-            </div>
+              <%= link_to new_event_path(date_from_today_view: Date.commercial(Date.today.year, number_of_week, 1).beginning_of_week.next_occurring(day)), data: { turbo: false } do %>
+                <span class="material-symbols-outlined">add_box</span>
+              <% end %>
+            </div>            
             <% events.where(start_time: Date.commercial(Date.today.year, number_of_week, 1).beginning_of_week.next_occurring(day).beginning_of_day..Date.commercial(Date.today.year, number_of_week, 1).beginning_of_week.next_occurring(day).end_of_day).each do |event| %>
               <div class="flex">
                 <p class="mr-2">
