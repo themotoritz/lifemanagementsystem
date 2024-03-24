@@ -3,9 +3,9 @@ class Event < ApplicationRecord
   
   has_many :timeslots, dependent: :nullify
 
-  validate :start_time_not_in_the_past
-  validate :start_time_before_end_time
-  validate :duration_positiv
+  validate :start_time_not_in_the_past, if: -> { start_time_changed? }
+  validate :start_time_before_end_time, if: -> { start_time_changed? || end_time_changed? }
+  validate :duration_positiv, if: -> { duration_changed? }
   validate :no_overlapping_events_exist
   after_destroy :merge_surrounding_timeslots
   after_commit :destroy_obsolete_timeslots
