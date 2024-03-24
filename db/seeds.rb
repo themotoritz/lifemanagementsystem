@@ -19,7 +19,7 @@ years = 10
   # Skip weekends (Saturday and Sunday)
   if current_date.saturday? || current_date.sunday?
     event = Event.new(
-      title: "Schlaf + Frühstück",
+      title: "Schlafen + Frühstück",
       description: "Sleeping Hours",
       start_time: sleeping_datetime,
       duration: 9.hours,
@@ -45,7 +45,7 @@ years = 10
     event.save!
   else
     event = Event.new(
-      title: "Sleeping Hours and Work",
+      title: "Schlafen und Arbeit",
       description: "Sleeping Hours and Work",
       start_time: sleeping_datetime,
       duration: 17.hours+30.minutes,
