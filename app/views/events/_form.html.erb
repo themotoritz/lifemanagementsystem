@@ -28,7 +28,7 @@
       <div class="flex">
         <div class="px-3 mb-2">
           <%= form.label :date, "START DATE", class: "block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"  %>
-          <%= form.date_field :date, value: event.start_time&.strftime('%Y-%m-%d') || nil, class: "appearance-none block bg-gray-200 text-gray-700 border rounded py-3 px-4 mb-2 leading-tight focus:outline-none focus:bg-white" %>
+          <%= form.date_field :date, value: params[:date_from_today_view] || event.start_time&.strftime('%Y-%m-%d') || nil, class: "appearance-none block bg-gray-200 text-gray-700 border rounded py-3 px-4 mb-2 leading-tight focus:outline-none focus:bg-white" %>
         </div>
         <div class="px-3 mb-2">
           <%= form.label :time, "START TIME", class: "block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"  %>
