@@ -57,7 +57,7 @@ class EventsController < ApplicationController
 
   # POST /events or /events.json
   def create
-    date = Date.parse(params[:event][:date])
+    date = Date.parse(params[:event][:date]) if params[:event][:date].present?
     time = Time.parse(params[:event][:time]) if params[:event][:time].present?
 
     @event = Event.new(event_params)
@@ -68,10 +68,14 @@ class EventsController < ApplicationController
       
       event_scheduler = EventScheduler.new(@event)
       @event = event_scheduler.schedule
-    elsif time.nil? || time.empty?
+    elsif time.blank? && date.present?
       event_scheduler = EventScheduler.new(@event)
       @event = event_scheduler.schedule_only_day(date)
+    elsif date.blank? && time.blank?
+      event_scheduler = EventScheduler.new(@event)
+      @event = event_scheduler.schedule
     else
+      raise "unknown case"
       event_scheduler = EventScheduler.new(@event)
       @event = event_scheduler.schedule
     end
@@ -89,21 +93,36 @@ class EventsController < ApplicationController
 
   # PATCH/PUT /events/1 or /events/1.json
   def update
-    @event.end_time = nil
+    date = Date.parse(params[:event][:date])
+    time = Time.parse(params[:event][:time]) if params[:event][:time].present?
+
+    if date.present? && time.present?
+      start_time = DateTime.new(date.year, date.month, date.day, time.hour, time.min, time.sec)
+      
+      if @event.start_time.to_time.strftime("%Y-%m-%d %H:%M") != start_time.to_time.strftime("%Y-%m-%d %H:%M")
+        @event.end_time = nil
+        @event.start_time = start_time.to_time
+
+        event_scheduler = EventScheduler.new(@event)
+        @event = event_scheduler.schedule
+      end
+    elsif time.nil? || time.empty?
+      @event.end_time = nil
+      event_scheduler = EventScheduler.new(@event)
+      @event = event_scheduler.schedule_only_day(date)
+    else
+    end
+
+
     @event.title = params[:event][:title]
 
     if @event.duration.to_s != params[:event][:duration]
       @event.end_time = nil
       @event.duration = params[:event][:duration].to_i
-    end
 
-    if @event.start_time.to_time != params[:event][:start_time].to_time
-      @event.end_time = nil
-      @event.start_time = params[:event][:start_time].to_time
+      event_scheduler = EventScheduler.new(@event)
+      @event = event_scheduler.schedule
     end
-
-    event_scheduler = EventScheduler.new(@event)
-    @event = event_scheduler.schedule
 
     @event.fixed = params[:event][:fixed]
     @event.done = params[:event][:done]
