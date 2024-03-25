@@ -2,7 +2,7 @@
 
 - Benutzereinstellungen (e.g. Standardwerte)
 - Event Typen: Aufgabe, Geburtstag, Reminder
-- Sequenz hinzufügen: jährlich, täglich, wöchentlich, etc..
+- Sequenz hinzufügen: jährlich, täglich, wöchentlich, alle 2 oder 3 Tage etc..
 - Blockierte Aufgaben
 - Legende (mit Farben)
 - Blockierte Zeiten hinzufügen (nachts, auf arbeit) (background job um die alle zu erstellen)
