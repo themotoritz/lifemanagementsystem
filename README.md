@@ -10,4 +10,5 @@
 - task in bestimmte "zone" schedulen, z.B. nur Mo-Fr von 15 - 18 Uhr, schedule between times
 - destroy timeslots with size 0
 - destroy all past timeslots
-- update action validation does not work
+- update action validation is not being displayed in the form
+- statistik mit erledigten aufgaben
