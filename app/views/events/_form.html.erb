@@ -52,7 +52,11 @@
         <%= form.check_box :done, class: "appearance-none block bg-gray-200 text-gray-700 border rounded py-3 px-4 mb-2 leading-tight focus:outline-none focus:bg-white" %>
       </div>
       <div class="px-3 mb-6">
-        <%= form.submit "Eintrag erstellen", class: "cursor-pointer bg-transparent hover:bg-blue-500 text-blue-500 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded mt-12" %>        
+        <% if event.persisted? %>
+          <%= form.submit "Eintrag aktualisieren", class: "cursor-pointer bg-transparent hover:bg-blue-500 text-blue-500 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded mt-12" %>
+        <% else %>
+          <%= form.submit "Eintrag erstellen", class: "cursor-pointer bg-transparent hover:bg-blue-500 text-blue-500 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded mt-12" %>
+        <% end %>
       </div>
   </form>
 <% end %>
