@@ -1,6 +1,7 @@
 class EventsController < ApplicationController
   require 'csv'
-  
+  include ApplicationHelper
+
   before_action :set_event, only: %i[ show edit update destroy ]
 
   # GET /events or /events.json
@@ -150,7 +151,7 @@ class EventsController < ApplicationController
   def export_to_csv
     @exported_records = Event.where.not(kind: "blocking") # Adjust the condition as needed
     respond_to do |format|
-      format.csv { send_data @exported_records.export_to_csv, filename: "event-records-#{Date.today}.csv" }
+      format.csv { send_data @exported_records.export_to_csv, filename: "event-records-#{format_datetime(Time.now)}.csv" }
     end
   end
 
