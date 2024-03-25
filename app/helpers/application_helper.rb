@@ -20,7 +20,7 @@ module ApplicationHelper
     end
 
     if include_date == true
-      datetime.strftime("%Y-%m-%d %H:%M:%S")
+      datetime.strftime("%Y-%m-%d %H:%M")
     elsif include_date == false
       datetime.strftime("%H:%M:%S")
     end
