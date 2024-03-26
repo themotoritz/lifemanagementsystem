@@ -12,3 +12,5 @@
 - destroy all past timeslots
 - update action validation is not being displayed in the form
 - statistik mit erledigten aufgaben
+- Tasks duplizieren
+- make bulk updating of yearly tasks possible
