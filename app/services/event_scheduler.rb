@@ -70,7 +70,7 @@ class EventScheduler
   def schedule_only_day_find_free_timeslot(date)
     timeslots = Timeslot.order(:start_time).where("size > ?", @event.duration)
 
-    timeslot = timeslots.where(start_time: date.beginning_of_day..date.end_of_day).first
+    timeslot = timeslots.where(start_time: date.beginning_of_day..date.end_of_day).first || find_free_timeslot
 
     timeslot
   end
@@ -95,5 +95,54 @@ class EventScheduler
 
     timeslot.update(end_time: @event.start_time, size: @event.start_time - timeslot_start_time)
     Timeslot.create!(start_time: @event.end_time, end_time: timeslot_end_time, size: timeslot_end_time - @event.start_time)
+  end
+
+  def create_remaining_events
+    events = []
+
+    case @event.recurrence
+    when "daily"
+    when "twoday"
+    when "threeday"
+    when "fourday"
+    when "fiveday"
+    when "sixday"
+    when "weekly"
+    when "twoweek"
+    when "threeweek"
+    when "monthly"
+      events << @event 
+
+      create_until_date = 10.years.from_now.end_of_month
+      current_time = @event.start_time + 1.month
+      month_counter = 1
+
+      while current_time <= create_until_date
+        event = @event.dup
+        event.start_time = current_time
+        if @event.end_time.present?
+          event.end_time = @event.end_time + month_counter.month
+        end
+        events << event
+
+        current_time += 1.month
+        month_counter += 1
+      end  
+    when "twomonth"
+    when "threemonth"
+    when "fourmonth"
+    when "fivemonth"
+    when "sixmonth"
+    when "sevenmonth"
+    when "eightmonth"
+    when "ninemonth"
+    when "tenmonth"
+    when "elevenmonth"
+    when "yearly"
+    when "weekdays"
+    when "weekend"
+    end
+
+    events
   end
 end
