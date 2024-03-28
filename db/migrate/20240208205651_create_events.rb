@@ -9,7 +9,8 @@ class CreateEvents < ActiveRecord::Migration[7.1]
       t.text :description
       t.string :title
       t.boolean :done
-      t.integer :frequency
+      t.integer :recurrence
+      t.integer :group_id
 
       t.timestamps
     end
