@@ -61,6 +61,7 @@ class EventsController < ApplicationController
 
     @event = Event.new(event_params)
     @event.duration = event_params[:duration].to_i*60 if event_params[:duration].present?
+    @event.recurrence = params[:event][:recurrence]
 
     if date.present? && time.present?
       @event.start_time = DateTime.new(date.year, date.month, date.day, time.hour, time.min, time.sec)
@@ -79,15 +80,34 @@ class EventsController < ApplicationController
       @event = event_scheduler.schedule
     end
 
+    if @event.recurrence != "onetime"
+      event_scheduler = EventScheduler.new(@event)
+      events = event_scheduler.create_remaining_events 
+    end
+
     respond_to do |format|
-      if @event.save
-        format.html { redirect_to event_url(@event), notice: "Event was successfully created." }
-        format.json { render :show, status: :created, location: @event }
+      if events.present?
+        ActiveRecord::Base.transaction do
+          events.each do |event|
+            raise ActiveRecord::Rollback unless event.save!
+          end
+        end
+        format.html { redirect_to events_url, notice: "Events were successfully created." }
+        format.json { render :index, status: :created }
       else
-        format.html { render :new, status: :unprocessable_entity }
-        format.json { render json: @event.errors, status: :unprocessable_entity }
+        if @event.save
+          format.html { redirect_to event_url(@event), notice: "Event was successfully created." }
+          format.json { render :show, status: :created, location: @event }
+        else
+          format.html { render :new, status: :unprocessable_entity }
+          format.json { render json: @event.errors, status: :unprocessable_entity }
+        end
       end
     end
+  rescue ActiveRecord::Rollback
+    format.html { render :new, status: :unprocessable_entity }
+    format.json { render json: @event.errors, status: :unprocessable_entity }
+    render :new
   end
 
   # PATCH/PUT /events/1 or /events/1.json
@@ -127,7 +147,7 @@ class EventsController < ApplicationController
     @event.done = params[:event][:done]
     @event.description = params[:event][:description]
 
-    respond_to do |format|
+    respond_to do |format|    
       if @event.save!
         format.html { redirect_to events_path, notice: "Event was successfully updated." }
         format.json { render :index , status: :ok, location: @event }
@@ -159,23 +179,30 @@ class EventsController < ApplicationController
     file = params[:file]
 
     if file.present? && file.content_type == 'text/csv'
-      CSV.foreach(file.path, headers: true) do |row|
-        @event = Event.new(row)
-        @event.end_time = nil
-        if @event.start_time.present? && @event.start_time < Time.now + 5.minutes
-          @event.start_time = nil
-        end
+      ActiveRecord::Base.transaction do
+        CSV.foreach(file.path, headers: true) do |row|
+          @event = Event.new(row)
 
-        event_scheduler = EventScheduler.new(@event)
-        @event = event_scheduler.schedule
-        @event.save!
+          if @event.done == true
+            raise ActiveRecord::Rollback unless @event.save!(validate: false)
+          else
+            date = @event.start_time.to_date
+            @event.start_time = @event.end_time = nil
+            event_scheduler = EventScheduler.new(@event)
+            @event = event_scheduler.schedule_only_day(date)
+            raise ActiveRecord::Rollback unless @event.save!
+          end
+        end
       end
-      flash[:success] = "Records imported successfully."
+      flash[:success] = "Events imported successfully."
     else
       flash[:error] = "Please provide a CSV file."
     end
 
     redirect_to root_path
+  rescue ActiveRecord::Rollback
+    flash[:error] = "Validation failed. Events not imported."
+    render :new
   end
 
   private
@@ -186,6 +213,6 @@ class EventsController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def event_params
-      params.require(:event).permit(:kind, :start_time, :duration, :fixed, :title, :end_time, :description, :done, :frequency)
+      params.require(:event).permit(:kind, :start_time, :duration, :fixed, :title, :end_time, :description, :done, :recurrence)
     end
 end
