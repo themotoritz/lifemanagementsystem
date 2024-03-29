@@ -12,8 +12,8 @@
           <% end %>
         <% end %>
         <% events.where(start_time: Date.today.beginning_of_week.beginning_of_day..Date.today.beginning_of_week.end_of_day).each do |event| %>
-          <div class="flex justify-start text-left <%= event.kind == 'blocking' ? '' : 'p-1 mb-1 rounded-lg bg-sky-300' %>">
-            <div class="mr-2"><p class="<%= event.kind == 'blocking' ? 'text-black text-opacity-25' : '' %>"><%= event.start_time.strftime('%H:%M') %>:</p></div>
+          <div class="flex flex-col justify-start text-left <%= event.kind == 'blocking' ? 'p-1' : 'p-1 mb-1 rounded-lg bg-sky-300' %>">
+            <div class="mr-2"><p class="<%= event.kind == 'blocking' ? 'text-black text-opacity-25' : '' %>"><%= event.start_time.strftime('%H:%M') %>-<%= event.end_time.strftime('%H:%M') %>:</p></div>
             <div><p class="<%= event.kind == 'blocking' ? 'text-black text-opacity-25' : '' %>"><%= link_to event.title, event_path(event), class: "underline mr-2 break-all" %><% if event.done == true %>&#10004;<% end %></p></div>
           </div>
         <% end %>
@@ -29,8 +29,8 @@
             <% end %>
           </div>
           <% events.where(start_time: Date.today.beginning_of_week.next_occurring(day).beginning_of_day..Date.today.beginning_of_week.next_occurring(day).end_of_day).each do |event| %>
-            <div class="flex justify-start text-left <%= event.kind == 'blocking' ? '' : 'p-1 mb-1 rounded-lg bg-sky-300' %>">
-              <div class="mr-2"><p class="<%= event.kind == 'blocking' ? 'text-black text-opacity-25' : '' %>"><%= event.start_time.strftime('%H:%M') %>:</p></div>
+            <div class="flex flex-col justify-start text-left <%= event.kind == 'blocking' ? 'p-1' : 'p-1 mb-1 rounded-lg bg-sky-300' %>">
+              <div class="mr-2"><p class="<%= event.kind == 'blocking' ? 'text-black text-opacity-25' : '' %>"><%= event.start_time.strftime('%H:%M') %>-<%= event.end_time.strftime('%H:%M') %>:</p></div>
               <div><p class="<%= event.kind == 'blocking' ? 'text-black text-opacity-25' : '' %>"><%= link_to event.title, event_path(event), class: "underline mr-2 break-all" %><% if event.done == true %>&#10004;<% end %></p></div>
             </div>
           <% end %>
@@ -57,8 +57,8 @@
             <% end %>
           </div>
           <% events.where(start_time: Date.commercial(Date.today.year, number_of_week, 1).beginning_of_week.beginning_of_day..Date.commercial(Date.today.year, number_of_week, 1).beginning_of_week.end_of_day).each do |event| %>
-            <div class="flex justify-start text-left <%= event.kind == 'blocking' ? '' : 'p-1 mb-1 rounded-lg bg-sky-300' %>">
-              <div class="mr-2"><p class="<%= event.kind == 'blocking' ? 'text-black text-opacity-25' : '' %>"><%= event.start_time.strftime('%H:%M') %>:</p></div>
+            <div class="flex flex-col justify-start text-left <%= event.kind == 'blocking' ? 'p-1' : 'p-1 mb-1 rounded-lg bg-sky-300' %>">
+              <div class="mr-2"><p class="<%= event.kind == 'blocking' ? 'text-black text-opacity-25' : '' %>"><%= event.start_time.strftime('%H:%M') %>-<%= event.end_time.strftime('%H:%M') %>:</p></div>
               <div><p class="<%= event.kind == 'blocking' ? 'text-black text-opacity-25' : '' %>"><%= link_to event.title, event_path(event), class: "underline mr-2 break-all" %><% if event.done == true %>&#10004;<% end %></p></div>
             </div>
           <% end %>    
@@ -72,8 +72,8 @@
               <% end %>
             </div>            
             <% events.where(start_time: Date.commercial(Date.today.year, number_of_week, 1).beginning_of_week.next_occurring(day).beginning_of_day..Date.commercial(Date.today.year, number_of_week, 1).beginning_of_week.next_occurring(day).end_of_day).each do |event| %>
-              <div class="flex justify-start text-left <%= event.kind == 'blocking' ? '' : 'p-1 mb-1 rounded-lg bg-sky-300' %>">
-                <div class="mr-2"><p class="<%= event.kind == 'blocking' ? 'text-black text-opacity-25' : '' %>"><%= event.start_time.strftime('%H:%M') %>:</p></div>
+              <div class="flex flex-col justify-start text-left <%= event.kind == 'blocking' ? 'p-1' : 'p-1 mb-1 rounded-lg bg-sky-300' %>">
+                <div class="mr-2"><p class="<%= event.kind == 'blocking' ? 'text-black text-opacity-25' : '' %>"><%= event.start_time.strftime('%H:%M') %>-<%= event.end_time.strftime('%H:%M') %>:</p></div>
                 <div><p class="<%= event.kind == 'blocking' ? 'text-black text-opacity-25' : '' %>"><%= link_to event.title, event_path(event), class: "underline mr-2 break-all" %><% if event.done == true %>&#10004;<% end %></p></div>
               </div>
             <% end %>
