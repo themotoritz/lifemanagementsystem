@@ -5,9 +5,7 @@
         <th class="border-b dark:border-slate-600 font-medium p-4 pl-8 pt-0 pb-3 text-slate-400 dark:text-slate-200 text-left">Title</th>
         <th class="border-b dark:border-slate-600 font-medium p-4 pt-0 pb-3 text-slate-400 dark:text-slate-200 text-left">Kind</th>
         <th class="border-b dark:border-slate-600 font-medium p-4 pt-0 pb-3 text-slate-400 dark:text-slate-200 text-left">Description</th>
-        <th class="border-b dark:border-slate-600 font-medium p-4 pt-0 pb-3 text-slate-400 dark:text-slate-200 text-left">Start time</th>
-        <th class="border-b dark:border-slate-600 font-medium p-4 pt-0 pb-3 text-slate-400 dark:text-slate-200 text-left">Duration</th>
-        <th class="border-b dark:border-slate-600 font-medium p-4 pt-0 pb-3 text-slate-400 dark:text-slate-200 text-left">End time</th>
+        <th class="border-b dark:border-slate-600 font-medium p-4 pt-0 pb-3 text-slate-400 dark:text-slate-200 text-left">Date & Time</th>
         <th class="border-b dark:border-slate-600 font-medium p-4 pt-0 pb-3 text-slate-400 dark:text-slate-200 text-left">Fixed</th>
         <th class="border-b dark:border-slate-600 font-medium p-4 pt-0 pb-3 text-slate-400 dark:text-slate-200 text-left">Action</th>
       </tr>
@@ -23,7 +21,7 @@
               <td class="border-b border-slate-100 dark:border-slate-700 p-4">
                 <%= (Date.today+index).strftime("%Y-%m-%d") %> (KW <%= (Date.today+index).strftime('%V') %>)
               </td>
-              <% 5.times do %>
+              <% 3.times do %>
                 <td class="border-b border-slate-100 dark:border-slate-700 p-4 pl-8 dark:text-slate-400">                
                 </td>
               <% end %>
@@ -40,10 +38,10 @@
                 <div class="my-2">
                   <%= render event %>
                   <td class="border-b border-slate-100 dark:border-slate-700 p-4 pr-8 dark:text-slate-400">
-                    <p class="text-black  <%= event.kind == 'blocking' ? 'text-opacity-25' : '' %>">
+                    <p class="text-base text-black  <%= event.kind == 'blocking' ? 'text-opacity-25' : '' %>">
                       <%= link_to "Anzeigen", event, class: "underline" %>                      
                     </p>
-                    <p class="text-black  <%= event.kind == 'blocking' ? 'text-opacity-25' : '' %>">
+                    <p class="text-base text-black  <%= event.kind == 'blocking' ? 'text-opacity-25' : '' %>">
                       <%= link_to "Editieren", edit_event_path(event), class: "underline" %>
                     </p>
                   </td>
