@@ -24,7 +24,7 @@
                 <%= (Date.today+index).strftime("%Y-%m-%d") %> (KW <%= (Date.today+index).strftime('%V') %>)
               </td>
               <% 5.times do %>
-                <td class="border-b border-slate-100 dark:border-slate-700 p-4 pl-8 text-slate-500 dark:text-slate-400">                
+                <td class="border-b border-slate-100 dark:border-slate-700 p-4 pl-8 dark:text-slate-400">                
                 </td>
               <% end %>
               <td class="border-b border-slate-100 dark:border-slate-700 p-4 pl-8">
@@ -36,14 +36,14 @@
           </tr>
           <% if events.where(start_time: (Date.today+index).beginning_of_day..(Date.today+index).end_of_day).present? %>
             <% events.where(start_time: (Date.today+index).beginning_of_day..(Date.today+index).end_of_day).each_with_index do |event, i| %> 
-              <tr class="<%= event.kind == 'blocking' ? 'bg-gray-300' : '' %>">
+              <tr>
                 <div class="my-2">
                   <%= render event %>
-                  <td class="border-b border-slate-100 dark:border-slate-700 p-4 pr-8 text-slate-500 dark:text-slate-400">
-                    <p>
+                  <td class="border-b border-slate-100 dark:border-slate-700 p-4 pr-8 dark:text-slate-400">
+                    <p class="text-black  <%= event.kind == 'blocking' ? 'text-opacity-25' : '' %>">
                       <%= link_to "Anzeigen", event, class: "underline" %>                      
                     </p>
-                    <p>
+                    <p class="text-black  <%= event.kind == 'blocking' ? 'text-opacity-25' : '' %>">
                       <%= link_to "Editieren", edit_event_path(event), class: "underline" %>
                     </p>
                   </td>

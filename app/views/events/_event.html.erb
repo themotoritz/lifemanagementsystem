@@ -1,7 +1,7 @@
 <div id="<%= dom_id event %>">
   <td class="border-b border-slate-100 dark:border-slate-700 p-4 pl-8 text-slate-500 dark:text-slate-400">
     <div class="flex">
-      <p class="mr-2">
+      <p class="mr-2 text-black  <%= event.kind == 'blocking' ? 'text-opacity-25' : '' %>">
         <%= link_to event.title, event_path(event), class: "underline" %>              
       </p>
       <% if event.done == true %>
@@ -11,37 +11,37 @@
   </td>
 
   <td class="border-b border-slate-100 dark:border-slate-700 p-4 text-slate-500 dark:text-slate-400">
-    <p>
+    <p class="text-black  <%= event.kind == 'blocking' ? 'text-opacity-25' : '' %>">
       <%= fallback_value(event, :kind) %>
     </p>
   </td>
 
   <td class="border-b border-slate-100 dark:border-slate-700 p-4 text-slate-500 dark:text-slate-400">
-    <p>
+    <p class="text-black  <%= event.kind == 'blocking' ? 'text-opacity-25' : '' %>">
       <%= fallback_value(event, :description) %>
     </p>
   </td>
 
   <td class="border-b border-slate-100 dark:border-slate-700 p-4 text-slate-500 dark:text-slate-400">
-    <p>
+    <p class="text-black  <%= event.kind == 'blocking' ? 'text-opacity-25' : '' %>">
       <%= format_datetime(event.start_time, false) %>
     </p>
   </td>
 
   <td class="border-b border-slate-100 dark:border-slate-700 p-4 text-slate-500 dark:text-slate-400">
-    <p>
+    <p class="text-black  <%= event.kind == 'blocking' ? 'text-opacity-25' : '' %>">
       <%= format_seconds_to_time(event.duration) %>
     </p>
   </td>
 
   <td class="border-b border-slate-100 dark:border-slate-700 p-4 text-slate-500 dark:text-slate-400">
-    <p>
+    <p class="text-black  <%= event.kind == 'blocking' ? 'text-opacity-25' : '' %>">
       <%= format_datetime(event.end_time, false) %>
     </p>
   </td>
 
   <td class="border-b border-slate-100 dark:border-slate-700 p-4 text-slate-500 dark:text-slate-400">
-    <p>
+    <p class="text-black  <%= event.kind == 'blocking' ? 'text-opacity-25' : '' %>">
       <%= event.fixed %>
     </p>
   </td>
