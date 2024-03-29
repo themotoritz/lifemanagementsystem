@@ -23,6 +23,14 @@ class Event < ApplicationRecord
     end
   end
 
+  def self.get_group_id
+    if where.not(group_id: nil).last.present?
+      where.not(group_id: nil).order(:group_id).last.group_id + 1
+    else
+      1
+    end
+  end
+
   private
 
   def start_time_before_end_time
