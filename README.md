@@ -14,3 +14,4 @@
 - statistik mit erledigten aufgaben
 - Tasks duplizieren
 - make bulk updating of yearly tasks possible
+- validation does not work for events with recurrence
