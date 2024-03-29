@@ -27,6 +27,12 @@ class EventsController < ApplicationController
 
   # GET /events/1 or /events/1.json
   def show
+    if @event.group_id.present?
+      @group_events = Event.where(group_id: @event.group_id)
+      render 'show_group_events'
+    else
+      render 'show'
+    end
   end
 
   # GET /events/new
