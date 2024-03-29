@@ -15,3 +15,4 @@
 - Tasks duplizieren
 - make bulk updating of yearly tasks possible
 - validation does not work for events with recurrence
+- einstellmöglichkeit für dauer der recurrence
