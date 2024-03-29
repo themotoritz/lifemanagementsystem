@@ -98,9 +98,9 @@ class EventsController < ApplicationController
             format.html { redirect_to event_url(@event), notice: "Event was successfully created." }
             format.json { render :show, status: :created, location: @event }
           else
-            raise ActiveRecord::Rollback
             format.html { render :new, status: :unprocessable_entity }
             format.json { render json: @event.errors, status: :unprocessable_entity }
+            raise ActiveRecord::Rollback
           end
         end
       end
