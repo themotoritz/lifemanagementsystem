@@ -3,7 +3,7 @@
   </div>
   <div class="relative rounded-xl overflow-auto p-8">
     <div class="pb-4 text-xl">KW <%= Date.today.strftime('%V') %></div>
-    <div class="grid grid-cols-7 gap-4 font-mono text-white text-sm text-center font-bold leading-6 bg-stripes-fuchsia rounded-lg">
+    <div class="grid grid-cols-7 gap-4 font-mono text-slate-700 text-sm text-center font-bold leading-6 bg-stripes-fuchsia rounded-lg">
       <div class="p-4 rounded-lg shadow-lg <%= Date.today.monday? ? 'bg-fuchsia-500' : 'bg-white text-slate-700' %>">
         <p class="text-lg pb-4"><%= Date.today.beginning_of_week.strftime("%A %d.%m") %></p>
         <% if Date.today.beginning_of_week >= Date.today %>
@@ -12,7 +12,7 @@
           <% end %>
         <% end %>
         <% events.where(start_time: Date.today.beginning_of_week.beginning_of_day..Date.today.beginning_of_week.end_of_day).each do |event| %>
-          <div class="flex justify-start text-left">
+          <div class="flex justify-start text-left <%= event.kind == 'blocking' ? '' : 'p-1 mb-1 rounded-lg bg-sky-300' %>">
             <div class="mr-2"><p class="<%= event.kind == 'blocking' ? 'text-black text-opacity-25' : '' %>"><%= event.start_time.strftime('%H:%M') %>:</p></div>
             <div><p class="<%= event.kind == 'blocking' ? 'text-black text-opacity-25' : '' %>"><%= link_to event.title, event_path(event), class: "underline mr-2 break-all" %><% if event.done == true %>&#10004;<% end %></p></div>
           </div>
@@ -29,7 +29,7 @@
             <% end %>
           </div>
           <% events.where(start_time: Date.today.beginning_of_week.next_occurring(day).beginning_of_day..Date.today.beginning_of_week.next_occurring(day).end_of_day).each do |event| %>
-            <div class="flex justify-start text-left">
+            <div class="flex justify-start text-left <%= event.kind == 'blocking' ? '' : 'p-1 mb-1 rounded-lg bg-sky-300' %>">
               <div class="mr-2"><p class="<%= event.kind == 'blocking' ? 'text-black text-opacity-25' : '' %>"><%= event.start_time.strftime('%H:%M') %>:</p></div>
               <div><p class="<%= event.kind == 'blocking' ? 'text-black text-opacity-25' : '' %>"><%= link_to event.title, event_path(event), class: "underline mr-2 break-all" %><% if event.done == true %>&#10004;<% end %></p></div>
             </div>
@@ -57,7 +57,7 @@
             <% end %>
           </div>
           <% events.where(start_time: Date.commercial(Date.today.year, number_of_week, 1).beginning_of_week.beginning_of_day..Date.commercial(Date.today.year, number_of_week, 1).beginning_of_week.end_of_day).each do |event| %>
-            <div class="flex justify-start text-left">
+            <div class="flex justify-start text-left <%= event.kind == 'blocking' ? '' : 'p-1 mb-1 rounded-lg bg-sky-300' %>">
               <div class="mr-2"><p class="<%= event.kind == 'blocking' ? 'text-black text-opacity-25' : '' %>"><%= event.start_time.strftime('%H:%M') %>:</p></div>
               <div><p class="<%= event.kind == 'blocking' ? 'text-black text-opacity-25' : '' %>"><%= link_to event.title, event_path(event), class: "underline mr-2 break-all" %><% if event.done == true %>&#10004;<% end %></p></div>
             </div>
@@ -72,7 +72,7 @@
               <% end %>
             </div>            
             <% events.where(start_time: Date.commercial(Date.today.year, number_of_week, 1).beginning_of_week.next_occurring(day).beginning_of_day..Date.commercial(Date.today.year, number_of_week, 1).beginning_of_week.next_occurring(day).end_of_day).each do |event| %>
-              <div class="flex justify-start text-left">
+              <div class="flex justify-start text-left <%= event.kind == 'blocking' ? '' : 'p-1 mb-1 rounded-lg bg-sky-300' %>">
                 <div class="mr-2"><p class="<%= event.kind == 'blocking' ? 'text-black text-opacity-25' : '' %>"><%= event.start_time.strftime('%H:%M') %>:</p></div>
                 <div><p class="<%= event.kind == 'blocking' ? 'text-black text-opacity-25' : '' %>"><%= link_to event.title, event_path(event), class: "underline mr-2 break-all" %><% if event.done == true %>&#10004;<% end %></p></div>
               </div>
