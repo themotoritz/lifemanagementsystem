@@ -478,7 +478,6 @@ class MultipleEventScheduler
       current_time = @event.start_time + 1.day
 
       while current_time <= create_until_date
-        # Skip weekends (Saturday and Sunday)
         unless current_time.saturday? || current_time.sunday?
           event = @event.dup
       
@@ -501,7 +500,6 @@ class MultipleEventScheduler
       current_time = @event.start_time + 1.day
 
       while current_time <= create_until_date
-        # Include weekends (Saturday and Sunday)
         if current_time.saturday? || current_time.sunday?
           event = @event.dup
       
