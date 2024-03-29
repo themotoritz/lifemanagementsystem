@@ -15,14 +15,9 @@
             <% end %>
           </div>
           <% events.where(start_time: Date.new(Time.now.year, Time.now.month, i+1).beginning_of_day..Date.new(Time.now.year, Time.now.month, i+1).end_of_day).each do |event| %>
-            <div class="flex">
-              <p class="mr-2">
-                <%= event.start_time.strftime('%H:%M') %>:
-                <%= link_to event.title, event_path(event), class: "underline" %>                
-              </p>
-              <% if event.done == true %>
-                <span class="material-symbols-outlined">check_circle</span>
-              <% end %>
+            <div class="flex justify-start text-left">
+              <div class="mr-2"><p class="<%= event.kind == 'blocking' ? 'text-black text-opacity-25' : '' %>"><%= event.start_time.strftime('%H:%M') %>:</p></div>
+              <div><p class="<%= event.kind == 'blocking' ? 'text-black text-opacity-25' : '' %>"><%= link_to event.title, event_path(event), class: "underline mr-2 break-all" %><% if event.done == true %>&#10004;<% end %></p></div>
             </div>
           <% end %>
         </div>
@@ -49,10 +44,10 @@
               <% end %>
             </div>
             <% events.where(start_time: Date.new(Time.now.year, number_of_month, i+1).beginning_of_day..Date.new(Time.now.year, number_of_month, i+1).end_of_day).each do |event| %>
-              <p>
-                <%= event.start_time.strftime('%H:%M') %>:
-                <%= link_to event.title, event_path(event), class: "underline" %>
-              </p>
+              <div class="flex justify-start text-left">
+                <div class="mr-2"><p class="<%= event.kind == 'blocking' ? 'text-black text-opacity-25' : '' %>"><%= event.start_time.strftime('%H:%M') %>:</p></div>
+                <div><p class="<%= event.kind == 'blocking' ? 'text-black text-opacity-25' : '' %>"><%= link_to event.title, event_path(event), class: "underline mr-2 break-all" %><% if event.done == true %>&#10004;<% end %></p></div>
+              </div>
             <% end %>
           </div>
         <% end %>
