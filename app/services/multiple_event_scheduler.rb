@@ -464,7 +464,7 @@ class MultipleEventScheduler
           event_scheduler = SingleEventScheduler.new(event)
           event = event_scheduler.schedule
         else
-          date = date = Date.parse(date_param)
+          date = Date.parse(date_param)
           event_scheduler = SingleEventScheduler.new(event)
           event = event_scheduler.schedule_only_day(date)
         end
@@ -475,21 +475,21 @@ class MultipleEventScheduler
         year_counter += 1
       end
     when "weekdays"
-      current_time = @event.start_time.to_date
+      current_time = @event.start_time + 1.day
 
-      while current_time <= create_until_date.to_date
+      while current_time <= create_until_date
         # Skip weekends (Saturday and Sunday)
         unless current_time.saturday? || current_time.sunday?
           event = @event.dup
-          event.start_time = current_time
       
           if time_param.present?
+            event.start_time = current_time
             event_scheduler = SingleEventScheduler.new(event)
             event = event_scheduler.schedule
           else
-            date = Date.parse(date_param)
+            event.end_time = event.start_time = nil
             event_scheduler = SingleEventScheduler.new(event)
-            event = event_scheduler.schedule_only_day(date)
+            event = event_scheduler.schedule_only_day(current_time.to_date)
           end
       
           events << event
@@ -498,28 +498,28 @@ class MultipleEventScheduler
         current_time += 1.day
       end      
     when "weekend"
-      current_time = @event.start_time.to_date
+      current_time = @event.start_time + 1.day
 
-      while current_time <= create_until_date.to_date
+      while current_time <= create_until_date
         # Include weekends (Saturday and Sunday)
         if current_time.saturday? || current_time.sunday?
           event = @event.dup
-          event.start_time = current_time
       
           if time_param.present?
+            event.start_time = current_time
             event_scheduler = SingleEventScheduler.new(event)
             event = event_scheduler.schedule
           else
-            date = Date.parse(date_param)
+            event.end_time = event.start_time = nil
             event_scheduler = SingleEventScheduler.new(event)
-            event = event_scheduler.schedule_only_day(date)
+            event = event_scheduler.schedule_only_day(current_time.to_date)
           end
       
           events << event
         end
-      
+
         current_time += 1.day
-      end      
+      end
     end
 
     events
