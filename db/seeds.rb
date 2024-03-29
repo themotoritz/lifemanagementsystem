@@ -27,7 +27,7 @@ years = 10
       fixed: false
     )
 
-    event_scheduler = EventScheduler.new(event)
+    event_scheduler = SingleEventScheduler.new(event)
     event = event_scheduler.schedule
     event.save!
 
@@ -40,7 +40,7 @@ years = 10
       fixed: false
     )
 
-    event_scheduler = EventScheduler.new(event)
+    event_scheduler = SingleEventScheduler.new(event)
     event = event_scheduler.schedule
     event.save!
   else
@@ -53,7 +53,7 @@ years = 10
       fixed: false
     )
 
-    event_scheduler = EventScheduler.new(event)
+    event_scheduler = SingleEventScheduler.new(event)
     event = event_scheduler.schedule
     event.save!
   end

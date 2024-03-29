@@ -45,7 +45,7 @@ class EventsController < ApplicationController
       event.start_time = nil
       event.end_time = nil
 
-      event_scheduler = EventScheduler.new(event)
+      event_scheduler = SingleEventScheduler.new(event)
       event = event_scheduler.schedule
 
       event.save  
@@ -57,33 +57,37 @@ class EventsController < ApplicationController
   # POST /events or /events.json
   def create
     ActiveRecord::Base.transaction do
-      date = Date.parse(params[:event][:date]) if params[:event][:date].present?
-      time = Time.parse(params[:event][:time]) if params[:event][:time].present?
+      date_param = params[:event][:date]
+      time_param = params[:event][:time]
 
       @event = Event.new(event_params)
       @event.duration = event_params[:duration].to_i*60 if event_params[:duration].present?
       @event.recurrence = params[:event][:recurrence]
 
-      if date.present? && time.present?
-        @event.start_time = DateTime.new(date.year, date.month, date.day, time.hour, time.min, time.sec)
+      if date_param.present? && time_param.present?
+        time_zone = Time.zone
+        datetime_str = "#{date_param} #{time_param}"
+        datetime_with_zone = Time.zone.parse(datetime_str)
+        @event.start_time = datetime_with_zone
         
-        event_scheduler = EventScheduler.new(@event)
+        event_scheduler = SingleEventScheduler.new(@event)
         @event = event_scheduler.schedule
-      elsif time.blank? && date.present?
-        event_scheduler = EventScheduler.new(@event)
+      elsif time_param.blank? && date_param.present?
+        date = Date.parse(params[:event][:date])
+        event_scheduler = SingleEventScheduler.new(@event)
         @event = event_scheduler.schedule_only_day(date)
-      elsif date.blank? && time.blank?
-        event_scheduler = EventScheduler.new(@event)
+      elsif date_param.blank? && time_param.blank?
+        event_scheduler = SingleEventScheduler.new(@event)
         @event = event_scheduler.schedule
       else
         raise "unknown case"
-        event_scheduler = EventScheduler.new(@event)
+        event_scheduler = SingleEventScheduler.new(@event)
         @event = event_scheduler.schedule
       end
 
       if @event.recurrence != "onetime"
-        event_scheduler = EventScheduler.new(@event)
-        events = event_scheduler.create_remaining_events(date, time)
+        event_scheduler = MultipleEventScheduler.new(@event)
+        events = event_scheduler.create_events(date_param, time_param)
       end
 
       respond_to do |format|
@@ -123,12 +127,12 @@ class EventsController < ApplicationController
         @event.end_time = nil
         @event.start_time = start_time.to_time
 
-        event_scheduler = EventScheduler.new(@event)
+        event_scheduler = SingleEventScheduler.new(@event)
         @event = event_scheduler.schedule
       end
     elsif time.nil? || time.empty?
       @event.end_time = nil
-      event_scheduler = EventScheduler.new(@event)
+      event_scheduler = SingleEventScheduler.new(@event)
       @event = event_scheduler.schedule_only_day(date)
     else
     end
@@ -140,7 +144,7 @@ class EventsController < ApplicationController
       @event.end_time = nil
       @event.duration = params[:event][:duration].to_i
 
-      event_scheduler = EventScheduler.new(@event)
+      event_scheduler = SingleEventScheduler.new(@event)
       @event = event_scheduler.schedule
     end
 
@@ -189,7 +193,7 @@ class EventsController < ApplicationController
           else
             date = @event.start_time.to_date
             @event.start_time = @event.end_time = nil
-            event_scheduler = EventScheduler.new(@event)
+            event_scheduler = SingleEventScheduler.new(@event)
             @event = event_scheduler.schedule_only_day(date)
             raise ActiveRecord::Rollback unless @event.save!
           end
