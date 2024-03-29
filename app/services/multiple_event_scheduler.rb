@@ -3,7 +3,7 @@ class MultipleEventScheduler
     @event = event
   end
 
-  def create_events(date, time)
+  def create_events(date_param, time_param)
     events = []
 
     case @event.recurrence
@@ -368,6 +368,14 @@ class MultipleEventScheduler
         eleven_month_counter += 1
       end    
     when "yearly"
+      group_id = Event.get_group_id
+
+      if group_id == nil || Event.where(group_id: group_id).present?
+        raise "FATAL: should not be possible"
+      end
+
+      @event.update(group_id: group_id)
+
       events << @event 
 
       create_until_date = 10.years.from_now.end_of_month
@@ -377,11 +385,18 @@ class MultipleEventScheduler
       while current_time <= create_until_date
         event = @event.dup
         event.start_time = current_time
-        if @event.end_time.present?
-          event.end_time = @event.end_time + year_counter.year
+
+        if time_param.present?
+          event_scheduler = SingleEventScheduler.new(event)
+          event = event_scheduler.schedule
+        else
+          date = date = Date.parse(date_param)
+          event_scheduler = SingleEventScheduler.new(event)
+          event = event_scheduler.schedule_only_day(date)
         end
+
         events << event
-    
+
         current_time += 1.year
         year_counter += 1
       end
