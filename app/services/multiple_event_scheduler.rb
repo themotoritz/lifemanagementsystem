@@ -18,10 +18,8 @@ class MultipleEventScheduler
       current_time = @event.start_time.to_date
 
       while current_time <= create_until_date.to_date
-        event = @event.dup
-        
-        event = call_single_event_scheduler(event, time_param, current_time)
-      
+        event = @event.dup        
+        event = call_single_event_scheduler(event, time_param, current_time)      
         events << event
       
         current_time += 1.day
@@ -32,9 +30,7 @@ class MultipleEventScheduler
 
       while current_time <= create_until_date
         event = @event.dup
-        
         event = call_single_event_scheduler(event, time_param, current_time)
-
         events << event
 
         current_time += 2.days
@@ -46,9 +42,7 @@ class MultipleEventScheduler
 
       while current_time <= create_until_date
         event = @event.dup
-        
         event = call_single_event_scheduler(event, time_param, current_time)
-
         events << event
 
         current_time += 3.days
@@ -60,9 +54,7 @@ class MultipleEventScheduler
 
       while current_time <= create_until_date
         event = @event.dup
-        
         event = call_single_event_scheduler(event, time_param, current_time)
-
         events << event
 
         current_time += 4.days
@@ -74,9 +66,7 @@ class MultipleEventScheduler
 
       while current_time <= create_until_date
         event = @event.dup
-        
         event = call_single_event_scheduler(event, time_param, current_time)
-
         events << event
 
         current_time += 5.days
@@ -88,9 +78,7 @@ class MultipleEventScheduler
 
       while current_time <= create_until_date
         event = @event.dup
-        
         event = call_single_event_scheduler(event, time_param, current_time)
-
         events << event
 
         current_time += 6.days
@@ -101,10 +89,8 @@ class MultipleEventScheduler
       week_counter = 1
       
       while current_time <= create_until_date
-        event = @event.dup
-        
-        event = call_single_event_scheduler(event, time_param, current_time)
-      
+        event = @event.dup        
+        event = call_single_event_scheduler(event, time_param, current_time)      
         events << event
       
         current_time += 1.week
@@ -116,9 +102,7 @@ class MultipleEventScheduler
 
       while current_time <= create_until_date
         event = @event.dup
-        
         event = call_single_event_scheduler(event, time_param, current_time)
-
         events << event
 
         current_time += 2.weeks
@@ -130,9 +114,7 @@ class MultipleEventScheduler
 
       while current_time <= create_until_date
         event = @event.dup
-        
         event = call_single_event_scheduler(event, time_param, current_time)
-
         events << event
 
         current_time += 3.weeks
@@ -144,9 +126,7 @@ class MultipleEventScheduler
 
       while current_time <= create_until_date
         event = @event.dup
-        
         event = call_single_event_scheduler(event, time_param, current_time)
-
         events << event
 
         current_time += 1.month
@@ -158,9 +138,7 @@ class MultipleEventScheduler
 
       while current_time <= create_until_date
         event = @event.dup
-        
         event = call_single_event_scheduler(event, time_param, current_time)
-
         events << event
 
         current_time = current_time.next_month.next_month
@@ -171,10 +149,8 @@ class MultipleEventScheduler
       three_month_counter = 1
       
       while current_time <= create_until_date
-        event = @event.dup
-        
-        event = call_single_event_scheduler(event, time_param, current_time)
-      
+        event = @event.dup        
+        event = call_single_event_scheduler(event, time_param, current_time)      
         events << event
       
         current_time += 3.months
@@ -186,9 +162,7 @@ class MultipleEventScheduler
 
       while current_time <= create_until_date
         event = @event.dup
-        
         event = call_single_event_scheduler(event, time_param, current_time)
-
         events << event
 
         current_time += 4.months
@@ -200,9 +174,7 @@ class MultipleEventScheduler
 
       while current_time <= create_until_date
         event = @event.dup
-        
         event = call_single_event_scheduler(event, time_param, current_time)
-
         events << event
 
         current_time += 5.months
@@ -214,9 +186,7 @@ class MultipleEventScheduler
 
       while current_time <= create_until_date
         event = @event.dup
-        
         event = call_single_event_scheduler(event, time_param, current_time)
-
         events << event
 
         current_time += 6.months
@@ -228,9 +198,7 @@ class MultipleEventScheduler
 
       while current_time <= create_until_date
         event = @event.dup
-        
         event = call_single_event_scheduler(event, time_param, current_time)
-
         events << event
 
         current_time += 7.months
@@ -242,9 +210,7 @@ class MultipleEventScheduler
 
       while current_time <= create_until_date
         event = @event.dup
-        
         event = call_single_event_scheduler(event, time_param, current_time)
-
         events << event
 
         current_time += 8.months
@@ -256,9 +222,7 @@ class MultipleEventScheduler
 
       while current_time <= create_until_date
         event = @event.dup
-        
         event = call_single_event_scheduler(event, time_param, current_time)
-
         events << event
 
         current_time += 9.months
@@ -270,9 +234,7 @@ class MultipleEventScheduler
 
       while current_time <= create_until_date
         event = @event.dup
-        
         event = call_single_event_scheduler(event, time_param, current_time)
-
         events << event
 
         current_time += 10.months
@@ -284,9 +246,7 @@ class MultipleEventScheduler
 
       while current_time <= create_until_date
         event = @event.dup
-        
         event = call_single_event_scheduler(event, time_param, current_time)
-
         events << event
 
         current_time += 11.months
@@ -298,9 +258,7 @@ class MultipleEventScheduler
 
       while current_time <= create_until_date
         event = @event.dup
-
         event = call_single_event_scheduler(event, time_param, current_time)
-
         events << event
 
         current_time += 1.year
@@ -312,9 +270,7 @@ class MultipleEventScheduler
       while current_time <= create_until_date
         unless current_time.saturday? || current_time.sunday?
           event = @event.dup
-      
           event = call_single_event_scheduler(event, time_param, current_time)
-      
           events << event
         end
       
@@ -326,9 +282,7 @@ class MultipleEventScheduler
       while current_time <= create_until_date
         if current_time.saturday? || current_time.sunday?
           event = @event.dup
-      
           event = call_single_event_scheduler(event, time_param, current_time)
-      
           events << event
         end
 
