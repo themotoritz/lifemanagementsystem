@@ -55,7 +55,7 @@ class Event < ApplicationRecord
     if start_time.present?
       overlapping_events = Event.where.not(id: id).where("start_time < ? AND end_time > ?", end_time, start_time)
       if overlapping_events.any?
-        errors.add(:start_time, "is within another event's time frame: #{overlapping_events.pluck(:title)}")
+        errors.add(:start_time, "is within another event's time frame: #{overlapping_events.all.each {|event| puts event}}")
         self.start_time = self.end_time = self.duration = nil
       end
     end
