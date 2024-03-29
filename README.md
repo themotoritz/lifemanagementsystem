@@ -16,3 +16,4 @@
 - make bulk updating of yearly tasks possible
 - validation does not work for events with recurrence
 - einstellmöglichkeit für dauer der recurrence
+- make it possible to schedule event during work (e.g. Friseur)
