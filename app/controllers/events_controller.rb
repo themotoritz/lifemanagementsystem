@@ -56,51 +56,52 @@ class EventsController < ApplicationController
 
   # POST /events or /events.json
   def create
-    date = Date.parse(params[:event][:date]) if params[:event][:date].present?
-    time = Time.parse(params[:event][:time]) if params[:event][:time].present?
+    ActiveRecord::Base.transaction do
+      date = Date.parse(params[:event][:date]) if params[:event][:date].present?
+      time = Time.parse(params[:event][:time]) if params[:event][:time].present?
 
-    @event = Event.new(event_params)
-    @event.duration = event_params[:duration].to_i*60 if event_params[:duration].present?
-    @event.recurrence = params[:event][:recurrence]
+      @event = Event.new(event_params)
+      @event.duration = event_params[:duration].to_i*60 if event_params[:duration].present?
+      @event.recurrence = params[:event][:recurrence]
 
-    if date.present? && time.present?
-      @event.start_time = DateTime.new(date.year, date.month, date.day, time.hour, time.min, time.sec)
-      
-      event_scheduler = EventScheduler.new(@event)
-      @event = event_scheduler.schedule
-    elsif time.blank? && date.present?
-      event_scheduler = EventScheduler.new(@event)
-      @event = event_scheduler.schedule_only_day(date)
-    elsif date.blank? && time.blank?
-      event_scheduler = EventScheduler.new(@event)
-      @event = event_scheduler.schedule
-    else
-      raise "unknown case"
-      event_scheduler = EventScheduler.new(@event)
-      @event = event_scheduler.schedule
-    end
-
-    if @event.recurrence != "onetime"
-      event_scheduler = EventScheduler.new(@event)
-      events = event_scheduler.create_remaining_events 
-    end
-
-    respond_to do |format|
-      if events.present?
-        ActiveRecord::Base.transaction do
-          events.each do |event|
-            raise ActiveRecord::Rollback unless event.save!
-          end
-        end
-        format.html { redirect_to events_url, notice: "Events were successfully created." }
-        format.json { render :index, status: :created }
+      if date.present? && time.present?
+        @event.start_time = DateTime.new(date.year, date.month, date.day, time.hour, time.min, time.sec)
+        
+        event_scheduler = EventScheduler.new(@event)
+        @event = event_scheduler.schedule
+      elsif time.blank? && date.present?
+        event_scheduler = EventScheduler.new(@event)
+        @event = event_scheduler.schedule_only_day(date)
+      elsif date.blank? && time.blank?
+        event_scheduler = EventScheduler.new(@event)
+        @event = event_scheduler.schedule
       else
-        if @event.save
-          format.html { redirect_to event_url(@event), notice: "Event was successfully created." }
-          format.json { render :show, status: :created, location: @event }
+        raise "unknown case"
+        event_scheduler = EventScheduler.new(@event)
+        @event = event_scheduler.schedule
+      end
+
+      if @event.recurrence != "onetime"
+        event_scheduler = EventScheduler.new(@event)
+        events = event_scheduler.create_remaining_events(date, time)
+      end
+
+      respond_to do |format|
+        if events.present?
+            events.each do |event|
+              raise ActiveRecord::Rollback unless event.save!
+            end
+          format.html { redirect_to events_url, notice: "Events were successfully created." }
+          format.json { render :index, status: :created }
         else
-          format.html { render :new, status: :unprocessable_entity }
-          format.json { render json: @event.errors, status: :unprocessable_entity }
+          if @event.save
+            format.html { redirect_to event_url(@event), notice: "Event was successfully created." }
+            format.json { render :show, status: :created, location: @event }
+          else
+            raise ActiveRecord::Rollback
+            format.html { render :new, status: :unprocessable_entity }
+            format.json { render json: @event.errors, status: :unprocessable_entity }
+          end
         end
       end
     end
