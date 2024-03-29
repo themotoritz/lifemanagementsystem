@@ -19,15 +19,15 @@ class MultipleEventScheduler
 
       while current_time <= create_until_date.to_date
         event = @event.dup
-        event.start_time = current_time
-      
+        
         if time_param.present?
+          event.start_time = current_time
           event_scheduler = SingleEventScheduler.new(event)
           event = event_scheduler.schedule
         else
-          date = Date.parse(date_param)
+          event.end_time = event.start_time = nil
           event_scheduler = SingleEventScheduler.new(event)
-          event = event_scheduler.schedule_only_day(date)
+          event = event_scheduler.schedule_only_day(current_time.to_date)
         end
       
         events << event
@@ -40,15 +40,15 @@ class MultipleEventScheduler
 
       while current_time <= create_until_date
         event = @event.dup
-        event.start_time = current_time
-
+        
         if time_param.present?
+          event.start_time = current_time
           event_scheduler = SingleEventScheduler.new(event)
           event = event_scheduler.schedule
         else
-          date = Date.parse(date_param)
+          event.end_time = event.start_time = nil
           event_scheduler = SingleEventScheduler.new(event)
-          event = event_scheduler.schedule_only_day(date)
+          event = event_scheduler.schedule_only_day(current_time.to_date)
         end
 
         events << event
@@ -62,15 +62,15 @@ class MultipleEventScheduler
 
       while current_time <= create_until_date
         event = @event.dup
-        event.start_time = current_time
-
+        
         if time_param.present?
+          event.start_time = current_time
           event_scheduler = SingleEventScheduler.new(event)
           event = event_scheduler.schedule
         else
-          date = Date.parse(date_param)
+          event.end_time = event.start_time = nil
           event_scheduler = SingleEventScheduler.new(event)
-          event = event_scheduler.schedule_only_day(date)
+          event = event_scheduler.schedule_only_day(current_time.to_date)
         end
 
         events << event
@@ -84,15 +84,15 @@ class MultipleEventScheduler
 
       while current_time <= create_until_date
         event = @event.dup
-        event.start_time = current_time
-
+        
         if time_param.present?
+          event.start_time = current_time
           event_scheduler = SingleEventScheduler.new(event)
           event = event_scheduler.schedule
         else
-          date = Date.parse(date_param)
+          event.end_time = event.start_time = nil
           event_scheduler = SingleEventScheduler.new(event)
-          event = event_scheduler.schedule_only_day(date)
+          event = event_scheduler.schedule_only_day(current_time.to_date)
         end
 
         events << event
@@ -106,15 +106,15 @@ class MultipleEventScheduler
 
       while current_time <= create_until_date
         event = @event.dup
-        event.start_time = current_time
-
+        
         if time_param.present?
+          event.start_time = current_time
           event_scheduler = SingleEventScheduler.new(event)
           event = event_scheduler.schedule
         else
-          date = Date.parse(date_param)
+          event.end_time = event.start_time = nil
           event_scheduler = SingleEventScheduler.new(event)
-          event = event_scheduler.schedule_only_day(date)
+          event = event_scheduler.schedule_only_day(current_time.to_date)
         end
 
         events << event
@@ -128,15 +128,15 @@ class MultipleEventScheduler
 
       while current_time <= create_until_date
         event = @event.dup
-        event.start_time = current_time
-
+        
         if time_param.present?
+          event.start_time = current_time
           event_scheduler = SingleEventScheduler.new(event)
           event = event_scheduler.schedule
         else
-          date = Date.parse(date_param)
+          event.end_time = event.start_time = nil
           event_scheduler = SingleEventScheduler.new(event)
-          event = event_scheduler.schedule_only_day(date)
+          event = event_scheduler.schedule_only_day(current_time.to_date)
         end
 
         events << event
@@ -150,15 +150,15 @@ class MultipleEventScheduler
       
       while current_time <= create_until_date
         event = @event.dup
-        event.start_time = current_time
-      
+        
         if time_param.present?
+          event.start_time = current_time
           event_scheduler = SingleEventScheduler.new(event)
           event = event_scheduler.schedule
         else
-          date = Date.parse(date_param)
+          event.end_time = event.start_time = nil
           event_scheduler = SingleEventScheduler.new(event)
-          event = event_scheduler.schedule_only_day(date)
+          event = event_scheduler.schedule_only_day(current_time.to_date)
         end
       
         events << event
@@ -172,15 +172,15 @@ class MultipleEventScheduler
 
       while current_time <= create_until_date
         event = @event.dup
-        event.start_time = current_time
-
+        
         if time_param.present?
+          event.start_time = current_time
           event_scheduler = SingleEventScheduler.new(event)
           event = event_scheduler.schedule
         else
-          date = Date.parse(date_param)
+          event.end_time = event.start_time = nil
           event_scheduler = SingleEventScheduler.new(event)
-          event = event_scheduler.schedule_only_day(date)
+          event = event_scheduler.schedule_only_day(current_time.to_date)
         end
 
         events << event
@@ -194,15 +194,15 @@ class MultipleEventScheduler
 
       while current_time <= create_until_date
         event = @event.dup
-        event.start_time = current_time
-
+        
         if time_param.present?
+          event.start_time = current_time
           event_scheduler = SingleEventScheduler.new(event)
           event = event_scheduler.schedule
         else
-          date = Date.parse(date_param)
+          event.end_time = event.start_time = nil
           event_scheduler = SingleEventScheduler.new(event)
-          event = event_scheduler.schedule_only_day(date)
+          event = event_scheduler.schedule_only_day(current_time.to_date)
         end
 
         events << event
@@ -216,15 +216,15 @@ class MultipleEventScheduler
 
       while current_time <= create_until_date
         event = @event.dup
-        event.start_time = current_time
-
+        
         if time_param.present?
+          event.start_time = current_time
           event_scheduler = SingleEventScheduler.new(event)
           event = event_scheduler.schedule
         else
-          date = Date.parse(date_param)
+          event.end_time = event.start_time = nil
           event_scheduler = SingleEventScheduler.new(event)
-          event = event_scheduler.schedule_only_day(date)
+          event = event_scheduler.schedule_only_day(current_time.to_date)
         end
 
         events << event
@@ -238,15 +238,15 @@ class MultipleEventScheduler
 
       while current_time <= create_until_date
         event = @event.dup
-        event.start_time = current_time
-
+        
         if time_param.present?
+          event.start_time = current_time
           event_scheduler = SingleEventScheduler.new(event)
           event = event_scheduler.schedule
         else
-          date = Date.parse(date_param)
+          event.end_time = event.start_time = nil
           event_scheduler = SingleEventScheduler.new(event)
-          event = event_scheduler.schedule_only_day(date)
+          event = event_scheduler.schedule_only_day(current_time.to_date)
         end
 
         events << event
@@ -260,15 +260,15 @@ class MultipleEventScheduler
       
       while current_time <= create_until_date
         event = @event.dup
-        event.start_time = current_time
-      
+        
         if time_param.present?
+          event.start_time = current_time
           event_scheduler = SingleEventScheduler.new(event)
           event = event_scheduler.schedule
         else
-          date = Date.parse(date_param)
+          event.end_time = event.start_time = nil
           event_scheduler = SingleEventScheduler.new(event)
-          event = event_scheduler.schedule_only_day(date)
+          event = event_scheduler.schedule_only_day(current_time.to_date)
         end
       
         events << event
@@ -282,15 +282,15 @@ class MultipleEventScheduler
 
       while current_time <= create_until_date
         event = @event.dup
-        event.start_time = current_time
-
+        
         if time_param.present?
+          event.start_time = current_time
           event_scheduler = SingleEventScheduler.new(event)
           event = event_scheduler.schedule
         else
-          date = Date.parse(date_param)
+          event.end_time = event.start_time = nil
           event_scheduler = SingleEventScheduler.new(event)
-          event = event_scheduler.schedule_only_day(date)
+          event = event_scheduler.schedule_only_day(current_time.to_date)
         end
 
         events << event
@@ -304,15 +304,15 @@ class MultipleEventScheduler
 
       while current_time <= create_until_date
         event = @event.dup
-        event.start_time = current_time
-
+        
         if time_param.present?
+          event.start_time = current_time
           event_scheduler = SingleEventScheduler.new(event)
           event = event_scheduler.schedule
         else
-          date = Date.parse(date_param)
+          event.end_time = event.start_time = nil
           event_scheduler = SingleEventScheduler.new(event)
-          event = event_scheduler.schedule_only_day(date)
+          event = event_scheduler.schedule_only_day(current_time.to_date)
         end
 
         events << event
@@ -326,15 +326,15 @@ class MultipleEventScheduler
 
       while current_time <= create_until_date
         event = @event.dup
-        event.start_time = current_time
-
+        
         if time_param.present?
+          event.start_time = current_time
           event_scheduler = SingleEventScheduler.new(event)
           event = event_scheduler.schedule
         else
-          date = Date.parse(date_param)
+          event.end_time = event.start_time = nil
           event_scheduler = SingleEventScheduler.new(event)
-          event = event_scheduler.schedule_only_day(date)
+          event = event_scheduler.schedule_only_day(current_time.to_date)
         end
 
         events << event
@@ -348,15 +348,15 @@ class MultipleEventScheduler
 
       while current_time <= create_until_date
         event = @event.dup
-        event.start_time = current_time
-
+        
         if time_param.present?
+          event.start_time = current_time
           event_scheduler = SingleEventScheduler.new(event)
           event = event_scheduler.schedule
         else
-          date = Date.parse(date_param)
+          event.end_time = event.start_time = nil
           event_scheduler = SingleEventScheduler.new(event)
-          event = event_scheduler.schedule_only_day(date)
+          event = event_scheduler.schedule_only_day(current_time.to_date)
         end
 
         events << event
@@ -370,15 +370,15 @@ class MultipleEventScheduler
 
       while current_time <= create_until_date
         event = @event.dup
-        event.start_time = current_time
-
+        
         if time_param.present?
+          event.start_time = current_time
           event_scheduler = SingleEventScheduler.new(event)
           event = event_scheduler.schedule
         else
-          date = Date.parse(date_param)
+          event.end_time = event.start_time = nil
           event_scheduler = SingleEventScheduler.new(event)
-          event = event_scheduler.schedule_only_day(date)
+          event = event_scheduler.schedule_only_day(current_time.to_date)
         end
 
         events << event
@@ -392,15 +392,15 @@ class MultipleEventScheduler
 
       while current_time <= create_until_date
         event = @event.dup
-        event.start_time = current_time
-
+        
         if time_param.present?
+          event.start_time = current_time
           event_scheduler = SingleEventScheduler.new(event)
           event = event_scheduler.schedule
         else
-          date = Date.parse(date_param)
+          event.end_time = event.start_time = nil
           event_scheduler = SingleEventScheduler.new(event)
-          event = event_scheduler.schedule_only_day(date)
+          event = event_scheduler.schedule_only_day(current_time.to_date)
         end
 
         events << event
@@ -414,15 +414,15 @@ class MultipleEventScheduler
 
       while current_time <= create_until_date
         event = @event.dup
-        event.start_time = current_time
-
+        
         if time_param.present?
+          event.start_time = current_time
           event_scheduler = SingleEventScheduler.new(event)
           event = event_scheduler.schedule
         else
-          date = Date.parse(date_param)
+          event.end_time = event.start_time = nil
           event_scheduler = SingleEventScheduler.new(event)
-          event = event_scheduler.schedule_only_day(date)
+          event = event_scheduler.schedule_only_day(current_time.to_date)
         end
 
         events << event
@@ -436,15 +436,15 @@ class MultipleEventScheduler
 
       while current_time <= create_until_date
         event = @event.dup
-        event.start_time = current_time
-
+        
         if time_param.present?
+          event.start_time = current_time
           event_scheduler = SingleEventScheduler.new(event)
           event = event_scheduler.schedule
         else
-          date = Date.parse(date_param)
+          event.end_time = event.start_time = nil
           event_scheduler = SingleEventScheduler.new(event)
-          event = event_scheduler.schedule_only_day(date)
+          event = event_scheduler.schedule_only_day(current_time.to_date)
         end
 
         events << event
@@ -458,15 +458,15 @@ class MultipleEventScheduler
 
       while current_time <= create_until_date
         event = @event.dup
-        event.start_time = current_time
 
         if time_param.present?
+          event.start_time = current_time
           event_scheduler = SingleEventScheduler.new(event)
           event = event_scheduler.schedule
         else
-          date = Date.parse(date_param)
+          event.end_time = event.start_time = nil
           event_scheduler = SingleEventScheduler.new(event)
-          event = event_scheduler.schedule_only_day(date)
+          event = event_scheduler.schedule_only_day(current_time.to_date)
         end
 
         events << event
