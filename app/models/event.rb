@@ -66,8 +66,8 @@ class Event < ApplicationRecord
     closest_subsequent_timeslot = Timeslot.where("start_time >= ?", end_time).order(:start_time).first
 
     new_end_time = closest_subsequent_timeslot.end_time
-    closest_subsequent_timeslot.destroy
-    closest_previous_timeslot.update(end_time: new_end_time)
+    closest_subsequent_timeslot.destroy 
+    closest_previous_timeslot.update(end_time: new_end_time) if closest_previous_timeslot.present?
   end
 
   def destroy_obsolete_timeslots
