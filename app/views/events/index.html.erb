@@ -14,33 +14,33 @@
 
   <div>
     <%= link_to events_path(current_view: "today"), data: { turbo: false } do %>
-      <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-3 px-3 rounded">
-        <span class="material-symbols-outlined inline-block align-middle" title="Ansicht heute">calendar_today</span>
+      <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-3 px-3 rounded" title="Ansicht heute">
+        <span class="material-symbols-outlined inline-block align-middle">calendar_today</span>
       </button>
     <% end %>
     <%= link_to events_path(current_view: "this_week"), data: { turbo: false } do %>
-     <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-3 px-3 rounded">
-        <span class="material-symbols-outlined inline-block align-middle" title="Ansicht diese Woche">calendar_view_week</span>
+     <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-3 px-3 rounded" title="Ansicht diese Woche">
+        <span class="material-symbols-outlined inline-block align-middle">calendar_view_week</span>
       </button>
     <% end %>
     <%= link_to events_path(current_view: "this_month"), data: { turbo: false } do %>
-      <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-3 px-3 rounded">
-        <span class="material-symbols-outlined inline-block align-middle" title="Ansicht dieser Monat">calendar_month</span>
+      <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-3 px-3 rounded" title="Ansicht dieser Monat">
+        <span class="material-symbols-outlined inline-block align-middle">calendar_month</span>
       </button>
     <% end %>
     <%= link_to events_path(current_view: "this_year"), data: { turbo: false } do %>
-      <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-3 px-3 rounded">
-        <p class="inline-block align-middle" title="Ansicht dieses Jahr"><%= Date.today.year %></p>
+      <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-3 px-3 rounded" title="Ansicht dieses Jahr">
+        <p class="inline-block align-middle"><%= Date.today.year %></p>
       </button>
     <% end %>
     <%= link_to reschedule_past_events_path, data: { turbo: false } do %>
-      <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-3 px-3 rounded">
-        <span class="material-symbols-outlined inline-block align-middle" title="Reschedule Past Events">autorenew</span>
+      <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-3 px-3 rounded" title="Reschedule Past Events">
+        <span class="material-symbols-outlined inline-block align-middle">autorenew</span>
       </button>
     <% end %> 
     <%= link_to export_events_to_csv_path(format: 'csv'), data: { turbo: false } do %>
-      <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-3 px-3 rounded">
-        <span class="material-symbols-outlined inline-block align-middle" title="Export Events to CSV">csv</span>
+      <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-3 px-3 rounded" title="Export Events to CSV">
+        <span class="material-symbols-outlined inline-block align-middle">csv</span>
       </button>
     <% end %> 
   </div>
