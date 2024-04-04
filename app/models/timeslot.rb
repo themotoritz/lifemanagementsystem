@@ -11,25 +11,36 @@ class Timeslot < ApplicationRecord
     self.size = end_time - start_time
   end
 
-  def self.now
-    where("start_time < ?", Time.now).where("end_time > ?", Time.now)
+  def self.current
+    find_by("start_time < ? AND end_time > ?", Time.now, Time.now)
+  end
+
+  def self.next
+    order(:start_time).first
   end
 
   def self.update_current_timeslot
-    if Timeslot.now.count > 1
-      raise "FATAL: should not be possible"
-    end
-
-    current_timeslot =  Timeslot.now
+    current_timeslot = Timeslot.current
 
     if current_timeslot.present?
-      if current_timeslot.end_time > Time.now + 5.minutes
-        current_timeslot.update(start_time: Time.now + 5.minutes)
-      elsif current_timeslot.end_time <= Time.now + 5.minutes
-        current_timeslot.destroy
-      else
-        raise "FATAL: case not covered"
-      end
+      current_timeslot.update_or_destroy_if_too_small
     end
+  end
+
+  def update_or_destroy_if_too_small
+    bigger_than_5_minutes = end_time > Time.now + 5.minutes
+    smaller_than_5_minutes = end_time <= Time.now + 5.minutes
+
+    if bigger_than_5_minutes
+      postpone_by(5.minutes)
+    elsif smaller_than_5_minutes
+      destroy!
+    else
+      raise "FATAL: case not covered"
+    end
+  end
+
+  def postpone_by(interval)
+    update!(start_time: Time.now + interval)
   end
 end
