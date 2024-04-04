@@ -12,6 +12,14 @@ class Event < ApplicationRecord
   after_destroy :merge_surrounding_timeslots
   after_commit :destroy_obsolete_timeslots
 
+  def self.current
+    find_by("start_time < ? AND end_time > ?", Time.now, Time.now)
+  end
+
+  def self.next
+    order(:start_time).first
+  end
+
   def self.export_to_csv
     attributes = ["kind", "start_time", "end_time", "duration", "fixed", "description", "title", "done"] 
     CSV.generate(headers: true) do |csv|
