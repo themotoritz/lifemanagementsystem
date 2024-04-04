@@ -4,23 +4,7 @@ class SingleEventScheduler
   end
 
   def schedule
-    if Timeslot.current_timeslot.count > 1
-      raise "FATAL: should not be possible"
-    end
-
-    current_timeslot =  Timeslot.current_timeslot.first
-
-    if current_timeslot.present?
-      if current_timeslot.end_time > Time.now + 5.minutes
-        current_timeslot.update(start_time: Time.now + 5.minutes)
-      elsif current_timeslot.end_time <= Time.now + 5.minutes
-        current_timeslot.destroy
-      else
-        raise "FATAL: case not covered"
-      end
-    end
-
-    timeslot = nil
+    Timeslot.update_current_timeslot
 
     if @event.end_time.nil?
       @event.duration = 15.minutes if @event.duration.nil?
@@ -36,23 +20,7 @@ class SingleEventScheduler
   end
 
   def schedule_only_day(date)
-    if Timeslot.current_timeslot.count > 1
-      raise "FATAL: should not be possible"
-    end
-
-    current_timeslot =  Timeslot.current_timeslot.first
-
-    if current_timeslot.present?
-      if current_timeslot.end_time > Time.now + 5.minutes
-        current_timeslot.update(start_time: Time.now + 5.minutes)
-      elsif current_timeslot.end_time <= Time.now + 5.minutes
-        current_timeslot.destroy
-      else
-        raise "FATAL: case not covered"
-      end
-    end
-
-    timeslot = nil
+    Timeslot.update_current_timeslot
 
     if @event.end_time.nil?
       @event.duration = 15.minutes if @event.duration.nil?
