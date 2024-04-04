@@ -17,3 +17,12 @@
 - validation does not work for events with recurrence
 - einstellmöglichkeit für dauer der recurrence
 - make it possible to schedule event during work (e.g. Friseur)
+- oben links unter Kalender hinweis wie viele unerledigte tasks rescheduled werden msüsen
+- tasks mit abhängigkeiten (blocking etc.)
+- erledigte Tasks anzeigen
+- deadlines
+- rückgängig machen, warnung vorm löschen
+- logic that makes sure events and timeslots do not overlap
+- timeslots überhaupt notwendig?
+- fix time fix date
+- importer is missing group id, occurrence
