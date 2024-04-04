@@ -10,4 +10,8 @@ class Timeslot < ApplicationRecord
   def update_size
     self.size = end_time - start_time
   end
+
+  def self.current_timeslot
+    where("start_time < ?", Time.now).where("end_time > ?", Time.now)
+  end
 end

@@ -4,11 +4,11 @@ class SingleEventScheduler
   end
 
   def schedule
-    if Timeslot.where("start_time < ?", Time.now).where("end_time > ?", Time.now).count > 1
+    if Timeslot.current_timeslot.count > 1
       raise "FATAL: should not be possible"
     end
 
-    current_timeslot =  Timeslot.where("start_time < ?", Time.now).where("end_time > ?", Time.now).first
+    current_timeslot =  Timeslot.current_timeslot.first
 
     if current_timeslot.present?
       if current_timeslot.end_time > Time.now + 5.minutes
@@ -36,11 +36,11 @@ class SingleEventScheduler
   end
 
   def schedule_only_day(date)
-    if Timeslot.where("start_time < ?", Time.now).where("end_time > ?", Time.now).count > 1
+    if Timeslot.current_timeslot.count > 1
       raise "FATAL: should not be possible"
     end
 
-    current_timeslot =  Timeslot.where("start_time < ?", Time.now).where("end_time > ?", Time.now).first
+    current_timeslot =  Timeslot.current_timeslot.first
 
     if current_timeslot.present?
       if current_timeslot.end_time > Time.now + 5.minutes
