@@ -4,6 +4,7 @@ class Timeslot < ApplicationRecord
   validates :size, :start_time, :end_time, presence: true
 
   scope :is_free, -> { where(event_id: nil) }
+  scope :past, -> { where("start_time < ?", Time.now) }
 
   before_save :update_size
 

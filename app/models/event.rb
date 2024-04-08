@@ -12,6 +12,11 @@ class Event < ApplicationRecord
   after_destroy :merge_surrounding_timeslots
   after_commit :destroy_obsolete_timeslots
 
+  scope :done, -> { where(done: true) }
+  scope :undone, -> { where.not(done: true) }
+  scope :past, -> { where("start_time < ?", Time.now) }
+  scope :not_blocking, -> { where("kind != ? OR kind IS NULL", "blocking") }
+
   def self.current
     find_by("start_time < ? AND end_time > ?", Time.now, Time.now)
   end
@@ -79,7 +84,7 @@ class Event < ApplicationRecord
   end
 
   def destroy_obsolete_timeslots
-    Timeslot.where("start_time < ?", Time.now).where("end_time < ?", Time.now).destroy_all
+    Timeslot.past.where("end_time < ?", Time.now).destroy_all
     Timeslot.where(size: 0).destroy_all
   end
 end

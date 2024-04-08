@@ -19,7 +19,7 @@ class EventsController < ApplicationController
     when "this_week", "this_month"
       @events = Event.where("start_time <= ?", 1.year.from_now).order(:start_time)
     when "this_year"
-      @events = Event.where("kind != ? OR kind IS NULL", "blocking").order(:start_time)
+      @events = Event.not_blocking.order(:start_time)
     end
 
     @events
@@ -45,7 +45,7 @@ class EventsController < ApplicationController
   end
 
   def reschedule_past_events
-    Event.where("kind != ? OR kind IS NULL", "blocking").where.not(done: true).where("start_time < ?", Time.now).all.each do |event|
+    Event.undone.past.not_blocking.all.each do |event|
       event.start_time = event.end_time = nil
 
       event_scheduler = SingleEventScheduler.new(event)
@@ -177,7 +177,7 @@ class EventsController < ApplicationController
   end
 
   def export_to_csv
-    @exported_records = Event.where("kind != ? OR kind IS NULL", "blocking") # Adjust the condition as needed
+    @exported_records = Event.not_blocking # Adjust the condition as needed
     respond_to do |format|
       format.csv { send_data @exported_records.export_to_csv, filename: "event-records-#{format_datetime(Time.now)}.csv" }
     end
