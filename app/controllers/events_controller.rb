@@ -194,8 +194,8 @@ class EventsController < ApplicationController
         CSV.foreach(file.path, headers: true) do |row|
           @event = Event.new(row)
 
-          # no need to schedule done tasks motherfuuuuuckeeerrrr
-          if @event.done == true
+          # no need to schedule done tasks or birthdays which are in the past
+          if @event.done == true || (@event.recurrence != "onetime" && @event.start_time.to_date < Date.today)
             raise ActiveRecord::Rollback unless @event.save!(validate: false)
           else
             date = @event.start_time.to_date
