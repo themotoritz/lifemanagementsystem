@@ -45,7 +45,7 @@ class EventsController < ApplicationController
   end
 
   def reschedule_past_events
-    Event.where.not(kind: "blocking").where.not(done: true).where("start_time < ?", Time.now).all.each do |event|
+    Event.where("kind != ? OR kind IS NULL", "blocking").where.not(done: true).where("start_time < ?", Time.now).all.each do |event|
       event = event
       
       event.start_time = nil
@@ -180,7 +180,7 @@ class EventsController < ApplicationController
   end
 
   def export_to_csv
-    @exported_records = Event.where.not(kind: "blocking") # Adjust the condition as needed
+    @exported_records = Event.where("kind != ? OR kind IS NULL", "blocking") # Adjust the condition as needed
     respond_to do |format|
       format.csv { send_data @exported_records.export_to_csv, filename: "event-records-#{format_datetime(Time.now)}.csv" }
     end
