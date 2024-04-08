@@ -26,3 +26,4 @@
 - timeslots überhaupt notwendig?
 - fix time fix date
 - importer is missing group id, occurrence
+- group views: mark/exclude event which are in the past
