@@ -21,7 +21,7 @@ class Event < ApplicationRecord
   end
 
   def self.export_to_csv
-    attributes = ["kind", "start_time", "end_time", "duration", "fixed", "description", "title", "done"] 
+    attributes = ["kind", "start_time", "end_time", "duration", "fixed", "description", "title", "done", "recurrence", "group_id"] 
     CSV.generate(headers: true) do |csv|
       csv << attributes
 
