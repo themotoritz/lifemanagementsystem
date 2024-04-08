@@ -43,4 +43,8 @@ class Timeslot < ApplicationRecord
   def postpone_by(interval)
     update!(start_time: Time.now + interval)
   end
+
+  def trim(new_end_time:)
+    update!(end_time: new_end_time, size: end_time - start_time)
+  end
 end

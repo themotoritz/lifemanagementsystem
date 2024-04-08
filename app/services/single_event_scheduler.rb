@@ -14,7 +14,7 @@ class SingleEventScheduler
 
     @event.end_time = @event.start_time + @event.duration if @event.start_time.present? && @event.duration.present?
 
-    udpate_timeslots(timeslot) if timeslot.present?
+    update_surrounding_timeslots(timeslot) if timeslot.present?
 
     return @event
   end
@@ -30,7 +30,7 @@ class SingleEventScheduler
 
     @event.end_time = @event.start_time + @event.duration if @event.start_time.present? && @event.duration.present?
 
-    udpate_timeslots(timeslot) if timeslot.present?
+    update_surrounding_timeslots(timeslot) if timeslot.present?
 
     return @event
   end
@@ -57,11 +57,13 @@ class SingleEventScheduler
     timeslot
   end
 
-  def udpate_timeslots(timeslot)
-    timeslot_start_time = timeslot.start_time
-    timeslot_end_time = timeslot.end_time
+  def update_surrounding_timeslots(current_timeslot)
+    new_timeslot_end_time = current_timeslot.end_time
+    current_timeslot.trim(new_end_time: @event.start_time)
+    create_new_timeslot_after_event(start_time: @event.end_time, end_time: new_timeslot_end_time)
+  end
 
-    timeslot.update(end_time: @event.start_time, size: @event.start_time - timeslot_start_time)
-    Timeslot.create!(start_time: @event.end_time, end_time: timeslot_end_time, size: timeslot_end_time - @event.start_time)
+  def create_new_timeslot_after_event(start_time:, end_time:)
+    Timeslot.create!(start_time: start_time, end_time: end_time, size: end_time - start_time)
   end
 end
