@@ -19,7 +19,7 @@ class EventsController < ApplicationController
     when "this_week", "this_month"
       @events = Event.where("start_time <= ?", 1.year.from_now).order(:start_time)
     when "this_year"
-      @events = Event.where.not(kind: "blocking").order(:start_time)
+      @events = Event.where("kind != ? OR kind IS NULL", "blocking").order(:start_time)
     end
 
     @events
@@ -194,6 +194,7 @@ class EventsController < ApplicationController
         CSV.foreach(file.path, headers: true) do |row|
           @event = Event.new(row)
 
+          # no need to schedule done tasks motherfuuuuuckeeerrrr
           if @event.done == true
             raise ActiveRecord::Rollback unless @event.save!(validate: false)
           else
