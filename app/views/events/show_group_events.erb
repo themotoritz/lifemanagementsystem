@@ -1,5 +1,7 @@
 <p style="color: green" class="mb-20"><%= notice %></p>
 
+<p style="margin-bottom:2rem">Past events: <%= @group_events.where("start_time < ?", Date.today).count %></p>
+
 <table class="border-collapse table-auto w-full text-sm">
     <thead>
       <tr>
@@ -15,55 +17,57 @@
     </thead>
     <tbody class="bg-white dark:bg-slate-800">
       <% @group_events.all.each do |event| %>
-        <tr>
-          <div id="<%= dom_id event %>">
-            <td class="border-b border-slate-100 dark:border-slate-700 p-4 pl-8 text-slate-500 dark:text-slate-400">
-              <p>
-                <%= event.title %>
-              </p>
-            </td>
-            
-            <td class="border-b border-slate-100 dark:border-slate-700 p-4 text-slate-500 dark:text-slate-400">
-              <p>
-                <%= fallback_value(event, :kind) %>
-              </p>
-            </td>
+        <% if event.start_time > Date.today %>
+          <tr>
+            <div id="<%= dom_id event %>">
+              <td class="border-b border-slate-100 dark:border-slate-700 p-4 pl-8 text-slate-500 dark:text-slate-400">
+                <p>
+                  <%= event.title %>
+                </p>
+              </td>
+              
+              <td class="border-b border-slate-100 dark:border-slate-700 p-4 text-slate-500 dark:text-slate-400">
+                <p>
+                  <%= fallback_value(event, :kind) %>
+                </p>
+              </td>
 
-            <td class="border-b border-slate-100 dark:border-slate-700 p-4 text-slate-500 dark:text-slate-400">
-              <p>
-                <%= fallback_value(event, :description) %>
-              </p>
-            </td>
+              <td class="border-b border-slate-100 dark:border-slate-700 p-4 text-slate-500 dark:text-slate-400">
+                <p>
+                  <%= fallback_value(event, :description) %>
+                </p>
+              </td>
 
-            <td class="border-b border-slate-100 dark:border-slate-700 p-4 text-slate-500 dark:text-slate-400">
-              <p>
-                <%= format_datetime(event.start_time) %>
-              </p>
-            </td>
+              <td class="border-b border-slate-100 dark:border-slate-700 p-4 text-slate-500 dark:text-slate-400">
+                <p>
+                  <%= format_datetime(event.start_time) %>
+                </p>
+              </td>
 
-            <td class="border-b border-slate-100 dark:border-slate-700 p-4 text-slate-500 dark:text-slate-400">
-              <p>
-                <%= format_datetime(event.end_time) %>
-              </p>
-            </td>
+              <td class="border-b border-slate-100 dark:border-slate-700 p-4 text-slate-500 dark:text-slate-400">
+                <p>
+                  <%= format_datetime(event.end_time) %>
+                </p>
+              </td>
 
-            <td class="border-b border-slate-100 dark:border-slate-700 p-4 text-slate-500 dark:text-slate-400">
-              <p>
-                <%= format_seconds_to_time(event.duration) %>
-              </p>
-            </td>
+              <td class="border-b border-slate-100 dark:border-slate-700 p-4 text-slate-500 dark:text-slate-400">
+                <p>
+                  <%= format_seconds_to_time(event.duration) %>
+                </p>
+              </td>
 
-            <td class="border-b border-slate-100 dark:border-slate-700 p-4 text-slate-500 dark:text-slate-400">
-              <p>
-                <%= event.fixed %>
-              </p>
-            </td>
-            <td class="border-b border-slate-100 dark:border-slate-700 p-4 text-slate-500 dark:text-slate-400">
-              <%= link_to "Eintrag editieren", edit_event_path(event), class: "underline" %>
-              <%= button_to "Eintrag löschen", event, method: :delete, class: "underline text-left" %>
-            </td>     
-          </div>
-        </tr>
+              <td class="border-b border-slate-100 dark:border-slate-700 p-4 text-slate-500 dark:text-slate-400">
+                <p>
+                  <%= event.fixed %>
+                </p>
+              </td>
+              <td class="border-b border-slate-100 dark:border-slate-700 p-4 text-slate-500 dark:text-slate-400">
+                <%= link_to "Eintrag editieren", edit_event_path(event), class: "underline" %>
+                <%= button_to "Eintrag löschen", event, method: :delete, class: "underline text-left" %>
+              </td>     
+            </div>
+          </tr>
+        <% end %>
       <% end %>
     </tbody>
 </table>
