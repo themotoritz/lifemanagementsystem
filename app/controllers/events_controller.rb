@@ -63,6 +63,12 @@ class EventsController < ApplicationController
       date_param = params[:event][:date]
       time_param = params[:event][:time]
 
+      if DateTime.parse(date_param) < Time.current
+        flash[:error] = "Date cannot be in the past"
+        redirect_to new_event_path
+        return
+      end
+
       @event = Event.new(event_params)
       @event.duration = event_params[:duration].to_i*60 if event_params[:duration].present?
       @event.recurrence = params[:event][:recurrence]
@@ -77,7 +83,7 @@ class EventsController < ApplicationController
         @event = event_scheduler.schedule
       elsif time_param.blank? && date_param.present?
         date = Date.parse(params[:event][:date])
-        event_scheduler = SingleEventScheduler.new(@event)
+        event_scheduler = SingleEventScheduler.new(@event)        
         @event = event_scheduler.schedule_only_day(date)
       elsif date_param.blank? && time_param.blank?
         event_scheduler = SingleEventScheduler.new(@event)
