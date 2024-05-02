@@ -26,10 +26,13 @@
 - timeslots überhaupt notwendig?
 - fix time fix date
 - importer is missing group id, occurrence ## DONE
-- group views: mark/exclude event which are in the past
+- group views: mark/exclude event which are in the past ## DONE
 - unite timeslot and event model
 - add validation error messages on new form
 - arzttermin während arbeitszeit schedulen
 - add a method that does not only reschedule past events, but reschedules all non-recurring events
 - geburtstage einfärben ## DONE
 - add image to event
+- set default values for event attributes done and fixed (for both false)
+- description wird noch nicht formatiert
+- neuen index view mit sortierfunktion, filterfunktion und suchfunktion
