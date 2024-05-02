@@ -36,3 +36,6 @@
 - set default values for event attributes done and fixed (for both false)
 - description wird noch nicht formatiert
 - neuen index view mit sortierfunktion, filterfunktion und suchfunktion
+- scheduling strategy (priority, duration)
+- devise user accounts
+- time picker does not work on firefox
