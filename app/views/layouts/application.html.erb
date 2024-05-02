@@ -13,6 +13,16 @@
   </head>
 
   <body class="mx-16 mb-16 mt-8">
+    <% if flash[:notice] %>
+      <div class="bg-orange-300">
+        <%= flash[:notice] %>
+      </div>
+    <% elsif flash[:alert] || flash[:error] %>
+      <div class="bg-red-300">
+        <%= flash[:notice] || flash[:error] %>
+      </div>
+    <% end %>
+
     <%= yield %>
   </body>
 </html>
