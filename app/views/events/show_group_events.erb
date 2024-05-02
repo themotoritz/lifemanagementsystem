@@ -1,5 +1,3 @@
-<p style="color: green" class="mb-20"><%= notice %></p>
-
 <p style="margin-bottom:2rem">Past events: <%= @group_events.where("start_time < ?", Date.today).count %></p>
 
 <table class="border-collapse table-auto w-full text-sm">
