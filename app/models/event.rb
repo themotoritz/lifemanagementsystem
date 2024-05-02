@@ -11,6 +11,7 @@ class Event < ApplicationRecord
   validate :no_overlapping_events_exist
   after_destroy :merge_surrounding_timeslots
   after_commit :destroy_obsolete_timeslots
+  before_save :set_default_priority
 
   scope :done, -> { where(done: true) }
   scope :undone, -> { where.not(done: true) }
@@ -26,7 +27,7 @@ class Event < ApplicationRecord
   end
 
   def self.export_to_csv
-    attributes = ["kind", "start_time", "end_time", "duration", "fixed", "description", "title", "done", "recurrence", "group_id"] 
+    attributes = ["kind", "start_time", "end_time", "duration", "fixed", "description", "title", "done", "recurrence", "group_id", "priority"] 
     CSV.generate(headers: true) do |csv|
       csv << attributes
 
@@ -45,6 +46,12 @@ class Event < ApplicationRecord
   end
 
   private
+
+  def set_default_priority
+    if priority.blank?
+      self.priority = 50
+    end
+  end
 
   def start_time_before_end_time
     if start_time.present? && end_time.present? && start_time >= end_time

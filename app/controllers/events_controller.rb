@@ -45,7 +45,7 @@ class EventsController < ApplicationController
   end
 
   def reschedule_past_events
-    Event.undone.past.not_blocking.all.each do |event|
+    Event.undone.past.not_blocking.order(priority: :desc).all.each do |event|
       event.start_time = event.end_time = nil
 
       event_scheduler = SingleEventScheduler.new(event)
@@ -228,6 +228,6 @@ class EventsController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def event_params
-      params.require(:event).permit(:kind, :start_time, :duration, :fixed, :title, :end_time, :description, :done, :recurrence)
+      params.require(:event).permit(:kind, :start_time, :duration, :fixed, :title, :end_time, :description, :done, :recurrence, :priority)
     end
 end
