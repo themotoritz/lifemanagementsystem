@@ -90,7 +90,7 @@ class EventsController < ApplicationController
       date_param = params[:event][:date]
       time_param = params[:event][:time]
 
-      if date_param.present? && DateTime.parse(date_param) < Time.current
+      if date_param.present? && time_param.present? && Time.zone.parse("#{date_param} #{time_param}") < Time.current
         flash[:error] = "Date cannot be in the past"
         redirect_to new_event_path
         return
@@ -307,5 +307,6 @@ class EventsController < ApplicationController
       if params[:event][:duration_in_minutes].present?
         params[:event][:duration] = (params[:event][:duration_in_minutes].to_i*60).to_s
       end
+      params[:event].delete("duration_in_minutes")
     end
 end
