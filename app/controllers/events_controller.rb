@@ -126,6 +126,9 @@ class EventsController < ApplicationController
 
   # PATCH/PUT /events/1 or /events/1.json
   def update
+    changes = get_changes
+
+    if changes.key?("start_time") || changes.key?("end_time") || changes.key?("duration")
     date = Date.parse(params[:event][:date])
     time = Time.parse(params[:event][:time]) if params[:event][:time].present?
 
@@ -146,20 +149,20 @@ class EventsController < ApplicationController
     else
     end
 
-
-    @event.title = params[:event][:title]
-
     if @event.duration.to_s != params[:event][:duration]
       @event.end_time = nil
       @event.duration = params[:event][:duration].to_i
 
       event_scheduler = SingleEventScheduler.new(@event)
       @event = event_scheduler.schedule
+      end
     end
 
+    @event.priority = params[:event][:priority]
     @event.fixed = params[:event][:fixed]
     @event.done = params[:event][:done]
     @event.description = params[:event][:description]
+    @event.title = params[:event][:title]
 
     respond_to do |format|    
       if @event.save!
@@ -229,5 +232,36 @@ class EventsController < ApplicationController
     # Only allow a list of trusted parameters through.
     def event_params
       params.require(:event).permit(:kind, :start_time, :duration, :fixed, :title, :end_time, :description, :done, :recurrence, :priority)
+    end
+
+    def get_changes
+      changes = {}
+
+      params[:event].each do |key, value|
+        if key == "end_time" || key == "start_time"
+          value = value.in_time_zone(Time.zone)
+        end
+
+        if key == "duration" || key == "priority"
+          value = value.to_i
+        end
+
+        if value.present? && @event.respond_to?(key) && @event.attributes[key.to_s] != value
+          if key == "done" || key == "fixed"
+            if value == "0" && @event.attributes[key.to_s] == false
+              next
+            elsif value == "1" && @event.attributes[key.to_s] == true
+              next
+            end
+          end
+
+          changes[key] = {
+            old_value: @event.attributes[key.to_s],
+            new_value: value
+          }
+        end
+      end
+      
+      changes
     end
 end

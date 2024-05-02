@@ -8,7 +8,7 @@ class Event < ApplicationRecord
   validate :start_time_not_in_the_past, if: -> { start_time_changed? }
   validate :start_time_before_end_time, if: -> { start_time_changed? || end_time_changed? }
   validate :duration_positiv, if: -> { duration_changed? }
-  validate :no_overlapping_events_exist
+  validate :no_overlapping_events_exist, if: -> { start_time_changed? || end_time_changed? || duration_changed? }
   after_destroy :merge_surrounding_timeslots
   after_commit :destroy_obsolete_timeslots
   before_save :set_default_priority
