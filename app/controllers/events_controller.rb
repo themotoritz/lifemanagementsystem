@@ -28,7 +28,7 @@ class EventsController < ApplicationController
   # GET /events/1 or /events/1.json
   def show
     if @event.group_id.present?
-      @group_events = Event.where(group_id: @event.group_id)
+      @group_events = Event.where(group_id: @event.group_id).order(start_time: :asc)
       render 'show_group_events'
     else
       render 'show'
