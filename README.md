@@ -25,11 +25,11 @@
 - logic that makes sure events and timeslots do not overlap
 - timeslots überhaupt notwendig?
 - fix time fix date
-- importer is missing group id, occurrence
+- importer is missing group id, occurrence ## DONE
 - group views: mark/exclude event which are in the past
 - unite timeslot and event model
 - add validation error messages on new form
 - arzttermin während arbeitszeit schedulen
 - add a method that does not only reschedule past events, but reschedules all non-recurring events
-- geburtstage einfärben
+- geburtstage einfärben ## DONE
 - add image to event
