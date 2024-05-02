@@ -145,7 +145,7 @@ class EventsController < ApplicationController
       changes = get_changes
 
       if changes.key?("start_time") || changes.key?("end_time") || changes.key?("duration")
-        date = Date.parse(params[:event][:date])
+        date = Date.parse(params[:event][:date]) if params[:event][:date].present?
         time = Time.parse(params[:event][:time]) if params[:event][:time].present?
 
         if date.present? && time.present?
@@ -158,7 +158,12 @@ class EventsController < ApplicationController
             event_scheduler = SingleEventScheduler.new(@event)
             @event = event_scheduler.schedule
           end
-        elsif time.nil? || time.empty?
+        elsif date.blank? && time.blank?
+          @event.end_time = @event.start_time = nil
+
+          event_scheduler = SingleEventScheduler.new(@event)
+          @event = event_scheduler.schedule
+        elsif date.present? && time.blank?
           @event.end_time = nil
           event_scheduler = SingleEventScheduler.new(@event)
           @event = event_scheduler.schedule_only_day(date)
