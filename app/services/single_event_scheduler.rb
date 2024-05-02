@@ -49,7 +49,7 @@ class SingleEventScheduler
     if @event.start_time.present? 
       timeslot = timeslots.where("start_time <= ?", @event.start_time).where("end_time >= ?", @event.end_time || @event.start_time + @event.duration).first
     elsif @event.duration.present?
-      timeslot = timeslots.where("end_time >= ?", Time.now).first
+      timeslot = timeslots.where("size >= ?", @event.duration).where("end_time >= ?", Time.now).first
     else
       raise "FATAL: case not covered"
     end

@@ -63,7 +63,7 @@ class EventsController < ApplicationController
       date_param = params[:event][:date]
       time_param = params[:event][:time]
 
-      if DateTime.parse(date_param) < Time.current
+      if date_param.present? && DateTime.parse(date_param) < Time.current
         flash[:error] = "Date cannot be in the past"
         redirect_to new_event_path
         return
