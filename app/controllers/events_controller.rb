@@ -126,6 +126,7 @@ class EventsController < ApplicationController
 
   # PATCH/PUT /events/1 or /events/1.json
   def update
+    ActiveRecord::Base.transaction do
     changes = get_changes
 
     if changes.key?("start_time") || changes.key?("end_time") || changes.key?("duration")
@@ -173,6 +174,11 @@ class EventsController < ApplicationController
         format.json { render json: @event.errors, status: :unprocessable_entity }
       end
     end
+    end
+  rescue ActiveRecord::Rollback
+    format.html { render :edit, status: :unprocessable_entity }
+    format.json { render json: @event.errors, status: :unprocessable_entity }
+    render :edit
   end
 
   # DELETE /events/1 or /events/1.json
