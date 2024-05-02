@@ -30,3 +30,6 @@
 - unite timeslot and event model
 - add validation error messages on new form
 - arzttermin während arbeitszeit schedulen
+- add a method that does not only reschedule past events, but reschedules all non-recurring events
+- geburtstage einfärben
+- add image to event
