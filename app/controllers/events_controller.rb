@@ -49,11 +49,11 @@ class EventsController < ApplicationController
     attribute = params[:sort_by].to_sym
 
     if attribute == :priority
-    Event.undone.recurrence_onetime.not_blocking.order("#{attribute}": :desc).all.each do |event|
-      event.start_time = event.end_time = nil
+      Event.undone.recurrence_onetime.not_blocking.order("#{attribute}": :desc).all.each do |event|
+        event.start_time = event.end_time = nil
 
-      event_scheduler = SingleEventScheduler.new(event)
-      event = event_scheduler.schedule
+        event_scheduler = SingleEventScheduler.new(event)
+        event = event_scheduler.schedule
 
         event.save  
       end
