@@ -3,6 +3,7 @@ class EventsController < ApplicationController
   include ApplicationHelper
 
   before_action :set_event, only: %i[ show edit update destroy ]
+  before_action :convert_duration_to_seconds, only: %i[ create update ]
 
   # GET /events or /events.json
   def index 
@@ -257,7 +258,7 @@ class EventsController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def event_params
-      params.require(:event).permit(:kind, :start_time, :duration, :fixed, :title, :end_time, :description, :done, :recurrence, :priority)
+      params.require(:event).permit(:kind, :start_time, :duration_in_minutes, :fixed, :title, :end_time, :description, :done, :recurrence, :priority)
     end
 
     def get_changes
@@ -289,5 +290,11 @@ class EventsController < ApplicationController
       end
       
       changes
+    end
+
+    def convert_duration_to_seconds
+      if params[:event][:duration_in_minutes].present?
+        params[:event][:duration] = (params[:event][:duration_in_minutes].to_i*60).to_s
+      end
     end
 end

@@ -45,8 +45,8 @@
         <%= button_tag "Reset", type: :button, class: "h-12 px-3 py-1 text-sm font-medium text-gray-700 bg-white border border-gray-200 rounded-md hover:border-gray-300", onclick: "document.getElementById('event_end_time').value=''" %>
       </div>
       <div class="px-3 mb-2">
-        <%= form.label :duration, style: "display: block", class: "block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" %>
-        <%= form.number_field :duration, placeholder: "Standardwert: 15 Minuten", class: "appearance-none block bg-gray-200 text-gray-700 border rounded py-3 px-4 mb-2 leading-tight focus:outline-none focus:bg-white" %>
+        <%= form.label "duration in minutes", style: "display: block", class: "block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" %>
+        <%= form.number_field :duration_in_minutes, placeholder: "Standardwert: 15 Minuten", class: "appearance-none block bg-gray-200 text-gray-700 border rounded py-3 px-4 mb-2 leading-tight focus:outline-none focus:bg-white", value: convert_seconds_to_minutes(event.duration) || nil, step: 1 %>
       </div>
       <% if params[:action] == "new" %>
         <div class="px-3 mb-2">

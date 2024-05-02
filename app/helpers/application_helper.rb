@@ -38,4 +38,8 @@ module ApplicationHelper
       "bg-sky-300"
     end
   end
+
+  def convert_seconds_to_minutes(seconds)
+    seconds / 60 if seconds.present?
+  end
 end
