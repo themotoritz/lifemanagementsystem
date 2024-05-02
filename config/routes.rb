@@ -7,6 +7,7 @@ Rails.application.routes.draw do
   get "up" => "rails/health#show", as: :rails_health_check
 
   get 'reschedule_past_events', action: :reschedule_past_events, controller: 'events'
+  get 'reschedule_events', action: :reschedule_events, controller: 'events'
   get 'export_events_to_csv', action: :export_to_csv, controller: 'events'
   post 'import_events_from_csv', action: :import_from_csv, controller: 'events'
 
