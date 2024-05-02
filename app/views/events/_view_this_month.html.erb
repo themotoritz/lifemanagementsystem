@@ -21,7 +21,7 @@
             <% end %>
           </div>
           <% events.where(start_time: Date.new(Time.now.year, Time.now.month, i+1).beginning_of_day..Date.new(Time.now.year, Time.now.month, i+1).end_of_day).each do |event| %>
-            <div class="flex flex-col justify-start text-left <%= event.kind == 'blocking' ? 'p-1' : 'p-1 mb-1 rounded-lg bg-sky-300' %>">
+            <div class="flex flex-col justify-start text-left <%= event.kind == 'blocking' ? 'p-1' : "p-1 mb-1 rounded-lg #{css_background_color_for(event)}" %>">
               <div class="mr-2"><p class="<%= event.kind == 'blocking' ? 'text-black text-opacity-25' : '' %>"><%= event.start_time.strftime('%H:%M') %>-<%= event.end_time.strftime('%H:%M') %>:</p></div>
               <div><p class="<%= event.kind == 'blocking' ? 'text-black text-opacity-25' : '' %>"><%= link_to event.title, event_path(event), class: "underline mr-2 break-all" %><% if event.done == true %>&#10004;<% end %></p></div>
             </div>
@@ -56,7 +56,7 @@
               <% end %>
             </div>
             <% events.where(start_time: Date.new(Time.now.year, number_of_month, i+1).beginning_of_day..Date.new(Time.now.year, number_of_month, i+1).end_of_day).each do |event| %>
-              <div class="flex flex-col justify-start text-left <%= event.kind == 'blocking' ? 'p-1' : 'p-1 mb-1 rounded-lg bg-sky-300' %>">
+              <div class="flex flex-col justify-start text-left <%= event.kind == 'blocking' ? 'p-1' : "p-1 mb-1 rounded-lg #{css_background_color_for(event)}" %>">
                 <div class="mr-2"><p class="<%= event.kind == 'blocking' ? 'text-black text-opacity-25' : '' %>"><%= event.start_time.strftime('%H:%M') %>-<%= event.end_time.strftime('%H:%M') %>:</p></div>
                 <div><p class="<%= event.kind == 'blocking' ? 'text-black text-opacity-25' : '' %>"><%= link_to event.title, event_path(event), class: "underline mr-2 break-all" %><% if event.done == true %>&#10004;<% end %></p></div>
               </div>

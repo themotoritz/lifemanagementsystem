@@ -9,7 +9,7 @@
             <div class="flex flex-row justify-start text-left">
               <p class="mr-2">
                 <%= format_datetime(event.start_time) %>-<%= format_datetime(event.end_time, false) %>:
-                <%= link_to event.title, event_path(event), class: "underline" %>                
+                <%= link_to event.title, event_path(event), class: "underline #{event.recurrence_yearly? ? 'bg-orange-300' : ''}" %>                
               </p>
               <% if event.done == true %>
                 <span class="material-symbols-outlined">check_circle</span>
@@ -34,7 +34,7 @@
             <div class="flex flex-row justify-start text-left">
               <p class="mr-2">
                 <%= format_datetime(event.start_time) %>-<%= format_datetime(event.end_time, false) %>:
-                <%= link_to event.title, event_path(event), class: "underline" %>                
+                <%= link_to event.title, event_path(event), class: "underline #{event.recurrence_yearly? ? 'bg-orange-300' : ''}" %>                
               </p>
               <% if event.done == true %>
                 <span class="material-symbols-outlined">check_circle</span>
