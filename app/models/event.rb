@@ -87,7 +87,12 @@ class Event < ApplicationRecord
 
     new_end_time = closest_subsequent_timeslot.end_time
     closest_subsequent_timeslot.destroy 
-    closest_previous_timeslot.update(end_time: new_end_time) if closest_previous_timeslot.present?
+    if closest_previous_timeslot.present?
+      closest_previous_timeslot.update(end_time: new_end_time)
+    else
+      current_time = Time.current
+      Timeslot.create(start_time: current_time, end_time: new_end_time, size: new_end_time - current_time)
+    end
   end
 
   def destroy_obsolete_timeslots
