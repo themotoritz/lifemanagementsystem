@@ -39,3 +39,11 @@
 - scheduling strategy (priority, duration)
 - devise user accounts
 - time picker does not work on firefox
+- replace Time.now by Time.current
+
+
+
+
+# Helper
+
+Time.zone.parse("#{date_param} #{time_param}")
