@@ -40,6 +40,7 @@
 - devise user accounts
 - time picker does not work on firefox
 - replace Time.now by Time.current
+- timeslot validation (now two timeslots at the same time)
 
 
 
