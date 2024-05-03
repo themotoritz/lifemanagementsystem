@@ -55,18 +55,24 @@ class Timeslot < ApplicationRecord
   end
 
   def self.update_surrounding_timeslots_one(id)
-    event_start_time = Event.find(id).start_time
-    event_end_time = Event.find(id).end_time
-    
-    closest_previous_timeslot = Timeslot.where("end_time <= ?", event_start_time).order(:start_time).last
-    closest_subsequent_timeslot = Timeslot.where("start_time >= ?", event_end_time).order(:start_time).first
+    new_timeslot = Timeslot.new(start_time: start_time, end_time: end_time, size: end_time - start_time)
 
-    if closest_previous_timeslot.present?
-      new_end_time = closest_subsequent_timeslot.end_time
-      closest_subsequent_timeslot.destroy if closest_subsequent_timeslot.present?
-      closest_previous_timeslot.update(end_time: new_end_time)
-    elsif closest_subsequent_timeslot.present?
-      closest_subsequent_timeslot.update(start_time: event_start_time)
+    ## merge bordering timeslots
+    previous_bordering_timeslot = Timeslot.find_by(end_time: new_timeslot.start_time)
+    subsequent_bordering_timeslot = Timeslot.find_by(start_time: new_timeslot.end_time)
+
+    if previous_bordering_timeslot.present? && subsequent_bordering_timeslot.present?
+      new_timeslot.update(start_time: previous_bordering_timeslot.start_time, end_time: subsequent_bordering_timeslot.end_time)
+      previous_bordering_timeslot.destroy
+      subsequent_bordering_timeslot.destroy
+    elsif previous_bordering_timeslot.present? && subsequent_bordering_timeslot.nil?
+      new_timeslot.update(start_time: previous_bordering_timeslot.start_time)
+      previous_bordering_timeslot.destroy
+    elsif previous_bordering_timeslot.nil? && subsequent_bordering_timeslot.present?
+      new_timeslot.update(end_time: subsequent_bordering_timeslot.end_time)
+      subsequent_bordering_timeslot.destroy
     end
+
+    new_timeslot.save
   end
 end
