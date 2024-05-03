@@ -75,23 +75,24 @@ class Event < ApplicationRecord
     if start_time.present?
       overlapping_events = Event.where.not(id: id).where("start_time < ? AND end_time > ?", end_time, start_time)
       if overlapping_events.any?
-        errors.add(:start_time, "#{title} #{start_time} - #{end_time} is within another event's time frame: #{overlapping_events.all.each {|event| puts event}}")
+        errors.add(:start_time, "Event-Titel '#{title}', #{start_time} (Startzeit) - #{end_time} (Endzeit) is within another event's time frame: #{overlapping_events.all.each {|event| puts event}}")
         self.start_time = self.end_time = self.duration = nil
       end
     end
   end
 
   def merge_surrounding_timeslots
+    Timeslot.destroy_past_timeslots
+
     closest_previous_timeslot = Timeslot.where("end_time <= ?", start_time).order(:start_time).last
     closest_subsequent_timeslot = Timeslot.where("start_time >= ?", end_time).order(:start_time).first
 
-    new_end_time = closest_subsequent_timeslot.end_time
-    closest_subsequent_timeslot.destroy 
     if closest_previous_timeslot.present?
+      new_end_time = closest_subsequent_timeslot.end_time
+      closest_subsequent_timeslot.destroy if closest_subsequent_timeslot.present?
       closest_previous_timeslot.update(end_time: new_end_time)
-    else
-      current_time = Time.current
-      Timeslot.create(start_time: current_time, end_time: new_end_time, size: new_end_time - current_time)
+    elsif closest_subsequent_timeslot.present?
+      closest_subsequent_timeslot.update(start_time: start_time)
     end
   end
 

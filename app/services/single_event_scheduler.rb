@@ -4,7 +4,9 @@ class SingleEventScheduler
   end
 
   def schedule
+    Timeslot.destroy_past_timeslots
     Timeslot.update_current_timeslot
+    Timeslot.update_surrounding_timeslots_one(@event.id) if @event.id.present?
 
     if @event.end_time.nil?
       @event.duration = 15.minutes if @event.duration.nil?
@@ -14,24 +16,26 @@ class SingleEventScheduler
 
     @event.end_time = @event.start_time + @event.duration if @event.start_time.present? && @event.duration.present?
 
-    update_surrounding_timeslots(timeslot) if timeslot.present?
+    update_surrounding_timeslots_two(timeslot) if timeslot.present?
 
     return @event
   end
 
   def schedule_only_day(date)
+    Timeslot.destroy_past_timeslots
     Timeslot.update_current_timeslot
+    Timeslot.update_surrounding_timeslots_one(@event.id) if @event.id.present?
 
     if @event.end_time.nil?
       @event.duration = 15.minutes if @event.duration.nil?
       timeslot = schedule_only_day_find_free_timeslot(date)
       @event.start_time = timeslot.start_time if (timeslot.present? && !@event.start_time.present?)
     end
-
+    
     @event.end_time = @event.start_time + @event.duration if @event.start_time.present? && @event.duration.present?
 
-    update_surrounding_timeslots(timeslot) if timeslot.present?
-
+    update_surrounding_timeslots_two(timeslot) if timeslot.present?
+    
     return @event
   end
 
@@ -57,9 +61,9 @@ class SingleEventScheduler
     timeslot
   end
 
-  def update_surrounding_timeslots(current_timeslot)
-    new_timeslot_end_time = current_timeslot.end_time
-    current_timeslot.trim(new_end_time: @event.start_time)
+  def update_surrounding_timeslots_two(timeslot)
+    new_timeslot_end_time = timeslot.end_time
+    timeslot.trim(new_end_time: @event.start_time)
     create_new_timeslot_after_event(start_time: @event.end_time, end_time: new_timeslot_end_time)
   end
 

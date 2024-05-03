@@ -48,4 +48,25 @@ class Timeslot < ApplicationRecord
   def trim(new_end_time:)
     update!(end_time: new_end_time, size: end_time - start_time)
   end
+
+  def self.destroy_past_timeslots
+    Timeslot.past.where("end_time < ?", Time.now).destroy_all
+    Timeslot.where(size: 0).destroy_all
+  end
+
+  def self.update_surrounding_timeslots_one(id)
+    event_start_time = Event.find(id).start_time
+    event_end_time = Event.find(id).end_time
+    
+    closest_previous_timeslot = Timeslot.where("end_time <= ?", event_start_time).order(:start_time).last
+    closest_subsequent_timeslot = Timeslot.where("start_time >= ?", event_end_time).order(:start_time).first
+
+    if closest_previous_timeslot.present?
+      new_end_time = closest_subsequent_timeslot.end_time
+      closest_subsequent_timeslot.destroy if closest_subsequent_timeslot.present?
+      closest_previous_timeslot.update(end_time: new_end_time)
+    elsif closest_subsequent_timeslot.present?
+      closest_subsequent_timeslot.update(start_time: event_start_time)
+    end
+  end
 end
