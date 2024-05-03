@@ -82,25 +82,7 @@ class Event < ApplicationRecord
   end
 
   def merge_surrounding_timeslots
-    new_timeslot = Timeslot.new(start_time: start_time, end_time: end_time, size: end_time - start_time)
-
-    ## merge bordering timeslots
-    previous_bordering_timeslot = Timeslot.find_by(end_time: new_timeslot.start_time)
-    subsequent_bordering_timeslot = Timeslot.find_by(start_time: new_timeslot.end_time)
-
-    if previous_bordering_timeslot.present? && subsequent_bordering_timeslot.present?
-      new_timeslot.update(start_time: previous_bordering_timeslot.start_time, end_time: subsequent_bordering_timeslot.end_time)
-      previous_bordering_timeslot.destroy
-      subsequent_bordering_timeslot.destroy
-    elsif previous_bordering_timeslot.present? && subsequent_bordering_timeslot.nil?
-      new_timeslot.update(start_time: previous_bordering_timeslot.start_time)
-      previous_bordering_timeslot.destroy
-    elsif previous_bordering_timeslot.nil? && subsequent_bordering_timeslot.present?
-      new_timeslot.update(end_time: subsequent_bordering_timeslot.end_time)
-      subsequent_bordering_timeslot.destroy
-    end
-
-    new_timeslot.save
+    Timeslot.update_bordering_timeslots(self)
   end
 
   def destroy_obsolete_timeslots

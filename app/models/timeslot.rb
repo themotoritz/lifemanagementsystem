@@ -54,8 +54,8 @@ class Timeslot < ApplicationRecord
     Timeslot.where(size: 0).destroy_all
   end
 
-  def self.update_surrounding_timeslots_one(id)
-    new_timeslot = Timeslot.new(start_time: start_time, end_time: end_time, size: end_time - start_time)
+  def self.update_bordering_timeslots(event)
+    new_timeslot = Timeslot.new(start_time: event.start_time, end_time: event.end_time, size: event.end_time - event.start_time)
 
     ## merge bordering timeslots
     previous_bordering_timeslot = Timeslot.find_by(end_time: new_timeslot.start_time)
