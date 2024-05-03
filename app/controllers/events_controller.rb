@@ -46,25 +46,53 @@ class EventsController < ApplicationController
   end
 
   def reschedule_events
-    attribute = params[:sort_by].to_sym
+    ActiveRecord::Base.transaction do
+      attribute = params[:sort_by].to_sym
 
-    if attribute == :priority
-      Event.undone.recurrence_onetime.not_blocking.order("#{attribute}": :desc).all.each do |event|
-        event.start_time = event.end_time = nil
+      if attribute == :priority
+        events_to_destroy = Event.undone.recurrence_onetime.not_blocking.order(start_time: :desc)
+        events_to_reschedule = Event.undone.recurrence_onetime.not_blocking.order("#{attribute}": :desc)
 
-        event_scheduler = SingleEventScheduler.new(event)
-        event = event_scheduler.schedule
+        new_events = []
+        events_to_reschedule.each do |event|
+          new_events << event.dup
+        end
 
-        event.save  
-      end
-    elsif attribute == :duration
-      Event.undone.recurrence_onetime.not_blocking.order("#{attribute}": :asc).all.each do |event|
-        event.start_time = event.end_time = nil
+        events_to_destroy.each do |event|
+          event.destroy
+        end
+        
+        new_events.each do |event|
+          recreated_event = event
+          recreated_event.start_time = recreated_event.end_time = nil
 
-        event_scheduler = SingleEventScheduler.new(event)
-        event = event_scheduler.schedule
+          event_scheduler = SingleEventScheduler.new(recreated_event)
+          recreated_event = event_scheduler.schedule
 
-        event.save  
+          recreated_event.save!
+        end
+      elsif attribute == :duration
+        events_to_destroy = Event.undone.recurrence_onetime.not_blocking.order(start_time: :desc)
+        events_to_reschedule = Event.undone.recurrence_onetime.not_blocking.order("#{attribute}": :asc)
+
+        new_events = []
+        events_to_reschedule.each do |event|
+          new_events << event.dup
+        end
+
+        events_to_destroy.each do |event|
+          event.destroy
+        end
+        
+        new_events.each do |event|
+          recreated_event = event
+          recreated_event.start_time = recreated_event.end_time = nil
+
+          event_scheduler = SingleEventScheduler.new(recreated_event)
+          recreated_event = event_scheduler.schedule
+
+          recreated_event.save!
+        end
       end
     end
     
@@ -72,13 +100,15 @@ class EventsController < ApplicationController
   end
 
   def reschedule_past_events
-    Event.undone.past.not_blocking.order(priority: :desc).all.each do |event|
-      event.start_time = event.end_time = nil
+    ActiveRecord::Base.transaction do
+      Event.undone.past.not_blocking.order(priority: :desc).all.each do |event|
+        event.start_time = event.end_time = nil
 
-      event_scheduler = SingleEventScheduler.new(event)
-      event = event_scheduler.schedule
+        event_scheduler = SingleEventScheduler.new(event)
+        event = event_scheduler.schedule
 
-      event.save  
+        event.save  
+      end
     end
     
     redirect_to(events_path)
@@ -97,7 +127,7 @@ class EventsController < ApplicationController
       end
 
       @event = Event.new(event_params)
-      @event.duration = event_params[:duration].to_i*60 if event_params[:duration].present?
+      @event.duration = event_params[:duration].to_i if event_params[:duration].present?
       @event.recurrence = params[:event][:recurrence]
 
       if date_param.present? && time_param.present?
@@ -138,6 +168,7 @@ class EventsController < ApplicationController
             format.html { redirect_to event_url(@event), notice: "Event was successfully created." }
             format.json { render :show, status: :created, location: @event }
           else
+            flash[:error] = @event.errors.full_messages.join(", ")
             format.html { render :new, status: :unprocessable_entity }
             format.json { render json: @event.errors, status: :unprocessable_entity }
             raise ActiveRecord::Rollback
@@ -146,6 +177,7 @@ class EventsController < ApplicationController
       end
     end
   rescue ActiveRecord::Rollback
+    flash[:error] = @event.errors.full_messages.join(", ")
     format.html { render :new, status: :unprocessable_entity }
     format.json { render json: @event.errors, status: :unprocessable_entity }
     render :new
@@ -269,7 +301,7 @@ class EventsController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def event_params
-      params.require(:event).permit(:kind, :start_time, :duration_in_minutes, :fixed, :title, :end_time, :description, :done, :recurrence, :priority)
+      params.require(:event).permit(:kind, :start_time, :duration_in_minutes, :duration, :fixed, :title, :end_time, :description, :done, :recurrence, :priority)
     end
 
     def get_changes
