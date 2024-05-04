@@ -41,6 +41,7 @@
 - time picker does not work on firefox
 - replace Time.now by Time.current
 - timeslot validation (now two timeslots at the same time)
+- Tasks bestimmten Projekten zuordnen und tasks eines bestimmten Projekts ganz oben schedulen mit neuem button
 
 
 
