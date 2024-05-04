@@ -59,6 +59,7 @@ class EventsController < ApplicationController
         end
 
         events_to_destroy.each do |event|
+          Timeslot.update_bordering_timeslots(event)
           event.destroy
         end
         
@@ -81,6 +82,7 @@ class EventsController < ApplicationController
         end
 
         events_to_destroy.each do |event|
+          Timeslot.update_bordering_timeslots(event)
           event.destroy
         end
         
@@ -102,6 +104,7 @@ class EventsController < ApplicationController
   def reschedule_past_events
     ActiveRecord::Base.transaction do
       Event.undone.past.not_blocking.order(priority: :desc).all.each do |event|
+        Timeslot.update_bordering_timeslots(event)
         event.start_time = event.end_time = nil
 
         event_scheduler = SingleEventScheduler.new(event)
@@ -188,6 +191,8 @@ class EventsController < ApplicationController
     ActiveRecord::Base.transaction do
       changes = get_changes
 
+      Timeslot.update_bordering_timeslots(@event)
+
       if changes.key?("start_time") || changes.key?("end_time") || changes.key?("duration")
         date = Date.parse(params[:event][:date]) if params[:event][:date].present?
         time = Time.parse(params[:event][:time]) if params[:event][:time].present?
@@ -247,6 +252,7 @@ class EventsController < ApplicationController
 
   # DELETE /events/1 or /events/1.json
   def destroy
+    Timeslot.update_bordering_timeslots(@event)
     @event.destroy!
 
     respond_to do |format|
