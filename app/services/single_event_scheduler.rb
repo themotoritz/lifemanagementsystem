@@ -67,13 +67,13 @@ class SingleEventScheduler
     timeslot
   end
 
-  def update_surrounding_timeslots_two(timeslot)
-    new_timeslot_end_time = timeslot.end_time
-    timeslot.trim(new_end_time: @event.start_time)
-    create_new_timeslot_after_event(start_time: @event.end_time, end_time: new_timeslot_end_time)
-  end
+  # def update_surrounding_timeslots_two(timeslot)
+  #   new_timeslot_end_time = timeslot.end_time
+  #   timeslot.trim(new_end_time: @event.start_time)
+  #   create_new_timeslot_after_event(start_time: @event.end_time, end_time: new_timeslot_end_time)
+  # end
 
-  def create_new_timeslot_after_event(start_time:, end_time:)
-    Timeslot.create!(start_time: start_time, end_time: end_time, size: end_time - start_time)
-  end
+  # def create_new_timeslot_after_event(start_time:, end_time:)
+  #   Timeslot.create!(start_time: start_time, end_time: end_time, size: end_time - start_time)
+  # end
 end

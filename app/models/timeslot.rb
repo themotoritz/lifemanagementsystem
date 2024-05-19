@@ -57,9 +57,9 @@ class Timeslot < ApplicationRecord
     update!(start_time: Time.now + interval)
   end
 
-  def trim(new_end_time:)
-    update!(end_time: new_end_time, size: end_time - start_time)
-  end
+  # def trim(new_end_time:)
+  #   update!(end_time: new_end_time, size: end_time - start_time)
+  # end
 
   def self.destroy_past_timeslots
     Timeslot.past.where("end_time < ?", Time.now).destroy_all
