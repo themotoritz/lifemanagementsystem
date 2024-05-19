@@ -5,13 +5,14 @@ class Event < ApplicationRecord
   
   has_many :timeslots, dependent: :nullify
 
-  validate :start_time_not_in_the_past, if: -> { start_time_changed? }
-  validate :start_time_before_end_time, if: -> { start_time_changed? || end_time_changed? }
+  #validate :start_time_not_in_the_past, if: -> { start_time_changed? }
+  #validate :start_time_before_end_time, if: -> { start_time_changed? || end_time_changed? }
   validate :duration_positiv, if: -> { duration_changed? }
   validate :no_overlapping_events_exist, if: -> { start_time_changed? || end_time_changed? || duration_changed? }
   after_destroy :merge_surrounding_timeslots
   after_commit :destroy_obsolete_timeslots
   before_save :set_default_priority
+  before_save :update_bordering_timeslots
 
   scope :done, -> { where(done: true) }
   scope :undone, -> { where.not(done: true) }
@@ -46,6 +47,28 @@ class Event < ApplicationRecord
   end
 
   private
+
+  def update_bordering_timeslots
+    unless start_time < Time.current
+      if Timeslot.where("start_time <= ? AND end_time >= ?", start_time, end_time).count > 1
+        raise "Should not be possible 1"
+      end
+      
+      available_timeslot = Timeslot.find_by("start_time <= ? AND end_time >= ?", start_time, end_time)
+      
+      if available_timeslot.nil?
+        raise "Should not be possible 2"
+      end
+      
+      ts_start_time = available_timeslot.start_time
+      ts_end_time = available_timeslot.end_time
+
+      available_timeslot.destroy
+
+      Timeslot.create(start_time: ts_start_time, end_time: start_time, size: start_time - ts_start_time)
+      Timeslot.create(start_time: end_time, end_time: ts_end_time, size: ts_end_time - end_time)
+    end
+  end
 
   def set_default_priority
     if priority.blank?
@@ -82,7 +105,7 @@ class Event < ApplicationRecord
   end
 
   def merge_surrounding_timeslots
-    Timeslot.update_bordering_timeslots(self)
+    Timeslot.update_bordering_timeslots_before_destroying(self)
   end
 
   def destroy_obsolete_timeslots
