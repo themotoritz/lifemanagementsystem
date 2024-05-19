@@ -4,6 +4,7 @@ class EventsController < ApplicationController
 
   before_action :set_event, only: %i[ show edit update destroy ]
   before_action :convert_duration_to_seconds, only: %i[ create update ]
+  before_action :get_project_names, only: %i[ new edit ]
 
   # GET /events or /events.json
   def index 
@@ -95,6 +96,9 @@ class EventsController < ApplicationController
 
           recreated_event.save!
         end
+      elsif attribute == :project
+        events_to_destroy = Event.undone.recurrence_onetime.not_blocking.order(start_time: :desc)
+        byebug
       end
     end
     
@@ -233,6 +237,7 @@ class EventsController < ApplicationController
       @event.done = params[:event][:done]
       @event.description = params[:event][:description]
       @event.title = params[:event][:title]
+      @event.project = params[:event][:project]
 
       respond_to do |format|    
         if @event.save!
@@ -307,7 +312,7 @@ class EventsController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def event_params
-      params.require(:event).permit(:kind, :start_time, :duration_in_minutes, :duration, :fixed, :title, :end_time, :description, :done, :recurrence, :priority)
+      params.require(:event).permit(:kind, :start_time, :duration_in_minutes, :duration, :fixed, :title, :end_time, :description, :done, :recurrence, :priority, :project)
     end
 
     def get_changes
@@ -346,5 +351,9 @@ class EventsController < ApplicationController
         params[:event][:duration] = (params[:event][:duration_in_minutes].to_i*60).to_s
       end
       params[:event].delete("duration_in_minutes")
+    end
+
+    def get_project_names
+      @project_names = Event.pluck(:project).uniq.compact.join(", ")
     end
 end
