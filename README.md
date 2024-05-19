@@ -44,7 +44,7 @@
 - Tasks bestimmten Projekten zuordnen und tasks eines bestimmten Projekts ganz oben schedulen mit neuem button
 - ki button der aus description title, priority und duration ableitet
 - copy paste board für emojis, z.B. warning emoji https://emojipedia.org/warning
-
+- add fixed attribute to yearly events
 
 
 

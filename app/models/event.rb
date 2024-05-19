@@ -112,4 +112,8 @@ class Event < ApplicationRecord
     Timeslot.past.where("end_time < ?", Time.now).destroy_all
     Timeslot.where(size: 0).destroy_all
   end
+
+  def self.project_names
+    pluck(:project).uniq.compact
+  end
 end

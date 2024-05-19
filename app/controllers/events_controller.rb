@@ -4,6 +4,7 @@ class EventsController < ApplicationController
 
   before_action :set_event, only: %i[ show edit update destroy ]
   before_action :convert_duration_to_seconds, only: %i[ create update ]
+  before_action :get_project_names, only: %i[ new edit ]
 
   # GET /events or /events.json
   def index 
@@ -49,40 +50,24 @@ class EventsController < ApplicationController
     ActiveRecord::Base.transaction do
       attribute = params[:sort_by].to_sym
 
-      if attribute == :priority
+      if attribute == :priority || attribute == :duration
         events_to_destroy = Event.undone.recurrence_onetime.not_blocking.order(start_time: :desc)
-        events_to_reschedule = Event.undone.recurrence_onetime.not_blocking.order("#{attribute}": :desc)
-
-        new_events = []
-        events_to_reschedule.each do |event|
-          new_events << event.dup
-        end
-
-        events_to_destroy.each do |event|
-          #Timeslot.update_bordering_timeslots_before_destroying(event)
-          event.destroy
-        end
         
-        new_events.each do |event|
-          recreated_event = event
-          recreated_event.start_time = recreated_event.end_time = nil
-
-          event_scheduler = SingleEventScheduler.new(recreated_event)
-          recreated_event = event_scheduler.schedule
-
-          recreated_event.save!
+        events_to_reschedule = Event.undone.recurrence_onetime.not_blocking
+        
+        if params[:project].present? && params[:project] != "none"
+          events_to_reschedule = events_to_reschedule.where(project: params[:project]).order("#{attribute}": :desc) + events_to_reschedule.where("project != ? OR project IS NULL", params[:project]).order("#{attribute}": :desc) 
+        else
+          events_to_reschedule = events_to_reschedule.order("#{attribute}": :desc)
         end
-      elsif attribute == :duration
-        events_to_destroy = Event.undone.recurrence_onetime.not_blocking.order(start_time: :desc)
-        events_to_reschedule = Event.undone.recurrence_onetime.not_blocking.order("#{attribute}": :asc)
 
         new_events = []
+        
         events_to_reschedule.each do |event|
           new_events << event.dup
         end
 
         events_to_destroy.each do |event|
-          #Timeslot.update_bordering_timeslots_before_destroying(event)
           event.destroy
         end
         
@@ -103,7 +88,7 @@ class EventsController < ApplicationController
 
   def reschedule_past_events
     ActiveRecord::Base.transaction do
-      Event.undone.past.not_blocking.order(priority: :desc).all.each do |event|
+      Event.undone.past.not_blocking.where.not(recurrence: "yearly").order(priority: :desc).all.each do |event|
         Timeslot.update_bordering_timeslots_before_destroying(event)
         event.start_time = event.end_time = nil
 
@@ -213,7 +198,8 @@ class EventsController < ApplicationController
           event_scheduler = SingleEventScheduler.new(@event)
           @event = event_scheduler.schedule
         elsif date.present? && time.blank?
-          @event.end_time = nil
+          @event.end_time = @event.start_time = nil
+          
           event_scheduler = SingleEventScheduler.new(@event)
           @event = event_scheduler.schedule_only_day(date)
         else
@@ -233,6 +219,7 @@ class EventsController < ApplicationController
       @event.done = params[:event][:done]
       @event.description = params[:event][:description]
       @event.title = params[:event][:title]
+      @event.project = params[:event][:project]
 
       respond_to do |format|    
         if @event.save!
@@ -307,7 +294,7 @@ class EventsController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def event_params
-      params.require(:event).permit(:kind, :start_time, :duration_in_minutes, :duration, :fixed, :title, :end_time, :description, :done, :recurrence, :priority)
+      params.require(:event).permit(:kind, :start_time, :duration_in_minutes, :duration, :fixed, :title, :end_time, :description, :done, :recurrence, :priority, :project)
     end
 
     def get_changes
@@ -316,6 +303,11 @@ class EventsController < ApplicationController
       params[:event].each do |key, value|
         if key == "end_time" || key == "start_time"
           value = value.in_time_zone(Time.zone)
+        end
+
+        if key == "date"
+          value = value.in_time_zone(Time.zone)
+          key = "start_time"
         end
 
         if key == "duration" || key == "priority"
@@ -346,5 +338,9 @@ class EventsController < ApplicationController
         params[:event][:duration] = (params[:event][:duration_in_minutes].to_i*60).to_s
       end
       params[:event].delete("duration_in_minutes")
+    end
+
+    def get_project_names
+      @project_names = Event.pluck(:project).compact.uniq.select { |element| !element.empty? }.join(", ")
     end
 end
