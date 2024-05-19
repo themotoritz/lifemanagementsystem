@@ -49,6 +49,10 @@ class EventsController < ApplicationController
   def reschedule_events
     ActiveRecord::Base.transaction do
       attribute = params[:sort_by].to_sym
+      order_mapping = {
+        "duration": :asc,
+        "priority": :desc
+      }
 
       if attribute == :priority || attribute == :duration
         events_to_destroy = Event.undone.recurrence_onetime.not_blocking.order(start_time: :desc)
@@ -56,9 +60,9 @@ class EventsController < ApplicationController
         events_to_reschedule = Event.undone.recurrence_onetime.not_blocking
         
         if params[:project].present? && params[:project] != "none"
-          events_to_reschedule = events_to_reschedule.where(project: params[:project]).order("#{attribute}": :desc) + events_to_reschedule.where("project != ? OR project IS NULL", params[:project]).order("#{attribute}": :desc) 
+          events_to_reschedule = events_to_reschedule.where(project: params[:project]).order("#{attribute}": order_mapping[attribute]) + events_to_reschedule.where("project != ? OR project IS NULL", params[:project]).order("#{attribute}": :desc) 
         else
-          events_to_reschedule = events_to_reschedule.order("#{attribute}": :desc)
+          events_to_reschedule = events_to_reschedule.order("#{attribute}": order_mapping[attribute])
         end
 
         new_events = []
