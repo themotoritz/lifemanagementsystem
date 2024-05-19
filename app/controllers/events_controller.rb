@@ -228,7 +228,8 @@ class EventsController < ApplicationController
           event_scheduler = SingleEventScheduler.new(@event)
           @event = event_scheduler.schedule
         elsif date.present? && time.blank?
-          @event.end_time = nil
+          @event.end_time = @event.start_time = nil
+          
           event_scheduler = SingleEventScheduler.new(@event)
           @event = event_scheduler.schedule_only_day(date)
         else
@@ -332,6 +333,11 @@ class EventsController < ApplicationController
       params[:event].each do |key, value|
         if key == "end_time" || key == "start_time"
           value = value.in_time_zone(Time.zone)
+        end
+
+        if key == "date"
+          value = value.in_time_zone(Time.zone)
+          key = "start_time"
         end
 
         if key == "duration" || key == "priority"
