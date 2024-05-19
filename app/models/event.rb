@@ -114,6 +114,6 @@ class Event < ApplicationRecord
   end
 
   def self.project_names
-    pluck(:project).uniq.compact
+    pluck(:project).compact.uniq.select { |element| !element.empty? }
   end
 end

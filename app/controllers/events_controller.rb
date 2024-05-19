@@ -345,6 +345,6 @@ class EventsController < ApplicationController
     end
 
     def get_project_names
-      @project_names = Event.pluck(:project).compact.uniq.select { |element| !element.empty? }.join(", ")
+      @project_names = Event.project_names.join(", ")
     end
 end
