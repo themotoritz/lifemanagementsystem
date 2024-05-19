@@ -50,7 +50,7 @@ class EventsController < ApplicationController
     ActiveRecord::Base.transaction do
       attribute = params[:sort_by].to_sym
 
-      if attribute == :priority
+      if attribute == :priority || attribute == :duration
         events_to_destroy = Event.undone.recurrence_onetime.not_blocking.order(start_time: :desc)
         
         events_to_reschedule = Event.undone.recurrence_onetime.not_blocking
@@ -62,42 +62,12 @@ class EventsController < ApplicationController
         end
 
         new_events = []
+        
         events_to_reschedule.each do |event|
           new_events << event.dup
         end
 
         events_to_destroy.each do |event|
-          #Timeslot.update_bordering_timeslots_before_destroying(event)
-          event.destroy
-        end
-        
-        new_events.each do |event|
-          recreated_event = event
-          recreated_event.start_time = recreated_event.end_time = nil
-
-          event_scheduler = SingleEventScheduler.new(recreated_event)
-          recreated_event = event_scheduler.schedule
-
-          recreated_event.save!
-        end
-      elsif attribute == :duration
-        events_to_destroy = Event.undone.recurrence_onetime.not_blocking.order(start_time: :desc)
-        
-        events_to_reschedule = Event.undone.recurrence_onetime.not_blocking
-        
-        if params[:project].present? && params[:project] != "none"
-          events_to_reschedule = events_to_reschedule.where(project: params[:project]).order("#{attribute}": :desc) + events_to_reschedule.where("project != ? OR project IS NULL", params[:project]).order("#{attribute}": :desc) 
-        else
-          events_to_reschedule = events_to_reschedule.order("#{attribute}": :desc)
-        end
-
-        new_events = []
-        events_to_reschedule.each do |event|
-          new_events << event.dup
-        end
-
-        events_to_destroy.each do |event|
-          #Timeslot.update_bordering_timeslots_before_destroying(event)
           event.destroy
         end
         
@@ -371,6 +341,6 @@ class EventsController < ApplicationController
     end
 
     def get_project_names
-      @project_names = Event.pluck(:project).uniq.compact.join(", ")
+      @project_names = Event.pluck(:project).compact.uniq.select { |element| !element.empty? }.join(", ")
     end
 end
