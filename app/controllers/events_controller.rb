@@ -118,7 +118,7 @@ class EventsController < ApplicationController
 
   def reschedule_past_events
     ActiveRecord::Base.transaction do
-      Event.undone.past.not_blocking.order(priority: :desc).all.each do |event|
+      Event.undone.past.not_blocking.where.not(recurrence: "yearly").order(priority: :desc).all.each do |event|
         Timeslot.update_bordering_timeslots_before_destroying(event)
         event.start_time = event.end_time = nil
 
