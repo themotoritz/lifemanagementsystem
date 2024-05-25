@@ -1,4 +1,4 @@
-Timeslot.create(start_time: Time.now, end_time: 10.years.from_now.end_of_day, size: 101.years.from_now.end_of_day - Time.now)
+Timeslot.create(start_time: Time.now, end_time: 20.years.from_now.end_of_day, size: 20.years.from_now.end_of_day - Time.now)
 
 
 sleeping_time = Time.zone.parse("00:00 AM")
@@ -8,7 +8,7 @@ lunch_time = Time.zone.parse("12:00 PM")
 one_day = 1.day
 
 # Define the number of years for which you want to create events
-years = 10
+years = 20
 
 # Loop through each day for the next 100 years and create the event
 (1..(365 * years)).each do |day_offset|
