@@ -45,9 +45,13 @@
 - ki button der aus description title, priority und duration ableitet
 - copy paste board für emojis, z.B. warning emoji https://emojipedia.org/warning
 - add fixed attribute to yearly events
-
-
+- reload schedue when a task is marked as done
+- done tasks entferne und reschedulen
 
 # Helper
 
 Time.zone.parse("#{date_param} #{time_param}")
+
+# Bugs
+
+- importer scheduled Tasks mit Datum und Uhrzeit auf "sofort"
