@@ -10,7 +10,6 @@ class MultipleEventScheduler
       raise "FATAL: should not be possible"
     end
     @event.update(group_id: group_id)
-    events << @event 
     create_until_date = 10.years.from_now.end_of_month
 
     case @event.recurrence
@@ -294,6 +293,8 @@ class MultipleEventScheduler
   end
 
   def call_single_event_scheduler(event, time_param, current_time)
+    # update logic, event object enthält hier start und end time vom original object. Das kann zu Problemen in timeslot = timeslots.where(start_time: date.beginning_of_day..date.end_of_day).first || find_free_timeslot führen
+
     if time_param.present?
       event.start_time = current_time
       event_scheduler = SingleEventScheduler.new(event)

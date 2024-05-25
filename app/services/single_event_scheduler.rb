@@ -6,7 +6,6 @@ class SingleEventScheduler
   def schedule
     Timeslot.destroy_past_timeslots
     Timeslot.update_current_timeslot
-    #Timeslot.update_bordering_timeslots_before_destroying(@event) if @event.id.present?
 
     if @event.end_time.nil?
       @event.duration = 15.minutes if @event.duration.nil?
@@ -19,7 +18,6 @@ class SingleEventScheduler
     if !timeslot.present?
       raise "unknown case"
     end
-    #update_surrounding_timeslots_two(timeslot) if timeslot.present?
 
     return @event
   end
@@ -27,7 +25,6 @@ class SingleEventScheduler
   def schedule_only_day(date)
     Timeslot.destroy_past_timeslots
     Timeslot.update_current_timeslot
-    #Timeslot.update_bordering_timeslots_before_destroying(@event) if @event.id.present?
 
     if @event.end_time.nil?
       @event.duration = 15.minutes if @event.duration.nil?
@@ -40,7 +37,6 @@ class SingleEventScheduler
     if !timeslot.present?
       raise "unknown case"
     end
-    #update_surrounding_timeslots_two(timeslot) if timeslot.present?
     
     return @event
   end
@@ -66,14 +62,4 @@ class SingleEventScheduler
 
     timeslot
   end
-
-  # def update_surrounding_timeslots_two(timeslot)
-  #   new_timeslot_end_time = timeslot.end_time
-  #   timeslot.trim(new_end_time: @event.start_time)
-  #   create_new_timeslot_after_event(start_time: @event.end_time, end_time: new_timeslot_end_time)
-  # end
-
-  # def create_new_timeslot_after_event(start_time:, end_time:)
-  #   Timeslot.create!(start_time: start_time, end_time: end_time, size: end_time - start_time)
-  # end
 end
