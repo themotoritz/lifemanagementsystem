@@ -28,7 +28,7 @@ class Event < ApplicationRecord
   end
 
   def self.export_to_csv
-    attributes = ["kind", "start_time", "end_time", "duration", "fixed", "description", "title", "done", "recurrence", "group_id", "priority"] 
+    attributes = ["kind", "start_time", "end_time", "duration", "fixed", "description", "title", "done", "recurrence", "group_id", "priority", "project"] 
     CSV.generate(headers: true) do |csv|
       csv << attributes
 
@@ -53,7 +53,7 @@ class Event < ApplicationRecord
       if Timeslot.where("start_time <= ? AND end_time >= ?", start_time, end_time).count > 1
         raise "Should not be possible 1"
       end
-      
+
       available_timeslot = Timeslot.find_by("start_time <= ? AND end_time >= ?", start_time, end_time)
       
       if available_timeslot.nil?
