@@ -140,6 +140,7 @@ class EventsController < ApplicationController
       @event = Event.new(event_params)
       @event.duration = event_params[:duration].to_i if event_params[:duration].present?
       @event.recurrence = params[:event][:recurrence]
+      @event.done_at = Time.current if params[:event][:done] == "1"
 
       if date_param.present? && time_param.present?
         time_zone = Time.zone
@@ -243,6 +244,7 @@ class EventsController < ApplicationController
       @event.description = params[:event][:description]
       @event.title = params[:event][:title]
       @event.project = params[:event][:project]
+      @event.done_at = Time.current if params[:event][:done] == "1"
 
       respond_to do |format|    
         if @event.save!
