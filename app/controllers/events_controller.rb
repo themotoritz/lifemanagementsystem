@@ -5,6 +5,25 @@ class EventsController < ApplicationController
   before_action :set_event, only: %i[ show edit update destroy ]
   before_action :convert_duration_to_seconds, only: %i[ create update ]
   before_action :get_project_names, only: %i[ new edit ]
+  before_action :archive_done_events, only: %i[ reschedule_events reschedule_past_events ]
+
+  def archive_done_events
+    ActiveRecord::Base.transaction do
+      events_to_archive = Event.future.done
+      archived_events = []
+
+      events_to_archive.each do |event|
+        archived_events << event.dup
+        event.destroy
+      end
+
+      archived_events.each do |event|
+        event.start_time = event.end_time = event.duration = nil
+        event.archived = true
+        event.save
+      end
+    end
+  end
 
   # GET /events or /events.json
   def index 
@@ -17,11 +36,11 @@ class EventsController < ApplicationController
       current_day = Date.today.strftime('%A').downcase
       current_day_index = days_of_week.index(current_day) + 1
       @sorted_days = days_of_week.rotate(current_day_index - 1)
-      @events = Event.where("start_time <= ?", 1.week.from_now).order(:start_time)
+      @events = Event.undone.where("start_time <= ?", 1.week.from_now).order(:start_time)
     when "this_week", "this_month"
-      @events = Event.where("start_time <= ?", 1.year.from_now).order(:start_time)
+      @events = Event.undone.where("start_time <= ?", 1.year.from_now).order(:start_time)
     when "this_year"
-      @events = Event.not_blocking.order(:start_time)
+      @events = Event.undone.not_blocking.order(:start_time)
     end
 
     @events

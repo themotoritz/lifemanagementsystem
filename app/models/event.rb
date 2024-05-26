@@ -7,16 +7,18 @@ class Event < ApplicationRecord
 
   #validate :start_time_not_in_the_past, if: -> { start_time_changed? }
   #validate :start_time_before_end_time, if: -> { start_time_changed? || end_time_changed? }
-  validate :duration_positiv, if: -> { duration_changed? }
-  validate :no_overlapping_events_exist, if: -> { start_time_changed? || end_time_changed? || duration_changed? }
+  validate :duration_positiv, if: -> { duration_changed? }, unless: :archived?
+  validate :no_overlapping_events_exist, if: -> { start_time_changed? || end_time_changed? || duration_changed? }, unless: :archived?
   after_destroy :merge_surrounding_timeslots
   after_commit :destroy_obsolete_timeslots
-  before_save :set_default_priority
-  before_save :update_bordering_timeslots
+  before_save :set_default_priority, unless: :archived?
+  before_save :update_bordering_timeslots, unless: :archived?
 
   scope :done, -> { where(done: true) }
   scope :undone, -> { where.not(done: true) }
+  scope :archived, -> { where(archived: true) }
   scope :past, -> { where("start_time < ?", Time.now) }
+  scope :future, -> { where("start_time >= ?", Time.now) }
   scope :not_blocking, -> { where("kind != ? OR kind IS NULL", "blocking") }
 
   def self.current
@@ -49,24 +51,26 @@ class Event < ApplicationRecord
   private
 
   def update_bordering_timeslots
-    unless start_time < Time.current
-      if Timeslot.where("start_time <= ? AND end_time >= ?", start_time, end_time).count > 1
-        raise "Should not be possible 1"
+    if start_time.present?
+      unless start_time < Time.current
+        if Timeslot.where("start_time <= ? AND end_time >= ?", start_time, end_time).count > 1
+          raise "Should not be possible 1"
+        end
+
+        available_timeslot = Timeslot.find_by("start_time <= ? AND end_time >= ?", start_time, end_time)
+        
+        if available_timeslot.nil?
+          raise "Should not be possible 2"
+        end
+        
+        ts_start_time = available_timeslot.start_time
+        ts_end_time = available_timeslot.end_time
+
+        available_timeslot.destroy
+
+        Timeslot.create(start_time: ts_start_time, end_time: start_time, size: start_time - ts_start_time)
+        Timeslot.create(start_time: end_time, end_time: ts_end_time, size: ts_end_time - end_time)
       end
-
-      available_timeslot = Timeslot.find_by("start_time <= ? AND end_time >= ?", start_time, end_time)
-      
-      if available_timeslot.nil?
-        raise "Should not be possible 2"
-      end
-      
-      ts_start_time = available_timeslot.start_time
-      ts_end_time = available_timeslot.end_time
-
-      available_timeslot.destroy
-
-      Timeslot.create(start_time: ts_start_time, end_time: start_time, size: start_time - ts_start_time)
-      Timeslot.create(start_time: end_time, end_time: ts_end_time, size: ts_end_time - end_time)
     end
   end
 

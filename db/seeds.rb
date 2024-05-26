@@ -24,7 +24,9 @@ years = 20
       start_time: sleeping_datetime,
       duration: 9.hours,
       kind: "blocking",
-      fixed: false
+      fixed: false,
+      done: false,
+      archived: false
     )
 
     event_scheduler = SingleEventScheduler.new(event)
@@ -37,7 +39,9 @@ years = 20
       start_time: lunch_datetime,
       duration: 2.hours,
       kind: "blocking",
-      fixed: false
+      fixed: false,
+      done: false,
+      archived: false
     )
 
     event_scheduler = SingleEventScheduler.new(event)
@@ -50,7 +54,9 @@ years = 20
       start_time: sleeping_datetime,
       duration: 17.hours+30.minutes,
       kind: "blocking",
-      fixed: false
+      fixed: false,
+      done: false,
+      archived: false
     )
 
     event_scheduler = SingleEventScheduler.new(event)
