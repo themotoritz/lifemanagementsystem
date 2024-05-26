@@ -197,6 +197,8 @@ class EventsController < ApplicationController
 
   # PATCH/PUT /events/1 or /events/1.json
   def update
+    # params:
+    # <ActionController::Parameters {"_method"=>"patch", "authenticity_token"=>"GbC23oW9TO2n45ifzJw0yi1Z1oqNk337Idb0OiFY5IzQzmX4aDXE4KPg_hmwfw21a9OU3jpehAlcHBsWoWRj1w", "event"=>#<ActionController::Parameters {"title"=>"Einkaufen", "kind"=>"", "project"=>"", "description"=>"1. neue kleine Pfanne\n2. neue sportklamotten (whörl mit Gutschein)\n3. Sommerschuhe\n4. neue Holzfällerhemden (z.B. schwarz-weiß, Kompliment von Heiko bekommen)\n5. Brillenputzmittel\n6. Küchentücher", "date"=>"2024-05-27", "time"=>"22:15", "end_time"=>"2024-05-27T22:30", "priority"=>"45", "fixed"=>"0", "done"=>"0"/"1", "duration"=>"900"} permitted: false>, "commit"=>"Eintrag aktualisieren", "controller"=>"events", "action"=>"update", "id"=>"9855"} permitted: false>
     ActiveRecord::Base.transaction do
       changes = get_changes
 
