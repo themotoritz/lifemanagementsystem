@@ -47,6 +47,7 @@
 - add fixed attribute to yearly events
 - reload schedue when a task is marked as done
 - done tasks entferne und reschedulen
+- at done_at timestamp
 
 # Helper
 
