@@ -36,6 +36,7 @@ Misc:
 - copy paste board für emojis, z.B. warning emoji https://emojipedia.org/warning
 - add fixed attribute to yearly events
 - reload schedue when a task is marked as done
+- respect current ordering when creating new event and update it (e.g. Weiterbildung priorität)
 
 Simple:
 - erledigte Tasks anzeigen
