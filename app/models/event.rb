@@ -2,7 +2,7 @@ class Event < ApplicationRecord
   enum :recurrence, { onetime: 0, daily: 1, twoday: 2, threeday: 3, fourday: 4, fiveday: 5, sixday: 6, weekly: 7, twoweek: 8, threeweek: 9, monthly: 10, twomonth: 11, threemonth: 12, fourmonth: 13, fivemonth: 14, sixmonth: 15, sevenmonth: 16, eightmonth: 17, ninemonth: 18, tenmonth: 19, elevenmonth: 20, yearly: 21, weekdays: 22, weekend: 23 }, prefix: true
 
   require 'csv'
-  
+
   has_many :timeslots, dependent: :nullify
 
   #validate :start_time_not_in_the_past, if: -> { start_time_changed? }
@@ -20,6 +20,7 @@ class Event < ApplicationRecord
   scope :past, -> { where("start_time < ?", Time.now) }
   scope :future, -> { where("start_time >= ?", Time.now) }
   scope :not_blocking, -> { where("kind != ? OR kind IS NULL", "blocking") }
+  scope :not_fixed, -> { where(fixed_date: false) }
 
   def self.current
     find_by("start_time < ? AND end_time > ?", Time.now, Time.now)
@@ -30,7 +31,7 @@ class Event < ApplicationRecord
   end
 
   def self.export_to_csv
-    attributes = ["kind", "start_time", "end_time", "duration", "fixed", "description", "title", "done", "recurrence", "group_id", "priority", "project"] 
+    attributes = ["kind", "start_time", "end_time", "duration", "fixed", "description", "title", "done", "recurrence", "group_id", "priority", "project"]
     CSV.generate(headers: true) do |csv|
       csv << attributes
 
@@ -58,11 +59,11 @@ class Event < ApplicationRecord
         end
 
         available_timeslot = Timeslot.find_by("start_time <= ? AND end_time >= ?", start_time, end_time)
-        
+
         if available_timeslot.nil?
           raise "Should not be possible 2"
         end
-        
+
         ts_start_time = available_timeslot.start_time
         ts_end_time = available_timeslot.end_time
 

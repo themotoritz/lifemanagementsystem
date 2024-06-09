@@ -10,7 +10,7 @@
       </ul>
     </div>
   <% end %>
-  
+
   <form class="w-40">
     <div class="flex flex-wrap flex-col -mx-3 mb-2">
       <div class="px-3 mb-2">
@@ -48,7 +48,7 @@
         <div class="px-3 mb-2">
           <%= form.label :end_time, style: "display: block", class: "block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"  %>
           <%= form.datetime_field :end_time, class: "appearance-none block bg-gray-200 text-gray-700 border rounded py-3 px-4 mb-2 leading-tight focus:outline-none focus:bg-white" %>
-        </div> 
+        </div>
         <%= button_tag "Reset", type: :button, class: "h-12 px-3 py-1 text-sm font-medium text-gray-700 bg-white border border-gray-200 rounded-md hover:border-gray-300", onclick: "document.getElementById('event_end_time').value=''" %>
       </div>
       <div class="px-3 mb-2">
@@ -66,8 +66,8 @@
         <%= form.number_field :priority, class: "appearance-none block bg-gray-200 text-gray-700 border rounded py-3 px-4 mb-2 leading-tight focus:outline-none focus:bg-white" %>
       </div>
       <div class="px-3 mb-2">
-        <%= form.label :fixed, style: "display: block", class: "block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" %>
-        <%= form.check_box :fixed, class: "appearance-none block bg-gray-200 text-gray-700 border rounded py-3 px-4 mb-2 leading-tight focus:outline-none focus:bg-white" %>
+        <%= form.label :fixed_date, style: "display: block", class: "block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" %>
+        <%= form.check_box :fixed_date, class: "appearance-none block bg-gray-200 text-gray-700 border rounded py-3 px-4 mb-2 leading-tight focus:outline-none focus:bg-white" %>
       </div>
       <div class="px-3 mb-2">
         <%= form.label :done, style: "display: block", class: "block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" %>
