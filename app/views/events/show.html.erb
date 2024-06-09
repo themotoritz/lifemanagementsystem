@@ -9,6 +9,7 @@
         <th class="border-b dark:border-slate-600 font-medium p-4 pt-0 pb-3 text-slate-400 dark:text-slate-200 text-left">Duration</th>
         <th class="border-b dark:border-slate-600 font-medium p-4 pt-0 pb-3 text-slate-400 dark:text-slate-200 text-left">Priority</th>
         <th class="border-b dark:border-slate-600 font-medium p-4 pt-0 pb-3 text-slate-400 dark:text-slate-200 text-left">Fixed</th>
+        <th class="border-b dark:border-slate-600 font-medium p-4 pt-0 pb-3 text-slate-400 dark:text-slate-200 text-left">File Upload</th>
         <th class="border-b dark:border-slate-600 font-medium p-4 pt-0 pb-3 text-slate-400 dark:text-slate-200 text-left">Action</th>
       </tr>
     </thead>
@@ -20,7 +21,7 @@
               <%= @event.title %>
             </p>
           </td>
-          
+
           <td class="border-b border-slate-100 dark:border-slate-700 p-4 text-slate-500 dark:text-slate-400">
             <p>
               <%= fallback_value(@event, :kind) %>
@@ -56,7 +57,7 @@
               <%= fallback_value(@event, :priority) %>
             </p>
           </td>
-          
+
           <td class="border-b border-slate-100 dark:border-slate-700 p-4 text-slate-500 dark:text-slate-400">
             <p>
               <%= @event.fixed %>
@@ -64,9 +65,19 @@
           </td>
 
           <td class="border-b border-slate-100 dark:border-slate-700 p-4 text-slate-500 dark:text-slate-400">
+            <p>
+              <% if @event.upload.attached? %>
+                <%= link_to @event.upload.filename.to_s, rails_blob_path(@event.upload, disposition: "attachment") %>
+              <% else %>
+                No file uploaded
+              <% end %>
+            </p>
+          </td>
+
+          <td class="border-b border-slate-100 dark:border-slate-700 p-4 text-slate-500 dark:text-slate-400">
             <%= link_to "Eintrag editieren", edit_event_path(@event), class: "underline" %>
             <%= button_to "Eintrag löschen", @event, method: :delete, class: "underline text-left" %>
-          </td>     
+          </td>
         </div>
       </tr>
     </tbody>
