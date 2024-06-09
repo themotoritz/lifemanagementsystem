@@ -5,6 +5,7 @@ Multiple User related:
 - devise user accounts
 
 Misc:
+- add file upload to events
 - Event Typen: Aufgabe, Geburtstag, Reminder
 - Blockierte Aufgaben
 - Legende (mit Farben)

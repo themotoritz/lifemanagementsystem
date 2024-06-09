@@ -248,6 +248,7 @@ class EventsController < ApplicationController
       @event.title = params[:event][:title]
       @event.project = params[:event][:project]
       @event.done_at = Time.current if params[:event][:done] == "1"
+      @event.upload = params[:event][:upload]
 
       respond_to do |format|
         if @event.save!
@@ -322,7 +323,7 @@ class EventsController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def event_params
-      params.require(:event).permit(:kind, :start_time, :duration_in_minutes, :duration, :fixed, :title, :end_time, :description, :done, :recurrence, :priority, :project, :fixed_date)
+      params.require(:event).permit(:kind, :start_time, :duration_in_minutes, :duration, :fixed, :title, :end_time, :description, :done, :recurrence, :priority, :project, :fixed_date, :upload)
     end
 
     def get_changes

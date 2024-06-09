@@ -73,6 +73,10 @@
         <%= form.label :done, style: "display: block", class: "block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" %>
         <%= form.check_box :done, class: "appearance-none block bg-gray-200 text-gray-700 border rounded py-3 px-4 mb-2 leading-tight focus:outline-none focus:bg-white" %>
       </div>
+      <div class="px-3 mb-2">
+        <%= form.label :upload %>
+        <%= form.file_field :upload %>
+      </div>
       <div class="px-3 mb-6">
         <% if event.persisted? %>
           <%= form.submit "Eintrag aktualisieren", class: "cursor-pointer bg-transparent hover:bg-blue-500 text-blue-500 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded mt-12" %>
