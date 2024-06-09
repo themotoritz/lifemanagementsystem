@@ -26,10 +26,10 @@ class EventsController < ApplicationController
   end
 
   # GET /events or /events.json
-  def index 
+  def index
     session[:current_view] = params[:current_view] if params[:current_view].present?
     session[:current_view] = "this_week" unless session[:current_view].present?
-    
+
     case session[:current_view] || params[:current_view]
     when "today"
       days_of_week = ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"]
@@ -74,18 +74,18 @@ class EventsController < ApplicationController
       }
 
       if attribute == :priority || attribute == :duration
-        events_to_destroy = Event.undone.recurrence_onetime.not_blocking.order(start_time: :desc)
-        
-        events_to_reschedule = Event.undone.recurrence_onetime.not_blocking
-        
+        events_to_destroy = Event.undone.recurrence_onetime.not_blocking.not_fixed.order(start_time: :desc)
+
+        events_to_reschedule = Event.undone.recurrence_onetime.not_blocking.not_fixed
+
         if params[:project].present? && params[:project] != "none"
-          events_to_reschedule = events_to_reschedule.where(project: params[:project]).order("#{attribute}": order_mapping[attribute]) + events_to_reschedule.where("project != ? OR project IS NULL", params[:project]).order("#{attribute}": :desc) 
+          events_to_reschedule = events_to_reschedule.where(project: params[:project]).order("#{attribute}": order_mapping[attribute]) + events_to_reschedule.where("project != ? OR project IS NULL", params[:project]).order("#{attribute}": :desc)
         else
           events_to_reschedule = events_to_reschedule.order("#{attribute}": order_mapping[attribute])
         end
 
         new_events = []
-        
+
         events_to_reschedule.each do |event|
           new_events << event.dup
         end
@@ -93,7 +93,7 @@ class EventsController < ApplicationController
         events_to_destroy.each do |event|
           event.destroy
         end
-        
+
         new_events.each do |event|
           recreated_event = event
           recreated_event.start_time = recreated_event.end_time = nil
@@ -105,23 +105,23 @@ class EventsController < ApplicationController
         end
       end
     end
-    
+
     redirect_to(events_path)
   end
 
   def reschedule_past_events
     ActiveRecord::Base.transaction do
-      Event.undone.past.not_blocking.where.not(recurrence: "yearly").order(priority: :desc).all.each do |event|
+      Event.undone.past.not_blocking.not_fixed.where.not(recurrence: "yearly").order(priority: :desc).all.each do |event|
         Timeslot.update_bordering_timeslots_before_destroying(event)
         event.start_time = event.end_time = nil
 
         event_scheduler = SingleEventScheduler.new(event)
         event = event_scheduler.schedule
 
-        event.save  
+        event.save
       end
     end
-    
+
     redirect_to(events_path)
   end
 
@@ -147,12 +147,12 @@ class EventsController < ApplicationController
         datetime_str = "#{date_param} #{time_param}"
         datetime_with_zone = Time.zone.parse(datetime_str)
         @event.start_time = datetime_with_zone
-        
+
         event_scheduler = SingleEventScheduler.new(@event)
         @event = event_scheduler.schedule
       elsif time_param.blank? && date_param.present?
         date = Date.parse(params[:event][:date])
-        event_scheduler = SingleEventScheduler.new(@event)        
+        event_scheduler = SingleEventScheduler.new(@event)
         @event = event_scheduler.schedule_only_day(date)
       elsif date_param.blank? && time_param.blank?
         event_scheduler = SingleEventScheduler.new(@event)
@@ -210,7 +210,7 @@ class EventsController < ApplicationController
 
         if date.present? && time.present?
           start_time = DateTime.new(date.year, date.month, date.day, time.hour, time.min, time.sec)
-          
+
           if @event.start_time.to_time.strftime("%Y-%m-%d %H:%M") != start_time.to_time.strftime("%Y-%m-%d %H:%M")
             @event.end_time = nil
             @event.start_time = start_time.to_time
@@ -225,7 +225,7 @@ class EventsController < ApplicationController
           @event = event_scheduler.schedule
         elsif date.present? && time.blank?
           @event.end_time = @event.start_time = nil
-          
+
           event_scheduler = SingleEventScheduler.new(@event)
           @event = event_scheduler.schedule_only_day(date)
         else
@@ -242,13 +242,14 @@ class EventsController < ApplicationController
 
       @event.priority = params[:event][:priority]
       @event.fixed = params[:event][:fixed]
+      @event.fixed_date = params[:event][:fixed_date]
       @event.done = params[:event][:done]
       @event.description = params[:event][:description]
       @event.title = params[:event][:title]
       @event.project = params[:event][:project]
       @event.done_at = Time.current if params[:event][:done] == "1"
 
-      respond_to do |format|    
+      respond_to do |format|
         if @event.save!
           format.html { redirect_to events_path, notice: "Event was successfully updated." }
           format.json { render :index , status: :ok, location: @event }
@@ -282,7 +283,7 @@ class EventsController < ApplicationController
     end
   end
 
-  def import_from_csv    
+  def import_from_csv
     file = params[:file]
 
     if file.present? && file.content_type == 'text/csv'
@@ -321,7 +322,7 @@ class EventsController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def event_params
-      params.require(:event).permit(:kind, :start_time, :duration_in_minutes, :duration, :fixed, :title, :end_time, :description, :done, :recurrence, :priority, :project)
+      params.require(:event).permit(:kind, :start_time, :duration_in_minutes, :duration, :fixed, :title, :end_time, :description, :done, :recurrence, :priority, :project, :fixed_date)
     end
 
     def get_changes
@@ -356,7 +357,7 @@ class EventsController < ApplicationController
           }
         end
       end
-      
+
       changes
     end
 
