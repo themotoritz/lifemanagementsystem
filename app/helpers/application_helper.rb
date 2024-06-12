@@ -41,6 +41,16 @@ module ApplicationHelper
     end
   end
 
+  def this_year_css_background_color_for(event)
+    if event.recurrence_yearly?
+      "bg-white text-black"
+    elsif event.fixed_date == true
+      "bg-orange-300"
+    else
+      ""
+    end
+  end
+
   def convert_seconds_to_minutes(seconds)
     seconds / 60 if seconds.present?
   end

@@ -1,7 +1,7 @@
 <div class="not-prose relative bg-slate-50 rounded-xl overflow-hidden dark:bg-slate-800/25 mb-4">
   <div class="relative rounded-xl overflow-auto p-8">
     <div class="pb-4 text-xl">Jahr <%= Date.today.strftime('%Y') %></div>
-    <div class="grid grid-cols-3 gap-4 font-mono text-white text-sm text-center font-bold leading-6 bg-stripes-fuchsia rounded-lg">      
+    <div class="grid grid-cols-3 gap-4 font-mono text-white text-sm text-center font-bold leading-6 bg-stripes-fuchsia rounded-lg">
       <% 12.times do |index| %>
         <div class="p-4 rounded-lg shadow-lg <%= Date.today.month == index+1 ? 'bg-fuchsia-500' : 'bg-white text-slate-700' %>">
           <p class="text-lg pb-4"><%= Date.new(Date.today.year, index+1, 1).strftime("%B") %></p>
@@ -9,7 +9,7 @@
             <div class="flex flex-row justify-start text-left">
               <p class="mr-2">
                 <%= format_datetime(event.start_time) %>-<%= format_datetime(event.end_time, false) %>:
-                <%= link_to event.title, event_path(event), class: "underline #{event.recurrence_yearly? ? 'bg-orange-300' : ''}" %>                
+                <%= link_to event.title, event_path(event), class: "underline #{this_year_css_background_color_for(event)}" %>
               </p>
               <% if event.done == true %>
                 <span class="material-symbols-outlined">check_circle</span>
@@ -26,7 +26,7 @@
 <div class="not-prose relative bg-slate-50 rounded-xl overflow-hidden dark:bg-slate-800/25">
   <div class="relative rounded-xl overflow-auto p-8">
     <div class="pb-4 text-xl">Jahr <%= Date.today.next_year.strftime('%Y') %></div>
-    <div class="grid grid-cols-3 gap-4 font-mono text-white text-sm text-center font-bold leading-6 bg-stripes-fuchsia rounded-lg">      
+    <div class="grid grid-cols-3 gap-4 font-mono text-white text-sm text-center font-bold leading-6 bg-stripes-fuchsia rounded-lg">
       <% 12.times do |index| %>
         <div class="p-4 rounded-lg shadow-lg bg-white text-slate-700">
           <p class="text-lg pb-4"><%= Date.new(Date.today.next_year.year, index+1, 1).strftime("%B") %></p>
@@ -34,7 +34,7 @@
             <div class="flex flex-row justify-start text-left">
               <p class="mr-2">
                 <%= format_datetime(event.start_time) %>-<%= format_datetime(event.end_time, false) %>:
-                <%= link_to event.title, event_path(event), class: "underline #{event.recurrence_yearly? ? 'bg-orange-300' : ''}" %>                
+                <%= link_to event.title, event_path(event), class: "underline #{this_year_css_background_color_for(event)}" %>
               </p>
               <% if event.done == true %>
                 <span class="material-symbols-outlined">check_circle</span>
