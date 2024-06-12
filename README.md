@@ -38,6 +38,8 @@ Misc:
 - add fixed attribute to yearly events
 - reload schedue when a task is marked as done
 - respect current ordering when creating new event and update it (e.g. Weiterbildung priorität)
+- automatic rescheduling after a task has been marked as done
+- make it possible to mark specific events with color
 
 Simple:
 - erledigte Tasks anzeigen
