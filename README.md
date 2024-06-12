@@ -5,7 +5,6 @@ Multiple User related:
 - devise user accounts
 
 Misc:
-- add file upload to events
 - Event Typen: Aufgabe, Geburtstag, Reminder
 - Blockierte Aufgaben
 - Legende (mit Farben)
@@ -59,6 +58,7 @@ DONE:
 - add a method that does not only reschedule past events, but reschedules all non-recurring events #DONE
 - Tasks bestimmten Projekten zuordnen und tasks eines bestimmten Projekts ganz oben schedulen mit neuem button #DONE
 - done tasks entfernen und reschedulen #DONE
+- add file upload to events #DONE
 
 # Helper
 
