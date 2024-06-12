@@ -16,14 +16,14 @@
             <div class="my-2 bg-sky-500/100">
               <td class="border-b border-slate-100 dark:border-slate-700 p-4 pl-8 text-black text-xl">
                 <%= day.capitalize %>
-                <%= link_to new_event_path(date_from_today_view: (Date.today+index)), data: { turbo: false } do %>
-                  <span class="material-symbols-outlined">add_box</span>
+                <%= link_to new_event_path(date_from_today_view: (Date.today+index)), data: { turbo: false }, class: "float-right" do %>
+                  <p class="text-end"><span class="material-symbols-outlined">add_box</span></p>
                 <% end %>
               </td>
               <td class="border-b border-slate-100 dark:border-slate-700 p-4">
                 <%= (Date.today+index).strftime("%Y-%m-%d") %> (KW <%= (Date.today+index).strftime('%V') %>)
               </td>
-              <% 4.times do %>
+              <% 3.times do %>
                 <td class="border-b border-slate-100 dark:border-slate-700 p-4 pl-8 dark:text-slate-400">
                 </td>
               <% end %>
