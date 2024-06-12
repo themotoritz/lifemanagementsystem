@@ -23,7 +23,7 @@
               <td class="border-b border-slate-100 dark:border-slate-700 p-4">
                 <%= (Date.today+index).strftime("%Y-%m-%d") %> (KW <%= (Date.today+index).strftime('%V') %>)
               </td>
-              <% 3.times do %>
+              <% 4.times do %>
                 <td class="border-b border-slate-100 dark:border-slate-700 p-4 pl-8 dark:text-slate-400">
                 </td>
               <% end %>
@@ -34,8 +34,6 @@
               <tr>
                 <div class="my-2">
                   <%= render event %>
-                  <td class="border-b border-slate-100 dark:border-slate-700 p-4 pr-8 dark:text-slate-400">
-                  </td>
                 </div>
               </tr>
             <% end %>
