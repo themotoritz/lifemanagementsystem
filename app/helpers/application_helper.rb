@@ -34,6 +34,8 @@ module ApplicationHelper
   def css_background_color_for(event)
     if event.recurrence_yearly?
       "bg-orange-300"
+    elsif event.fixed_date == true
+      "bg-red-300"
     else
       "bg-sky-300"
     end
