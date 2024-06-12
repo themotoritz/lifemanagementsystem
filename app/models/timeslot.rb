@@ -1,6 +1,6 @@
 class Timeslot < ApplicationRecord
   belongs_to :event, optional: true
-  
+
   validates :size, :start_time, :end_time, presence: true
   before_save :no_overlapping_timeslots_exist
 
@@ -14,8 +14,8 @@ class Timeslot < ApplicationRecord
       overlapping_timeslots = Timeslot.where.not(id: id).where("start_time < ? AND end_time > ?", end_time, start_time)
       if overlapping_timeslots.any?
         errors.add(:start_time, "Timeslot-ID '#{id}', #{start_time} (Startzeit) - #{end_time} (Endzeit) is within another timeslot's time frame: #{overlapping_timeslots.all.each {|timeslot| puts timeslot}}")
-        self.start_time = self.end_time = self.size = nil
         raise "overlapping timeslots"
+        self.start_time = self.end_time = self.size = nil
       end
     end
   end
@@ -63,6 +63,7 @@ class Timeslot < ApplicationRecord
   end
 
   def self.update_bordering_timeslots_before_destroying(event)
+    skip_save = false
     new_timeslot = Timeslot.new(start_time: event.start_time, end_time: event.end_time, size: event.end_time - event.start_time)
 
     ## merge bordering timeslots
@@ -85,13 +86,27 @@ class Timeslot < ApplicationRecord
       new_timeslot.update(start_time: previous_bordering_timeslot_start_time)
     elsif previous_bordering_timeslot.nil? && subsequent_bordering_timeslot.present?
       subsequent_bordering_timeslot_end_time = subsequent_bordering_timeslot.end_time
-      
+
       subsequent_bordering_timeslot.destroy
 
       new_timeslot.update(end_time: subsequent_bordering_timeslot_end_time)
     else
+      overlapping_timeslot = Timeslot.find_by("start_time < ? AND end_time > ?", event.end_time, event.start_time)
+
+      if overlapping_timeslot.present?
+        if overlapping_timeslot.end_time >= event.end_time && overlapping_timeslot.start_time <= event.start_time
+          # do not create timeslot
+          skip_save = true
+        elsif overlapping_timeslot.end_time >= event.end_time
+          raise "unknown case"
+        elsif overlapping_timeslot.start_time <= event.start_time
+          raise "unknown case"
+        end
+      end
     end
 
-    new_timeslot.save
+    unless skip_save == true
+      new_timeslot.save
+    end
   end
 end
