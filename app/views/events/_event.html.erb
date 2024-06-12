@@ -5,7 +5,9 @@
         <%= link_to event.title, event_path(event), class: "underline" %>
       </p>
       <p class="text-base text-black  <%= event.kind == 'blocking' ? 'text-opacity-25' : '' %>">
-        <%= link_to "Editieren", edit_event_path(event), class: "underline" %>
+        <%= link_to edit_event_path(event) do %>
+          <span class="material-symbols-outlined">edit</span>
+        <% end %>
       </p>
       <% if event.done == true %>
         <span class="material-symbols-outlined">check_circle</span>
