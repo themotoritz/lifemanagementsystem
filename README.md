@@ -46,8 +46,8 @@ Simple:
 - erledigte Tasks anzeigen
 
 DONE:
-- importer is missing group id, occurrence #DONE
 - group views: mark/exclude event which are in the past #DONE
+- importer is missing group id, occurrence #DONE
 - at done_at timestamp #DONE
 - scheduling strategy (priority, duration) #DONE
 - geburtstage einfärben #DONE

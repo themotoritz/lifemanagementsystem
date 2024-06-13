@@ -22,10 +22,24 @@
     </div>
   </td>
 
-  <td class="border-b border-slate-100 dark:border-slate-700 p-4 text-slate-500 dark:text-slate-400 break-all">
-    <p class="text-base text-black  <%= event.kind == 'blocking' ? 'text-opacity-25' : '' %>">
-      <%= simple_format(fallback_value(event, :description)) %>
-    </p>
+  <td class="border-b border-slate-100 dark:border-slate-700 p-4 text-slate-500 dark:text-slate-400 break-all w-1/2">
+    <div class="bg-white rounded">
+    	<div id="accordion-flush" data-accordion="collapse" data-active-classes="bg-white dark:bg-gray-900 text-gray-900 dark:text-white" data-inactive-classes="text-gray-500 dark:text-gray-400">
+    		<h2 id="accordion-flush-heading-<%= event.id %>">
+    			<button type="button" class="flex justify-between items-center py-5 w-full text-left" data-accordion-target="#accordion-flush-body-<%= event.id %>" aria-expanded="false" aria-controls="accordion-flush-body-<%= event.id %>">
+          <%= fallback_value(event, :description).truncate(100) %>
+          <svg data-accordion-icon class="w-6 h-6 shrink-0" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
+        </button>
+    		</h2>
+    		<div id="accordion-flush-body-<%= event.id %>" class="hidden" aria-labelledby="accordion-flush-heading-<%= event.id %>">
+          <div class="py-5">
+    				<p class="mb-2 text-gray-500 dark:text-gray-400">
+              <%= simple_format(fallback_value(event, :description)) %>
+            </p>
+    			</div>
+    		</div>
+    	</div>
+    </div>
   </td>
 
   <td class="border-b border-slate-100 dark:border-slate-700 p-4 text-slate-500 dark:text-slate-400">
