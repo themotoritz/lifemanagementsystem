@@ -177,7 +177,7 @@ class EventsController < ApplicationController
           format.json { render :index, status: :created }
         else
           if @event.save
-            format.html { redirect_to event_url(@event), notice: "Event was successfully created." }
+            format.html { redirect_to events_url, notice: "Event was successfully created." }
             format.json { render :show, status: :created, location: @event }
           else
             flash[:error] = @event.errors.full_messages.join(", ")
