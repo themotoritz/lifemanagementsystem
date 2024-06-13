@@ -39,6 +39,9 @@ Misc:
 - respect current ordering when creating new event and update it (e.g. Weiterbildung priorität)
 - automatic rescheduling after a task has been marked as done
 - make it possible to mark specific events with color
+- löschen icon in today view
+- priorities in today view direkt bearbeiten
+- low priority events ausblenden
 
 Simple:
 - erledigte Tasks anzeigen
