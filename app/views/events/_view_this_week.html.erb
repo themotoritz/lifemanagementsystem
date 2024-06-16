@@ -12,7 +12,7 @@
           <% end %>
         <% end %>
         <% events.where(start_time: Date.today.beginning_of_week.beginning_of_day..Date.today.beginning_of_week.end_of_day).each do |event| %>
-          <div class="flex flex-col justify-start text-left <%= event.kind == 'blocking' ? 'p-1' : "p-1 mb-1 rounded-lg #{css_background_color_for(event)}" %>">
+          <div class="flex flex-col justify-start text-left <%= event.kind == 'blocking' ? 'p-1' : "p-1 mb-1 rounded-lg #{this_week_css_background_color_for(event)}" %>">
             <div class="mr-2"><p class="<%= event.kind == 'blocking' ? 'text-black text-opacity-25' : '' %>"><%= event.start_time.strftime('%H:%M') %>-<%= event.end_time.strftime('%H:%M') %>:</p></div>
             <div><p class="<%= event.kind == 'blocking' ? 'text-black text-opacity-25' : '' %>"><%= link_to event.title, event_path(event), class: "underline mr-2 break-all" %><% if event.done == true %>&#10004;<% end %></p></div>
           </div>
@@ -29,7 +29,7 @@
             <% end %>
           </div>
           <% events.where(start_time: Date.today.beginning_of_week.next_occurring(day).beginning_of_day..Date.today.beginning_of_week.next_occurring(day).end_of_day).each do |event| %>
-            <div class="flex flex-col justify-start text-left <%= event.kind == 'blocking' ? 'p-1' : "p-1 mb-1 rounded-lg #{css_background_color_for(event)}" %>">
+            <div class="flex flex-col justify-start text-left <%= event.kind == 'blocking' ? 'p-1' : "p-1 mb-1 rounded-lg #{this_week_css_background_color_for(event)}" %>">
               <div class="mr-2"><p class="<%= event.kind == 'blocking' ? 'text-black text-opacity-25' : '' %>"><%= event.start_time.strftime('%H:%M') %>-<%= event.end_time.strftime('%H:%M') %>:</p></div>
               <div><p class="<%= event.kind == 'blocking' ? 'text-black text-opacity-25' : '' %>"><%= link_to event.title, event_path(event), class: "underline mr-2 break-all" %><% if event.done == true %>&#10004;<% end %></p></div>
             </div>
@@ -39,7 +39,7 @@
     </div>
   </div>
   <div class="absolute inset-0 pointer-events-none border border-black/5 rounded-xl dark:border-white/5">
-  </div>  
+  </div>
 </div>
 
 <% (Date.today.cweek+1..52).each do |number_of_week| %>
@@ -57,11 +57,11 @@
             <% end %>
           </div>
           <% events.where(start_time: Date.commercial(Date.today.year, number_of_week, 1).beginning_of_week.beginning_of_day..Date.commercial(Date.today.year, number_of_week, 1).beginning_of_week.end_of_day).each do |event| %>
-            <div class="flex flex-col justify-start text-left <%= event.kind == 'blocking' ? 'p-1' : "p-1 mb-1 rounded-lg #{css_background_color_for(event)}" %>">
+            <div class="flex flex-col justify-start text-left <%= event.kind == 'blocking' ? 'p-1' : "p-1 mb-1 rounded-lg #{this_week_css_background_color_for(event)}" %>">
               <div class="mr-2"><p class="<%= event.kind == 'blocking' ? 'text-black text-opacity-25' : '' %>"><%= event.start_time.strftime('%H:%M') %>-<%= event.end_time.strftime('%H:%M') %>:</p></div>
               <div><p class="<%= event.kind == 'blocking' ? 'text-black text-opacity-25' : '' %>"><%= link_to event.title, event_path(event), class: "underline mr-2 break-all" %><% if event.done == true %>&#10004;<% end %></p></div>
             </div>
-          <% end %>    
+          <% end %>
         </div>
         <% [:tuesday, :wednesday, :thursday, :friday, :saturday, :sunday].each do |day| %>
           <div class="p-4 rounded-lg shadow-lg bg-white text-slate-700">
@@ -70,9 +70,9 @@
               <%= link_to new_event_path(date_from_today_view: Date.commercial(Date.today.year, number_of_week, 1).beginning_of_week.next_occurring(day)), data: { turbo: false } do %>
                 <span class="material-symbols-outlined">add_box</span>
               <% end %>
-            </div>            
+            </div>
             <% events.where(start_time: Date.commercial(Date.today.year, number_of_week, 1).beginning_of_week.next_occurring(day).beginning_of_day..Date.commercial(Date.today.year, number_of_week, 1).beginning_of_week.next_occurring(day).end_of_day).each do |event| %>
-              <div class="flex flex-col justify-start text-left <%= event.kind == 'blocking' ? 'p-1' : "p-1 mb-1 rounded-lg #{css_background_color_for(event)}" %>">
+              <div class="flex flex-col justify-start text-left <%= event.kind == 'blocking' ? 'p-1' : "p-1 mb-1 rounded-lg #{this_week_css_background_color_for(event)}" %>">
                 <div class="mr-2"><p class="<%= event.kind == 'blocking' ? 'text-black text-opacity-25' : '' %>"><%= event.start_time.strftime('%H:%M') %>-<%= event.end_time.strftime('%H:%M') %>:</p></div>
                 <div><p class="<%= event.kind == 'blocking' ? 'text-black text-opacity-25' : '' %>"><%= link_to event.title, event_path(event), class: "underline mr-2 break-all" %><% if event.done == true %>&#10004;<% end %></p></div>
               </div>

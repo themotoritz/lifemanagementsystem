@@ -30,15 +30,13 @@
             </div>
           </tr>
           <% if events.where(start_time: (Date.today+index).beginning_of_day..(Date.today+index).end_of_day).present? %>
-						<div id="eventAccordion">
-	            <% events.where(start_time: (Date.today+index).beginning_of_day..(Date.today+index).end_of_day).each_with_index do |event, i| %>
-	              <tr>
-	                <div class="my-2">
-	                  <%= render event %>
-	                </div>
-	              </tr>
-	            <% end %>
-						</div>
+            <% events.where(start_time: (Date.today+index).beginning_of_day..(Date.today+index).end_of_day).each_with_index do |event, i| %>
+              <tr class="<%= today_css_background_color_for(event) %>">
+                <div id="eventAccordion" class="my-2">
+                  <%= render event %>
+                </div>
+              </tr>
+            <% end %>
           <% else %>
             <tr>
               <div>

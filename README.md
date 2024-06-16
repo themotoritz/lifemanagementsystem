@@ -41,8 +41,7 @@ Misc:
 - make it possible to mark specific events with color
 - priorities in today view direkt bearbeiten
 - low priority events ausblenden
-- skip fixed events from being rescheduled
-- events mit hoher priorität irgendwie kennzeichnen, prio 90-100 besonders hervorheben
+- display only events with prio > 90
 
 Simple:
 - erledigte Tasks anzeigen
@@ -64,6 +63,8 @@ DONE:
 - done tasks entfernen und reschedulen #DONE
 - add file upload to events #DONE
 - löschen icon in today view #DONE
+- events mit hoher priorität irgendwie kennzeichnen, prio 90-100 besonders hervorheben #DONE
+- skip fixed events from being rescheduled #DONE
 
 # Helper
 
