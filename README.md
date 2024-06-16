@@ -41,6 +41,8 @@ Misc:
 - make it possible to mark specific events with color
 - priorities in today view direkt bearbeiten
 - low priority events ausblenden
+- skip fixed events from being rescheduled
+- events mit hoher priorität irgendwie kennzeichnen
 
 Simple:
 - erledigte Tasks anzeigen

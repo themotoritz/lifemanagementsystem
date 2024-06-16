@@ -30,7 +30,7 @@
             </div>
           </tr>
           <% if events.where(start_time: (Date.today+index).beginning_of_day..(Date.today+index).end_of_day).present? %>
-						<div id="accordion-flush" data-accordion="collapse" data-active-classes="bg-white dark:bg-gray-900 text-gray-900 dark:text-white" data-inactive-classes="text-gray-500 dark:text-gray-400">
+						<div id="eventAccordion">
 	            <% events.where(start_time: (Date.today+index).beginning_of_day..(Date.today+index).end_of_day).each_with_index do |event, i| %>
 	              <tr>
 	                <div class="my-2">
