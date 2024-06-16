@@ -266,6 +266,13 @@ class EventsController < ApplicationController
     render :edit
   end
 
+  def mark_as_done
+    event = Event.find(params[:id])
+    current_time = Time.current
+    event.update_columns(done: true, done_at: current_time, updated_at: current_time)
+    redirect_to events_path, notice: "Event marked as done."
+  end
+
   # DELETE /events/1 or /events/1.json
   def destroy
     @event.destroy!

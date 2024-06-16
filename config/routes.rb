@@ -10,6 +10,7 @@ Rails.application.routes.draw do
   get 'reschedule_events', action: :reschedule_events, controller: 'events'
   get 'export_events_to_csv', action: :export_to_csv, controller: 'events'
   post 'import_events_from_csv', action: :import_from_csv, controller: 'events'
+  patch 'mark_as_done/:id', to: 'events#mark_as_done', as: :mark_as_done
 
   root "events#index"
 end

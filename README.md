@@ -42,7 +42,7 @@ Misc:
 - priorities in today view direkt bearbeiten
 - low priority events ausblenden
 - skip fixed events from being rescheduled
-- events mit hoher priorität irgendwie kennzeichnen
+- events mit hoher priorität irgendwie kennzeichnen, prio 90-100 besonders hervorheben
 
 Simple:
 - erledigte Tasks anzeigen
