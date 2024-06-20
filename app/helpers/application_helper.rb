@@ -1,5 +1,7 @@
 module ApplicationHelper
   def format_seconds_to_time(seconds)
+    return unless seconds.present?
+    
     if seconds < 60
       "#{seconds} Seconds"
     elsif seconds < 3600
@@ -13,6 +15,8 @@ module ApplicationHelper
   end
 
   def format_datetime(datetime, include_date = true)
+    return unless datetime.present?
+
     if datetime.is_a?(String)
       datetime = DateTime.parse(datetime)
     else

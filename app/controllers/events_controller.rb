@@ -7,6 +7,10 @@ class EventsController < ApplicationController
   before_action :get_project_names, only: %i[ new edit ]
   before_action :archive_done_events, only: %i[ reschedule_events reschedule_past_events ]
 
+  def done_events
+    @done_events = Event.done.order(done_at: :desc)
+  end
+
   def archive_done_events
     ActiveRecord::Base.transaction do
       events_to_archive = Event.future.done
