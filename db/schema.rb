@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_06_09_191312) do
+ActiveRecord::Schema[7.1].define(version: 2024_06_20_193933) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -60,6 +60,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_06_09_191312) do
     t.boolean "archived", default: false
     t.datetime "done_at"
     t.boolean "fixed_date", default: false
+    t.text "result"
   end
 
   create_table "timeslots", force: :cascade do |t|
