@@ -42,7 +42,6 @@ Misc:
 - priorities in today view direkt bearbeiten
 - low priority events ausblenden
 - display only events with prio > 90
-- add list of done tasks
 
 Simple:
 - erledigte Tasks anzeigen
@@ -67,6 +66,7 @@ DONE:
 - events mit hoher priorität irgendwie kennzeichnen, prio 90-100 besonders hervorheben #DONE
 - skip fixed events from being rescheduled #DONE
 - ergebnis feld hinzufügen #DONE
+- add list of done tasks #DONE
 
 # Helper
 
