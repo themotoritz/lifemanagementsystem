@@ -177,11 +177,17 @@ class EventsController < ApplicationController
             events.each do |event|
               raise ActiveRecord::Rollback unless event.save!
             end
-          format.html { redirect_to events_url, notice: "Events were successfully created." }
+          format.html do 
+            flash[:success] = "Events were successfully created."
+            redirect_to events_url
+          end
           format.json { render :index, status: :created }
         else
           if @event.save
-            format.html { redirect_to events_url, notice: "Event was successfully created." }
+            format.html do
+              flash[:success] = "Event was successfully created."
+              redirect_to events_url
+            end
             format.json { render :show, status: :created, location: @event }
           else
             flash[:error] = @event.errors.full_messages.join(", ")
@@ -257,7 +263,10 @@ class EventsController < ApplicationController
 
       respond_to do |format|
         if @event.save!
-          format.html { redirect_to events_path, notice: "Event was successfully updated." }
+          format.html do
+            flash[:success] = "Event was successfully updated."
+            redirect_to events_path
+          end
           format.json { render :index , status: :ok, location: @event }
         else
           format.html { render :edit, status: :unprocessable_entity }
@@ -275,7 +284,8 @@ class EventsController < ApplicationController
     event = Event.find(params[:id])
     current_time = Time.current
     event.update_columns(done: true, done_at: current_time, updated_at: current_time)
-    redirect_to events_path, notice: "Event marked as done."
+    flash[:success] = "Event marked as done."
+    redirect_to events_path
   end
 
   # DELETE /events/1 or /events/1.json
@@ -283,7 +293,10 @@ class EventsController < ApplicationController
     @event.destroy!
 
     respond_to do |format|
-      format.html { redirect_to events_url, notice: "Event was successfully destroyed." }
+      format.html do 
+        flash[:success] = "Event was successfully destroyed."
+        redirect_to events_url
+      end
       format.json { head :no_content }
     end
   end

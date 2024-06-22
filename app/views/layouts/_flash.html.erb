@@ -1,0 +1,8 @@
+<% flash.each do |key, message| %>
+  <div class="rounded-md <%= tailwind_class_for(key) %> flex items-center justify-between px-4 py-2 my-4" role="alert">
+    <div class="text-lg"><%= message %></div>
+    <button type="button" class="text-3xl" data-dismiss="alert" aria-label="Close" onclick="this.parentElement.style.display='none';">
+      &times;
+    </button>
+  </div>
+<% end %>

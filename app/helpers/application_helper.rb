@@ -70,4 +70,19 @@ module ApplicationHelper
   def convert_seconds_to_minutes(seconds)
     seconds / 60 if seconds.present?
   end
+
+  def tailwind_class_for(flash_type)
+    case flash_type
+    when "success"
+      "bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative"
+    when "error"
+      "bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative"
+    when "alert"
+      "bg-yellow-100 border border-yellow-400 text-yellow-700 px-4 py-3 rounded relative"
+    when "notice"
+      "bg-blue-100 border border-blue-400 text-blue-700 px-4 py-3 rounded relative"
+    else
+      flash_type.to_s
+    end
+  end  
 end
