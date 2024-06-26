@@ -1,10 +1,16 @@
-<h1 class="mb-4">Eintrag editieren</h1>
+<div class="mb-5">
+  <%= link_to events_path do %>
+    <button class="bg-transparent hover:bg-blue-500 text-blue-500 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded">
+      Zurück zum Kalender
+    </button>
+  <% end %>
+  <%= link_to event_path(@event) do %>
+    <button class="mx-3 bg-transparent hover:bg-blue-500 text-blue-500 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded">
+      Eintrag anzeigen
+    </button>
+  <% end %>
+</div>
+
+<h4 class="mb-2 mt-0 text-2xl font-medium leading-tight text-primary">Eintrag editieren:</h4>
 
 <%= render "form", event: @event %>
-
-<br>
-
-<div>
-  <%= link_to "Eintrag anzeigen", @event %> |
-  <%= link_to "Zurück zum Kalender", events_path %>
-</div>
