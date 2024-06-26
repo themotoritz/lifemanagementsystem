@@ -43,26 +43,6 @@
         </button>
       <% end %>
     </div>
-    <%
-=begin%>
- <div>
-      <%= link_to reschedule_events_path(sort_by: "priority"), data: { turbo: false }, class: "mr-2" do %>
-        <button class="bg-red-500 hover:bg-red-700 text-white font-bold py-3 px-3 rounded" title="Reschedule by Priority">
-          <span class="material-symbols-outlined inline-block align-middle">autorenew</span>
-        </button>
-      <% end %> 
-      Reschedule by Priority
-    </div>
-    <div>
-      <%= link_to reschedule_events_path(sort_by: "duration"), data: { turbo: false }, class: "mr-2" do %>
-        <button class="bg-green-500 hover:bg-green-700 text-white font-bold py-3 px-3 rounded" title="Reschedule by Duration">
-          <span class="material-symbols-outlined inline-block align-middle">autorenew</span>
-        </button>
-      <% end %>
-      Reschedule by Duration 
-    </div> 
-<%
-=end%>
     <div>
       <%= form_with(mode: Event, url: reschedule_events_path, method: :get) do |form| %>
         <div class="flex mt-2">
