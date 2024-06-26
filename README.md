@@ -42,6 +42,7 @@ Misc:
 - priorities in today view direkt bearbeiten
 - low priority events ausblenden
 - display only events with prio > 90
+- today view: tag einklappbar machen
 
 Simple:
 - erledigte Tasks anzeigen
