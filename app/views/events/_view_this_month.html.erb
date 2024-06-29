@@ -1,36 +1,32 @@
-<div class="not-prose relative bg-slate-50 rounded-xl overflow-hidden dark:bg-slate-800/25">
-  <div style="background-position:10px 10px" class="absolute inset-0 bg-grid-slate-100 dark:bg-grid-slate-700/25">
+<div class="not-prose relative bg-slate-50 rounded-xl overflow-hidden dark:bg-slate-800/25 p-8">
+  <div class="pb-4 text-xl">
+    <%= Date.today.strftime("%B") %>
   </div>
-  <div class="relative rounded-xl overflow-auto p-8">
-    <div class="pb-4 text-xl"><%= Date.today.strftime("%B") %></div>
-    <div class="grid grid-cols-7 gap-4 font-mono text-slate-700 text-sm text-center font-bold leading-6 bg-stripes-fuchsia rounded-lg">
-      <% Time.days_in_month(Time.now.month, Time.now.year).times do |i| %>
-        <% if i+1 == 1 %>
-          <% (Date.new(Time.now.year, Time.now.month, i+1).wday-1).times do %>
-            <div class="p-4 rounded-lg shadow-lg bg-white text-slate-700">
-            </div>
-          <% end %>
-        <% end %>
-        <div class="p-4 rounded-lg shadow-lg <%= Date.today.day == i+1 ? 'bg-fuchsia-500' : 'bg-white text-slate-700' %>">
-          <div class="flex space-x-2">
-            <p class="text-lg pb-4"><%= Date.new(Time.now.year, Time.now.month, i+1).strftime("%A %d.%m") %></p>
-            <% if Date.new(Time.now.year, Time.now.month, i+1) >= Date.today %>
-              <%= link_to new_event_path(date_from_today_view: Date.new(Time.now.year, Time.now.month, i+1)), data: { turbo: false } do %>
-                <span class="material-symbols-outlined">add_box</span>
-              <% end %>
-            <% end %>
+  <div class="grid grid-cols-7 gap-4 font-mono text-slate-700 text-sm text-center font-bold leading-6 bg-stripes-fuchsia rounded-lg">
+    <% Time.days_in_month(Time.now.month, Time.now.year).times do |i| %>
+      <% if i+1 == 1 %>
+        <% (Date.new(Time.now.year, Time.now.month, i+1).wday-1).times do %>
+          <div class="p-4 rounded-lg shadow-lg bg-white text-slate-700">
           </div>
-          <% events.where(start_time: Date.new(Time.now.year, Time.now.month, i+1).beginning_of_day..Date.new(Time.now.year, Time.now.month, i+1).end_of_day).each do |event| %>
-            <div class="flex flex-col justify-start text-left <%= event.kind == 'blocking' ? 'p-1' : "p-1 mb-1 rounded-lg #{this_month_css_background_color_for(event)}" %>">
-              <div class="mr-2"><p class="<%= event.kind == 'blocking' ? 'text-black text-opacity-25' : '' %>"><%= event.start_time.strftime('%H:%M') %>-<%= event.end_time.strftime('%H:%M') %>:</p></div>
-              <div><p class="<%= event.kind == 'blocking' ? 'text-black text-opacity-25' : '' %>"><%= link_to event.title, event_path(event), class: "underline mr-2 break-all" %><% if event.done == true %>&#10004;<% end %></p></div>
-            </div>
+        <% end %>
+      <% end %>
+      <div class="p-4 rounded-lg shadow-lg <%= Date.today.day == i+1 ? 'bg-fuchsia-500' : 'bg-white text-slate-700' %>">
+        <div class="flex space-x-2">
+          <p class="text-lg pb-4"><%= Date.new(Time.now.year, Time.now.month, i+1).strftime("%A %d.%m") %></p>
+          <% if Date.new(Time.now.year, Time.now.month, i+1) >= Date.today %>
+            <%= link_to new_event_path(date_from_today_view: Date.new(Time.now.year, Time.now.month, i+1)), data: { turbo: false } do %>
+              <span class="material-symbols-outlined">add_box</span>
+            <% end %>
           <% end %>
         </div>
-      <% end %>
-    </div>
-  </div>
-  <div class="absolute inset-0 pointer-events-none border border-black/5 rounded-xl dark:border-white/5">
+        <% events.where(start_time: Date.new(Time.now.year, Time.now.month, i+1).beginning_of_day..Date.new(Time.now.year, Time.now.month, i+1).end_of_day).each do |event| %>
+          <div class="flex flex-col justify-start text-left <%= event.kind == 'blocking' ? 'p-1' : "p-1 mb-1 rounded-lg #{this_month_css_background_color_for(event)}" %>">
+            <div class="mr-2"><p class="<%= event.kind == 'blocking' ? 'text-black text-opacity-25' : '' %>"><%= event.start_time.strftime('%H:%M') %>-<%= event.end_time.strftime('%H:%M') %>:</p></div>
+            <div><p class="<%= event.kind == 'blocking' ? 'text-black text-opacity-25' : '' %>"><%= link_to event.title, event_path(event), class: "underline mr-2 break-all" %><% if event.done == true %>&#10004;<% end %></p></div>
+          </div>
+        <% end %>
+      </div>
+    <% end %>
   </div>
 </div>
 
@@ -64,8 +60,6 @@
           </div>
         <% end %>
       </div>
-    </div>
-    <div class="absolute inset-0 pointer-events-none border border-black/5 rounded-xl dark:border-white/5">
     </div>
   </div>
 <% end %>
