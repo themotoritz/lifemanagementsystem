@@ -9,9 +9,11 @@
       <div class="w-1/4">
         <% unless event.kind == "blocking" %>
           <div class="flex justify-end">
-            <%= form_with(model: event, url: mark_as_done_path(event), method: :patch) do |form| %>
-              <%= button_tag(type: 'submit') do %>
-                <span class="material-symbols-outlined text-green-600">check_circle</span>
+            <% unless event.done_at? %>
+              <%= form_with(model: event, url: mark_as_done_path(event), method: :patch) do |form| %>
+                <%= button_tag(type: 'submit') do %>
+                  <span class="material-symbols-outlined text-green-600">check_circle</span>
+                <% end %>
               <% end %>
             <% end %>
             <%= link_to edit_event_path(event) do %>
