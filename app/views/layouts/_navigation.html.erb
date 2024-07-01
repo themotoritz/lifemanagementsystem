@@ -1,7 +1,7 @@
 <div class="flex items-center justify-between flex-wrap mb-8 p-8 pt-4 bg-slate-50">
   <div class="flex">
     <%= link_to events_path(current_view: "today"), data: { turbo: false } do %>
-      <h1 class="font-bold text-4xl text-blue-500 mr-2">Kalender</h1>
+      <h1 class="font-bold text-4xl text-blue-500 mr-2 test-klass">Kalender</h1>
     <% end %>
     <%= link_to new_event_path(date_from_today_view: (Date.today)) do %>
       <button class="bg-transparent hover:bg-blue-500 text-blue-500 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded">
@@ -15,7 +15,7 @@
     <p class="block uppercase tracking-wide text-gray-700 text-xs font-bold">change view</p>
     <div class="flex justify-end space-x-1">
       <%= link_to events_path(current_view: "today"), data: { turbo: false } do %>
-        <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-3 px-3 rounded" title="Ansicht heute">
+        <button class="custom-button" title="Ansicht heute">
           <span class="material-symbols-outlined inline-block align-middle">calendar_today</span>
         </button>
       <% end %>
