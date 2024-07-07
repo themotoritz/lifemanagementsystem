@@ -20,27 +20,27 @@
         </button>
       <% end %>
       <%= link_to events_path(current_view: "this_week"), data: { turbo: false } do %>
-        <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-3 px-3 rounded" title="Ansicht diese Woche">
+        <button class="custom-button" title="Ansicht diese Woche">
           <span class="material-symbols-outlined inline-block align-middle">calendar_view_week</span>
         </button>
       <% end %>
       <%= link_to events_path(current_view: "this_month"), data: { turbo: false } do %>
-        <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-3 px-3 rounded" title="Ansicht dieser Monat">
+        <button class="custom-button" title="Ansicht dieser Monat">
           <span class="material-symbols-outlined inline-block align-middle">calendar_month</span>
         </button>
       <% end %>
       <%= link_to events_path(current_view: "this_year"), data: { turbo: false } do %>
-        <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-3 px-3 rounded" title="Ansicht dieses Jahr">
+        <button class="custom-button" title="Ansicht dieses Jahr">
           <p class="inline-block align-middle"><%= Date.today.year %></p>
         </button>
       <% end %>
       <%= link_to reschedule_past_events_path, data: { turbo: false } do %>
-        <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-3 px-3 rounded" title="Reschedule Past Events">
+        <button class="custom-button" title="Reschedule Past Events">
           <span class="material-symbols-outlined inline-block align-middle">history</span>
         </button>
       <% end %>  
       <%= link_to export_events_to_csv_path(format: 'csv'), data: { turbo: false } do %>
-        <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-3 px-3 rounded" title="Export Events to CSV">
+        <button class="custom-button" title="Export Events to CSV">
           <span class="material-symbols-outlined inline-block align-middle">csv</span>
         </button>
       <% end %>
