@@ -88,21 +88,15 @@ class EventsController < ApplicationController
       events = Event.undone.recurrence_onetime.not_blocking.not_fixed
 
       if attribute == :priority || attribute == :duration
-        events_to_destroy = events.order(start_time: :desc)
-
-        events_to_reschedule = events
+        events_to_destroy = events_to_reschedule = events
 
         if params[:project].present? && params[:project] != "none"
           events_to_reschedule = events_to_reschedule.where(project: params[:project]).order("#{attribute}": order_mapping[attribute]) + events_to_reschedule.where("project != ? OR project IS NULL", params[:project]).order("#{attribute}": :desc)
         else
           events_to_reschedule = events_to_reschedule.order("#{attribute}": order_mapping[attribute])
         end
-
-        new_events = []
-
-        events_to_reschedule.each do |event|
-          new_events << event.dup
-        end
+        
+        new_events = events_to_reschedule.map(&:dup)
 
         events_to_destroy.destroy_all # triggers event.merge_surrounding_timeslots
 
