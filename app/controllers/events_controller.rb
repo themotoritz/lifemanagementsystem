@@ -127,12 +127,18 @@ class EventsController < ApplicationController
       events = Event.undone.past.not_blocking.not_fixed.where.not(recurrence: "yearly").order(priority: :desc).all
       Event.where(id: events.pluck(:id)).update_all(start_time: nil, end_time: nil)
 
+      updates = []
+
       events.all.each do |event|
         event_scheduler = SingleEventScheduler.new(event)
         rescheduled_event = event_scheduler.schedule
-        event.assign_attributes(rescheduled_event.attributes)
-        event.save
+        
+        updates << { id: event.id, new_attributes: rescheduled_event.attributes }
       end
+
+      updates.each do |update|
+        Event.where(id: update[:id]).update_all(update[:new_attributes])
+      end      
     end
     Timeslot.destroy_past_timeslots
 
