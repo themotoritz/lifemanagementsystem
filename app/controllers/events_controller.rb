@@ -104,9 +104,7 @@ class EventsController < ApplicationController
           new_events << event.dup
         end
 
-        events_to_destroy.each do |event|
-          event.destroy
-        end
+        events_to_destroy.destroy_all # triggers event.merge_surrounding_timeslots
 
         new_events.each do |event|
           recreated_event = event
@@ -115,7 +113,7 @@ class EventsController < ApplicationController
           event_scheduler = SingleEventScheduler.new(recreated_event)
           recreated_event = event_scheduler.schedule
 
-          recreated_event.save!
+          recreated_event.save! # set_default_priority, update_bordering_timeslots, destroy_obsolete_timeslots
         end
       end
     end
