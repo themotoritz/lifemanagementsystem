@@ -14,7 +14,6 @@ class Timeslot < ApplicationRecord
       overlapping_timeslots = Timeslot.where.not(id: id).where("start_time < ? AND end_time > ?", end_time, start_time)
       if overlapping_timeslots.any?
         errors.add(:start_time, "Timeslot-ID '#{id}', #{start_time} (Startzeit) - #{end_time} (Endzeit) is within another timeslot's time frame: #{overlapping_timeslots.all.each {|timeslot| puts timeslot}}")
-        raise "overlapping timeslots"
         self.start_time = self.end_time = self.size = nil
       end
     end
@@ -25,7 +24,8 @@ class Timeslot < ApplicationRecord
   end
 
   def self.current
-    find_by("start_time < ? AND end_time > ?", Time.now, Time.now)
+    time_current = Time.current
+    find_by("start_time < ? AND end_time > ?", time_current, time_current)
   end
 
   def self.next
@@ -34,15 +34,13 @@ class Timeslot < ApplicationRecord
 
   def self.update_current_timeslot
     current_timeslot = Timeslot.current
-
-    if current_timeslot.present?
-      current_timeslot.update_or_destroy_if_too_small
-    end
+    current_timeslot.update_or_destroy_if_too_small if current_timeslot.present?
   end
 
   def update_or_destroy_if_too_small
-    bigger_than_5_minutes = end_time > Time.now + 5.minutes
-    smaller_than_5_minutes = end_time <= Time.now + 5.minutes
+    time_current = Time.current
+    bigger_than_5_minutes = end_time > time_current + 5.minutes
+    smaller_than_5_minutes = end_time <= time_current+ 5.minutes
 
     if bigger_than_5_minutes
       postpone_by(5.minutes)
@@ -58,8 +56,7 @@ class Timeslot < ApplicationRecord
   end
 
   def self.destroy_past_timeslots
-    Timeslot.past.where("end_time < ?", Time.now).destroy_all
-    Timeslot.where(size: 0).destroy_all
+    Timeslot.where("(end_time < ?) OR (size = 0)", Time.now).destroy_all
   end
 
   def self.update_bordering_timeslots_before_destroying(event)
