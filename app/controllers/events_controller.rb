@@ -85,12 +85,10 @@ class EventsController < ApplicationController
         "priority": :desc
       }
 
-      events = Event.undone.recurrence_onetime.not_blocking.not_fixed
+      events = Event.undone.recurrence_onetime.not_blocking.not_fixed.order(start_time: :desc)
 
       if attribute == :priority || attribute == :duration
-        events_to_destroy = events.order(start_time: :desc)
-
-        events_to_reschedule = events
+        events_to_destroy = events_to_reschedule = events
 
         if params[:project].present? && params[:project] != "none"
           events_to_reschedule = events_to_reschedule.where(project: params[:project]).order("#{attribute}": order_mapping[attribute]) + events_to_reschedule.where("project != ? OR project IS NULL", params[:project]).order("#{attribute}": :desc)
@@ -98,25 +96,22 @@ class EventsController < ApplicationController
           events_to_reschedule = events_to_reschedule.order("#{attribute}": order_mapping[attribute])
         end
 
-        new_events = []
+        new_events = events_to_reschedule.map(&:dup)
 
-        events_to_reschedule.each do |event|
-          new_events << event.dup
-        end
+        events_to_destroy.destroy_all
 
-        events_to_destroy.each do |event|
-          event.destroy
-        end
+        recreated_events = []
 
         new_events.each do |event|
-          recreated_event = event
-          recreated_event.start_time = recreated_event.end_time = nil
+          event.start_time = event.end_time = nil
 
-          event_scheduler = SingleEventScheduler.new(recreated_event)
-          recreated_event = event_scheduler.schedule
+          event_scheduler = SingleEventScheduler.new(event)
+          event = event_scheduler.schedule
 
-          recreated_event.save!
+          recreated_events << event
         end
+        
+        Event.import recreated_events
       end
     end
 
