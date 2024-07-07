@@ -125,7 +125,9 @@ class EventsController < ApplicationController
     Timeslot.destroy_past_timeslots
     ActiveRecord::Base.transaction do
       events = Event.undone.past.not_blocking.not_fixed.where.not(recurrence: "yearly").order(priority: :desc).all
+      event_ids = events.pluck(:id)
       Event.where(id: events.pluck(:id)).update_all(start_time: nil, end_time: nil)
+      events = Event.where(id: event_ids).all
 
       updates = []
 
@@ -138,7 +140,7 @@ class EventsController < ApplicationController
 
       updates.each do |update|
         Event.where(id: update[:id]).update_all(update[:new_attributes])
-      end      
+      end
     end
     Timeslot.destroy_past_timeslots
 
