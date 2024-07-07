@@ -85,10 +85,12 @@ class EventsController < ApplicationController
         "priority": :desc
       }
 
-      if attribute == :priority || attribute == :duration
-        events_to_destroy = Event.undone.recurrence_onetime.not_blocking.not_fixed.order(start_time: :desc)
+      events = Event.undone.recurrence_onetime.not_blocking.not_fixed
 
-        events_to_reschedule = Event.undone.recurrence_onetime.not_blocking.not_fixed
+      if attribute == :priority || attribute == :duration
+        events_to_destroy = events.order(start_time: :desc)
+
+        events_to_reschedule = events
 
         if params[:project].present? && params[:project] != "none"
           events_to_reschedule = events_to_reschedule.where(project: params[:project]).order("#{attribute}": order_mapping[attribute]) + events_to_reschedule.where("project != ? OR project IS NULL", params[:project]).order("#{attribute}": :desc)
