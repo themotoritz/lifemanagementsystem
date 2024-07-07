@@ -134,6 +134,7 @@ class EventsController < ApplicationController
         event.save
       end
     end
+    Timeslot.destroy_past_timeslots
 
     redirect_to(events_path)
   end
