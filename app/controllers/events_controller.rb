@@ -125,13 +125,11 @@ class EventsController < ApplicationController
     Timeslot.destroy_past_timeslots
     ActiveRecord::Base.transaction do
       events = Event.undone.past.not_blocking.not_fixed.where.not(recurrence: "yearly").order(priority: :desc).all
-      event_ids = events.pluck(:id)
-      Event.where(id: events.pluck(:id)).update_all(start_time: nil, end_time: nil)
-      events = Event.where(id: event_ids).all
 
       updates = []
 
       events.all.each do |event|
+        event.start_time = event.end_time = nil
         event_scheduler = SingleEventScheduler.new(event)
         rescheduled_event = event_scheduler.schedule
         
