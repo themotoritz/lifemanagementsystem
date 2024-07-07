@@ -34,17 +34,25 @@ class EventsController < ApplicationController
     session[:current_view] = params[:current_view] if params[:current_view].present?
     session[:current_view] = "this_week" unless session[:current_view].present?
 
+    @done_events = Event.done
+    @undone_events = Event.undone
+    date_today = Date.today
+
     case session[:current_view] || params[:current_view]
     when "today"
       days_of_week = ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"]
-      current_day = Date.today.strftime('%A').downcase
+      current_day = date_today.strftime('%A').downcase
       current_day_index = days_of_week.index(current_day) + 1
       @sorted_days = days_of_week.rotate(current_day_index - 1)
-      @events = Event.undone.where("start_time <= ?", 1.week.from_now).order(:start_time)
+      @undone_events_not_blocking_count = @undone_events.not_blocking.future.count
+      @done_events_count = @done_events.count
+      @events = @undone_events.where("start_time <= ?", 1.week.from_now).order(:start_time)
+      @events_hash = {}
+      @events_hash = @events.where(start_time: date_today.beginning_of_day..(date_today+7.days).end_of_day).group_by { |event| event.start_time.strftime("%A").downcase }
     when "this_week", "this_month"
-      @events = Event.undone.where("start_time <= ?", 1.year.from_now).order(:start_time)
+      @events = @undone_events.where("start_time <= ?", 1.year.from_now).order(:start_time)
     when "this_year"
-      @events = Event.undone.not_blocking.order(:start_time)
+      @events = @undone_events.not_blocking.order(:start_time)
     end
 
     @events

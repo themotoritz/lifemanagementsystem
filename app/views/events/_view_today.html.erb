@@ -10,7 +10,7 @@
       </tr>
     </thead>
     <tbody class="bg-white dark:bg-slate-800">
-      <% if events.where("start_time > ?", Date.today.beginning_of_day).present? %>
+      <% if @events_hash.fetch("sunday").present? %>
         <% @sorted_days.each_with_index do |day, index| %>
           <tr class=" bg-sky-500/100">
             <div class="my-2 bg-sky-500/100">
@@ -29,8 +29,9 @@
               <% end %>
             </div>
           </tr>
-          <% if events.where(start_time: (Date.today+index).beginning_of_day..(Date.today+index).end_of_day).present? %>
-            <% events.where(start_time: (Date.today+index).beginning_of_day..(Date.today+index).end_of_day).each_with_index do |event, i| %>
+          <% @events_of_this_day = @events_hash.fetch(day) %>
+          <% if @events_of_this_day.present? %>
+            <% @events_of_this_day.each_with_index do |event, i| %>
               <tr class="<%= today_css_background_color_for(event) %>">
                 <div id="eventAccordion" class="my-2">
                   <%= render event %>

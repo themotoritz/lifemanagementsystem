@@ -51,7 +51,7 @@
     <div class="flex">
       <div class="mr-2">
         <%= form.label "PROJECT (OPTIONAL)", style: "display: block", class: "block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" %>
-        <%= form.select :project, Event.project_names.unshift("none"), { }, class: "appearance-none block bg-gray-200 text-gray-700 border rounded py-3 px-4 mb-2 leading-tight focus:outline-none focus:bg-white", style: "width:200px" %>
+        <%= form.select :project, @project_names, { }, class: "appearance-none block bg-gray-200 text-gray-700 border rounded py-3 px-4 mb-2 leading-tight focus:outline-none focus:bg-white", style: "width:200px" %>
       </div>
       <div class="mr-2">
         <%= form.label :sort_by, style: "display: block", class: "block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" %>
