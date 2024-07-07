@@ -127,11 +127,7 @@ class EventsController < ApplicationController
         event_scheduler = SingleEventScheduler.new(event)
         rescheduled_event = event_scheduler.schedule
         
-        updates << { id: event.id, new_attributes: rescheduled_event.attributes }
-      end
-
-      updates.each do |update|
-        Event.where(id: update[:id]).update_all(update[:new_attributes])
+        Event.where(id: rescheduled_event.id).update_all(rescheduled_event.attributes)
       end
     end
     Timeslot.destroy_past_timeslots
