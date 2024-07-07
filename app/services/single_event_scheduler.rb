@@ -42,7 +42,7 @@ class SingleEventScheduler
   end
 
   def schedule_only_day_find_free_timeslot(date)
-    timeslots = Timeslot.order(:start_time).where("size > ?", @event.duration)
+    timeslots = Timeslot.order(:start_time).where("size >= ?", @event.duration)
 
     timeslot = timeslots.where(start_time: date.beginning_of_day..date.end_of_day).first || find_free_timeslot
 
@@ -50,12 +50,12 @@ class SingleEventScheduler
   end
 
   def find_free_timeslot
-    timeslots = Timeslot.order(:start_time).where("size > ?", @event.duration)
+    timeslots = Timeslot.order(:start_time).where("size >= ?", @event.duration)
 
     if @event.start_time.present? 
       timeslot = timeslots.where("start_time <= ?", @event.start_time).where("end_time >= ?", @event.end_time || @event.start_time + @event.duration).first
     elsif @event.duration.present?
-      timeslot = timeslots.where("size >= ?", @event.duration).where("end_time >= ?", Time.current).first
+      timeslot = timeslots.where("end_time >= ?", Time.current).first
     else
       raise "FATAL: case not covered"
     end
