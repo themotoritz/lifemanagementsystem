@@ -3,8 +3,8 @@ class SingleEventScheduler
     @event = event
   end
 
-  def schedule
-    Timeslot.destroy_past_timeslots
+  def schedule(destroy_past_timeslots = false)
+    Timeslot.destroy_past_timeslots if destroy_past_timeslots
     Timeslot.update_current_timeslot
 
     if @event.end_time.nil?
