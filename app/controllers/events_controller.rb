@@ -96,20 +96,22 @@ class EventsController < ApplicationController
           events_to_reschedule = events_to_reschedule.order("#{attribute}": order_mapping[attribute])
         end
 
-        updates = []
+        new_events = events_to_reschedule.map(&:dup)
 
-        events_to_reschedule.each do |event|
+        events_to_destroy.destroy_all
+
+        recreated_events = []
+
+        new_events.each do |event|
           event.start_time = event.end_time = nil
 
           event_scheduler = SingleEventScheduler.new(event)
           event = event_scheduler.schedule
 
-          updates << { id: event.id, new_attributes: event.attributes }
+          recreated_events << event
         end
-  
-        updates.each do |update|
-          Event.where(id: update[:id]).update_all(update[:new_attributes])
-        end
+        
+        Event.import recreated_events
       end
     end
 
