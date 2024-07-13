@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_07_07_114534) do
+ActiveRecord::Schema[7.1].define(version: 2024_07_13_130451) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -61,6 +61,8 @@ ActiveRecord::Schema[7.1].define(version: 2024_07_07_114534) do
     t.datetime "done_at"
     t.boolean "fixed_date", default: false
     t.text "result"
+    t.integer "motivation_level", default: 50
+    t.string "lack_of_motivation_reason"
   end
 
   create_table "timeslots", force: :cascade do |t|

@@ -82,12 +82,13 @@ class EventsController < ApplicationController
       attribute = params[:sort_by].to_sym
       order_mapping = {
         "duration": :asc,
-        "priority": :desc
+        "priority": :desc,
+        "motivation_level": :desc
       }
 
       events = Event.undone.recurrence_onetime.not_blocking.not_fixed
-
-      if attribute == :priority || attribute == :duration
+ 
+      if attribute == :priority || attribute == :duration || attribute == :motivation_level
         events_to_destroy = events_to_reschedule = events
 
         if params[:project].present? && params[:project] != "none"
@@ -266,6 +267,8 @@ class EventsController < ApplicationController
       @event.done_at = Time.current if params[:event][:done] == "1"
       @event.upload = params[:event][:upload]
       @event.result = params[:event][:result]
+      @event.motivation_level = params[:event][:motivation_level]
+      @event.lack_of_motivation_reason = params[:event][:lack_of_motivation_reason]
 
       respond_to do |format|
         if @event.save!
@@ -353,7 +356,7 @@ class EventsController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def event_params
-      params.require(:event).permit(:kind, :start_time, :duration_in_minutes, :duration, :fixed, :title, :end_time, :description, :done, :recurrence, :priority, :project, :fixed_date, :upload, :result)
+      params.require(:event).permit(:kind, :start_time, :duration_in_minutes, :duration, :fixed, :title, :end_time, :description, :done, :recurrence, :priority, :project, :fixed_date, :upload, :result, :motivation_level, :lack_of_motivation_reason)
     end
 
     def get_changes
@@ -369,7 +372,7 @@ class EventsController < ApplicationController
           key = "start_time"
         end
 
-        if key == "duration" || key == "priority"
+        if key == "duration" || key == "priority" || key == "motivation_level"
           value = value.to_i
         end
 
