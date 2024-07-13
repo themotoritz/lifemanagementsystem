@@ -50,8 +50,6 @@ class Event < ApplicationRecord
     end
   end
 
-  private
-
   def update_bordering_timeslots
     if start_time.present?
       unless start_time < Time.current

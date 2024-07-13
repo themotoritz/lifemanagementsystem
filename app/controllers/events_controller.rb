@@ -34,17 +34,25 @@ class EventsController < ApplicationController
     session[:current_view] = params[:current_view] if params[:current_view].present?
     session[:current_view] = "this_week" unless session[:current_view].present?
 
+    @done_events = Event.done
+    @undone_events = Event.undone
+    date_today = Date.today
+
     case session[:current_view] || params[:current_view]
     when "today"
       days_of_week = ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"]
-      current_day = Date.today.strftime('%A').downcase
+      current_day = date_today.strftime('%A').downcase
       current_day_index = days_of_week.index(current_day) + 1
       @sorted_days = days_of_week.rotate(current_day_index - 1)
-      @events = Event.undone.where("start_time <= ?", 1.week.from_now).order(:start_time)
+      @undone_events_not_blocking_count = @undone_events.not_blocking.future.count
+      @done_events_count = @done_events.count
+      @events = @undone_events.where("start_time <= ?", 1.week.from_now).order(:start_time)
+      @events_hash = {}
+      @events_hash = @events.where(start_time: date_today.beginning_of_day..(date_today+7.days).end_of_day).group_by { |event| event.start_time.strftime("%A").downcase }
     when "this_week", "this_month"
-      @events = Event.undone.where("start_time <= ?", 1.year.from_now).order(:start_time)
+      @events = @undone_events.where("start_time <= ?", 1.year.from_now).order(:start_time)
     when "this_year"
-      @events = Event.undone.not_blocking.order(:start_time)
+      @events = @undone_events.not_blocking.order(:start_time)
     end
 
     @events
@@ -77,35 +85,29 @@ class EventsController < ApplicationController
         "priority": :desc
       }
 
-      if attribute == :priority || attribute == :duration
-        events_to_destroy = Event.undone.recurrence_onetime.not_blocking.not_fixed.order(start_time: :desc)
+      events = Event.undone.recurrence_onetime.not_blocking.not_fixed
 
-        events_to_reschedule = Event.undone.recurrence_onetime.not_blocking.not_fixed
+      if attribute == :priority || attribute == :duration
+        events_to_destroy = events_to_reschedule = events
 
         if params[:project].present? && params[:project] != "none"
           events_to_reschedule = events_to_reschedule.where(project: params[:project]).order("#{attribute}": order_mapping[attribute]) + events_to_reschedule.where("project != ? OR project IS NULL", params[:project]).order("#{attribute}": :desc)
         else
           events_to_reschedule = events_to_reschedule.order("#{attribute}": order_mapping[attribute])
         end
-
-        new_events = []
+        
+        events_to_reschedule.each do |event|
+          event.merge_surrounding_timeslots
+          event.start_time = event.end_time = nil
+          event.save!
+        end
 
         events_to_reschedule.each do |event|
-          new_events << event.dup
-        end
-
-        events_to_destroy.each do |event|
-          event.destroy
-        end
-
-        new_events.each do |event|
           recreated_event = event
-          recreated_event.start_time = recreated_event.end_time = nil
-
           event_scheduler = SingleEventScheduler.new(recreated_event)
           recreated_event = event_scheduler.schedule
 
-          recreated_event.save!
+          recreated_event.save! # set_default_priority, update_bordering_timeslots, destroy_obsolete_timeslots
         end
       end
     end
@@ -114,17 +116,21 @@ class EventsController < ApplicationController
   end
 
   def reschedule_past_events
+    Timeslot.destroy_past_timeslots
     ActiveRecord::Base.transaction do
-      Event.undone.past.not_blocking.not_fixed.where.not(recurrence: "yearly").order(priority: :desc).all.each do |event|
-        Timeslot.update_bordering_timeslots_before_destroying(event)
+      events = Event.undone.past.not_blocking.not_fixed.where.not(recurrence: "yearly").order(priority: :desc).all
+
+      updates = []
+
+      events.all.each do |event|
         event.start_time = event.end_time = nil
-
         event_scheduler = SingleEventScheduler.new(event)
-        event = event_scheduler.schedule
-
-        event.save
+        rescheduled_event = event_scheduler.schedule
+        
+        Event.where(id: rescheduled_event.id).update_all(rescheduled_event.attributes)
       end
     end
+    Timeslot.destroy_past_timeslots
 
     redirect_to(events_path)
   end

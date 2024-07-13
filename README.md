@@ -43,6 +43,7 @@ Misc:
 - low priority events ausblenden
 - display only events with prio > 90
 - today view: tag einklappbar machen
+- hab ich bock drauf krtierium ähnlich zu priorität hinzufügen
 
 Simple:
 - erledigte Tasks anzeigen

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_06_20_193933) do
+ActiveRecord::Schema[7.1].define(version: 2024_07_07_114534) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -70,7 +70,10 @@ ActiveRecord::Schema[7.1].define(version: 2024_06_20_193933) do
     t.bigint "event_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["end_time"], name: "index_timeslots_on_end_time"
     t.index ["event_id"], name: "index_timeslots_on_event_id"
+    t.index ["size"], name: "index_timeslots_on_size"
+    t.index ["start_time"], name: "index_timeslots_on_start_time"
   end
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
