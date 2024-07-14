@@ -3,7 +3,6 @@ class Event < ApplicationRecord
 
   require 'csv'
 
-  has_many :timeslots, dependent: :nullify
   has_one_attached :upload
 
   #validate :start_time_not_in_the_past, if: -> { start_time_changed? }

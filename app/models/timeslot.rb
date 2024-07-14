@@ -1,6 +1,4 @@
 class Timeslot < ApplicationRecord
-  belongs_to :event, optional: true
-
   validates :size, :start_time, :end_time, presence: true
   before_save :no_overlapping_timeslots_exist
 
