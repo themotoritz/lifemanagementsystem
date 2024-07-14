@@ -103,10 +103,14 @@ class EventsController < ApplicationController
           event.save!
         end
 
-        events_to_reschedule.each do |event|
+        events_to_reschedule.each_with_index do |event, index|
           recreated_event = event
           event_scheduler = SingleEventScheduler.new(recreated_event)
-          recreated_event = event_scheduler.schedule
+          if index == 0
+            recreated_event = event_scheduler.schedule(destroy_past_timeslots: true, first_record: true)
+          else
+            recreated_event = event_scheduler.schedule
+          end
 
           recreated_event.save! # set_default_priority, update_bordering_timeslots, destroy_obsolete_timeslots
         end
@@ -322,7 +326,7 @@ class EventsController < ApplicationController
 
     if file.present? && file.content_type == 'text/csv'
       ActiveRecord::Base.transaction do
-        CSV.foreach(file.path, headers: true) do |row|
+        CSV.foreach(file.path, headers: true).with_index do |row, index|
           @event = Event.new(row)
 
           # no need to schedule done tasks or birthdays which are in the past
@@ -332,7 +336,12 @@ class EventsController < ApplicationController
             date = @event.start_time.to_date
             @event.start_time = @event.end_time = nil
             event_scheduler = SingleEventScheduler.new(@event)
-            @event = event_scheduler.schedule_only_day(date)
+            if index == 0
+              @event = event_scheduler.schedule_only_day(date, destroy_past_timeslots: true, first_record: true)
+            else
+              @event = event_scheduler.schedule_only_day(date)
+            end
+            
             raise ActiveRecord::Rollback unless @event.save!
           end
         end

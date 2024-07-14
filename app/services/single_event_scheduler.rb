@@ -3,9 +3,9 @@ class SingleEventScheduler
     @event = event
   end
 
-  def schedule(destroy_past_timeslots = false)
+  def schedule(destroy_past_timeslots: false, first_record: false)
     Timeslot.destroy_past_timeslots if destroy_past_timeslots
-    Timeslot.update_current_timeslot
+    Timeslot.update_current_timeslot if first_record == true
 
     if @event.end_time.nil?
       @event.duration = 15.minutes if @event.duration.nil?
@@ -22,9 +22,9 @@ class SingleEventScheduler
     return @event
   end
 
-  def schedule_only_day(date)
-    Timeslot.destroy_past_timeslots
-    Timeslot.update_current_timeslot
+  def schedule_only_day(date, destroy_past_timeslots: false, first_record: false)
+    Timeslot.destroy_past_timeslots if destroy_past_timeslots
+    Timeslot.update_current_timeslot if first_record == true
 
     if @event.end_time.nil?
       @event.duration = 15.minutes if @event.duration.nil?
