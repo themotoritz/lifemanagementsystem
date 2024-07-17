@@ -86,7 +86,12 @@ class EventsController < ApplicationController
         "motivation_level": :desc
       }
 
-      events = Event.undone.recurrence_onetime.not_blocking.not_fixed
+      #old
+      #events = Event.undone.recurrence_onetime.not_blocking.not_fixed
+      
+      #new
+      events = Event.future.undone.recurrence_onetime.not_blocking.not_fixed.order(:start_time)
+      events = EventScheduler.new(events).call
  
       if attribute == :priority || attribute == :duration || attribute == :motivation_level
         events_to_destroy = events_to_reschedule = events
