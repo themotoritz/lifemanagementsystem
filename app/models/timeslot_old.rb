@@ -1,4 +1,4 @@
-class Timeslot < ApplicationRecord
+class TimeslotOld < ApplicationRecord
   validates :size, :start_time, :end_time, presence: true
   before_save :no_overlapping_timeslots_exist
 
