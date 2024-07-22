@@ -32,16 +32,25 @@ class Calendar
     end
   end
 
-  def get_next_suitable_timeslot(size:)
+  def get_next_suitable_timeslot(size:, date: nil)
     get_timeslots if @timeslots.empty?
     i = nil
 
     @timeslots.each_with_index do |timeslot, index|
-      if timeslot.size >= size
-        @next_suitable_timeslot = timeslot
-        i = index
-        
-        break
+      if date.present?
+        if timeslot.size >= size && timeslot.start_time.to_date == date
+          @next_suitable_timeslot = timeslot
+          i = index
+          
+          break
+        end
+      else
+        if timeslot.size >= size
+          @next_suitable_timeslot = timeslot
+          i = index
+          
+          break
+        end
       end
     end
 

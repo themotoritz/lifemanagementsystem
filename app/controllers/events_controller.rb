@@ -177,8 +177,10 @@ class EventsController < ApplicationController
         @event = event_scheduler.schedule
       elsif time_param.blank? && date_param.present?
         date = Date.parse(params[:event][:date])
-        #event_scheduler = SingleEventScheduler.new(@event)
-        #@event = event_scheduler.schedule_only_day(date)
+        @event.start_time = date
+        @event.fixed_date = true
+        event_class_array = EventScheduler.new([@event]).call
+        @event = event_class_array.first
       elsif date_param.blank? && time_param.blank?
         #event_scheduler = SingleEventScheduler.new(@event)
         #@event = event_scheduler.schedule
@@ -191,6 +193,7 @@ class EventsController < ApplicationController
       end
 
       if @event.recurrence != "onetime"
+        @event.fixed_date = true
         event_scheduler = MultipleEventScheduler.new(@event)
         events = event_scheduler.create_events(date_param, time_param)
       end

@@ -9,7 +9,8 @@ class MultipleEventScheduler
     if group_id == nil || Event.where(group_id: group_id).present?
       raise "FATAL: should not be possible"
     end
-    @event.update(group_id: group_id)
+    #@event.update(group_id: group_id)
+    @event.group_id = group_id
     create_until_date = 10.years.from_now.end_of_month
 
     case @event.recurrence
@@ -252,17 +253,21 @@ class MultipleEventScheduler
         eleven_month_counter += 1
       end
     when "yearly"
+      events << @event
       current_time = @event.start_time + 1.year
       year_counter = 1
 
       while current_time <= create_until_date
-        event = @event.dup
-        event = call_single_event_scheduler(event, time_param, current_time)
+        event = @event.dup        
+        #event = call_single_event_scheduler(event, time_param, current_time)
+        event.start_time = current_time
         events << event
 
         current_time += 1.year
         year_counter += 1
       end
+
+      events = EventScheduler.new(events).call
     when "weekdays"
       current_time = @event.start_time + 1.day
 
