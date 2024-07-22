@@ -86,11 +86,7 @@ class EventsController < ApplicationController
         "motivation_level": :desc
       }
 
-      #old
-      #events = Event.undone.recurrence_onetime.not_blocking.not_fixed
-      
-      #new
-      events = Event.future.undone.recurrence_onetime.not_blocking.not_fixed #.order(:start_time)
+      events = Event.future.undone.recurrence_onetime.not_blocking.not_fixed
       
       if attribute == :priority || attribute == :duration || attribute == :motivation_level
         events_to_destroy = events_to_reschedule = events
@@ -100,28 +96,8 @@ class EventsController < ApplicationController
         else
           events_to_reschedule = events_to_reschedule.order("#{attribute}": order_mapping[attribute])
         end
-
-        #new
       
         events = EventScheduler.new(events_to_reschedule).call
-
-        # events_to_reschedule.each do |event|
-        #   event.merge_surrounding_timeslots
-        #   event.start_time = event.end_time = nil
-        #   event.save!
-        # end
-
-        # events_to_reschedule.each_with_index do |event, index|
-        #   recreated_event = event
-        #   event_scheduler = SingleEventScheduler.new(recreated_event)
-        #   if index == 0
-        #     recreated_event = event_scheduler.schedule(destroy_past_timeslots: true, first_record: true)
-        #   else
-        #     recreated_event = event_scheduler.schedule
-        #   end
-
-        #   recreated_event.save! # set_default_priority, update_bordering_timeslots, destroy_obsolete_timeslots
-        # end
       end
     end
 
@@ -129,22 +105,10 @@ class EventsController < ApplicationController
   end
 
   def reschedule_past_events
-    #Timeslot.destroy_past_timeslots
     ActiveRecord::Base.transaction do
       events = Event.undone.past.not_blocking.not_fixed.where.not(recurrence: "yearly").order(priority: :desc).all
-
-      # updates = []
-
-      # events.all.each do |event|
-      #   event.start_time = event.end_time = nil
-      #   event_scheduler = SingleEventScheduler.new(event)
-      #   rescheduled_event = event_scheduler.schedule
-        
-      #   Event.where(id: rescheduled_event.id).update_all(rescheduled_event.attributes)
-      # end
       events = EventScheduler.new(events).call
     end
-    #Timeslot.destroy_past_timeslots
 
     redirect_to(events_path)
   end
@@ -182,8 +146,6 @@ class EventsController < ApplicationController
         event_class_array = EventScheduler.new([@event]).call
         @event = event_class_array.first
       elsif date_param.blank? && time_param.blank?
-        #event_scheduler = SingleEventScheduler.new(@event)
-        #@event = event_scheduler.schedule
         event_class_array = EventScheduler.new([@event]).call
         @event = event_class_array.first
       else
@@ -238,8 +200,6 @@ class EventsController < ApplicationController
     ActiveRecord::Base.transaction do
       changes = get_changes
 
-      #Timeslot.update_bordering_timeslots_before_destroying(@event)
-
       if changes.key?("start_time") || changes.key?("end_time") || changes.key?("duration")
         date = Date.parse(params[:event][:date]) if params[:event][:date].present?
         time = Time.parse(params[:event][:time]) if params[:event][:time].present?
@@ -256,9 +216,6 @@ class EventsController < ApplicationController
           end
         elsif date.blank? && time.blank?
           @event.end_time = @event.start_time = nil
-
-          #event_scheduler = SingleEventScheduler.new(@event)
-          #@event = event_scheduler.schedule
 
           event_class_array = EventScheduler.new([@event]).call
           @event = event_class_array.first

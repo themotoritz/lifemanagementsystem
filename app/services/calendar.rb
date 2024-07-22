@@ -74,12 +74,6 @@ class Calendar
   
     closest_event = events[low]
   
-    # if low > 0
-    #   byebug
-    #   prev_event = events[low - 1]
-    #   closest = prev_event if (given_time - prev_event.start_time).abs < (given_time - closest.start_time).abs
-    # end
-  
     [closest_event, low]
   end  
 end

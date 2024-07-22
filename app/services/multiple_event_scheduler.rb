@@ -9,7 +9,6 @@ class MultipleEventScheduler
     if group_id == nil || Event.where(group_id: group_id).present?
       raise "FATAL: should not be possible"
     end
-    #@event.update(group_id: group_id)
     @event.group_id = group_id
     create_until_date = 10.years.from_now.end_of_month
 
@@ -258,8 +257,7 @@ class MultipleEventScheduler
       year_counter = 1
 
       while current_time <= create_until_date
-        event = @event.dup        
-        #event = call_single_event_scheduler(event, time_param, current_time)
+        event = @event.dup
         event.start_time = current_time
         events << event
 

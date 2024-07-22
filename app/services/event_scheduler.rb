@@ -20,13 +20,6 @@ class EventScheduler
   end
 
   def unschedule_events_from_calendar
-    # @events.each do |event|
-    #   #e = @calendar.events.find { |e| e.id == event.id}
-    #   #e.start_time = nil
-    #   #e.end_time = nil
-    #   @calendar.events.delete(event)
-    # end
-
     @calendar.events -= @events
   end
 
