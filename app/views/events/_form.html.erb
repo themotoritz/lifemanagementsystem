@@ -23,11 +23,8 @@
       </div>
       <div class="px-3 mb-2">
         <%= form.label :project, style: "display: block", class: "block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" %>
-        <%= form.text_field :project, class: "appearance-none block bg-gray-200 text-gray-700 border rounded py-3 px-4 mb-2 leading-tight focus:outline-none focus:bg-white" %>
+        <%= form.select :project, options_for_select(@project_names, event.project), {}, class: "appearance-none block bg-gray-200 text-gray-700 border rounded py-3 px-4 mb-2 leading-tight focus:outline-none focus:bg-white" %>
       </div>
-      <% unless @project_names.blank? %>
-        <p class="px-3 mb-2">List of Projects: <%= @project_names %></p>
-      <% end %>
       <div class="px-3 mb-2">
         <%= form.label :description, style: "display: block", class: "block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" %>
         <%= form.text_area :description, style: "width:500px;height:250px", class: "appearance-none block bg-gray-200 text-gray-700 border rounded py-3 px-4 mb-2 leading-tight focus:outline-none focus:bg-white" %>

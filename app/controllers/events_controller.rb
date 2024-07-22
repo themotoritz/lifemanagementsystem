@@ -387,6 +387,6 @@ class EventsController < ApplicationController
     end
 
     def get_project_names
-      @project_names = Event.project_names.join(", ")
+      @project_names = Event.project_names.unshift("none")
     end
 end
