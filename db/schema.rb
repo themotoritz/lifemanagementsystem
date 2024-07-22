@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_07_13_130451) do
+ActiveRecord::Schema[7.1].define(version: 2024_07_22_211603) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -65,20 +65,6 @@ ActiveRecord::Schema[7.1].define(version: 2024_07_13_130451) do
     t.string "lack_of_motivation_reason"
   end
 
-  create_table "timeslots", force: :cascade do |t|
-    t.bigint "size"
-    t.datetime "start_time"
-    t.datetime "end_time"
-    t.bigint "event_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["end_time"], name: "index_timeslots_on_end_time"
-    t.index ["event_id"], name: "index_timeslots_on_event_id"
-    t.index ["size"], name: "index_timeslots_on_size"
-    t.index ["start_time"], name: "index_timeslots_on_start_time"
-  end
-
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
-  add_foreign_key "timeslots", "events"
 end
