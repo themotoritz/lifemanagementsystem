@@ -86,8 +86,8 @@ class EventsController < ApplicationController
         "motivation_level": :desc
       }
 
-      events = Event.undone.recurrence_onetime.not_blocking.not_fixed
- 
+      events = Event.future.undone.recurrence_onetime.not_blocking.not_fixed
+      
       if attribute == :priority || attribute == :duration || attribute == :motivation_level
         events_to_destroy = events_to_reschedule = events
 
@@ -96,24 +96,8 @@ class EventsController < ApplicationController
         else
           events_to_reschedule = events_to_reschedule.order("#{attribute}": order_mapping[attribute])
         end
-        
-        events_to_reschedule.each do |event|
-          event.merge_surrounding_timeslots
-          event.start_time = event.end_time = nil
-          event.save!
-        end
-
-        events_to_reschedule.each_with_index do |event, index|
-          recreated_event = event
-          event_scheduler = SingleEventScheduler.new(recreated_event)
-          if index == 0
-            recreated_event = event_scheduler.schedule(destroy_past_timeslots: true, first_record: true)
-          else
-            recreated_event = event_scheduler.schedule
-          end
-
-          recreated_event.save! # set_default_priority, update_bordering_timeslots, destroy_obsolete_timeslots
-        end
+      
+        events = EventScheduler.new(events_to_reschedule).call
       end
     end
 
@@ -121,21 +105,10 @@ class EventsController < ApplicationController
   end
 
   def reschedule_past_events
-    Timeslot.destroy_past_timeslots
     ActiveRecord::Base.transaction do
       events = Event.undone.past.not_blocking.not_fixed.where.not(recurrence: "yearly").order(priority: :desc).all
-
-      updates = []
-
-      events.all.each do |event|
-        event.start_time = event.end_time = nil
-        event_scheduler = SingleEventScheduler.new(event)
-        rescheduled_event = event_scheduler.schedule
-        
-        Event.where(id: rescheduled_event.id).update_all(rescheduled_event.attributes)
-      end
+      events = EventScheduler.new(events).call
     end
-    Timeslot.destroy_past_timeslots
 
     redirect_to(events_path)
   end
@@ -154,6 +127,7 @@ class EventsController < ApplicationController
 
       @event = Event.new(event_params)
       @event.duration = event_params[:duration].to_i if event_params[:duration].present?
+      @event.duration ||= 900
       @event.recurrence = params[:event][:recurrence]
       @event.done_at = Time.current if params[:event][:done] == "1"
 
@@ -167,11 +141,13 @@ class EventsController < ApplicationController
         @event = event_scheduler.schedule
       elsif time_param.blank? && date_param.present?
         date = Date.parse(params[:event][:date])
-        event_scheduler = SingleEventScheduler.new(@event)
-        @event = event_scheduler.schedule_only_day(date)
+        @event.start_time = date
+        @event.fixed_date = true
+        event_class_array = EventScheduler.new([@event]).call
+        @event = event_class_array.first
       elsif date_param.blank? && time_param.blank?
-        event_scheduler = SingleEventScheduler.new(@event)
-        @event = event_scheduler.schedule
+        event_class_array = EventScheduler.new([@event]).call
+        @event = event_class_array.first
       else
         raise "unknown case"
         event_scheduler = SingleEventScheduler.new(@event)
@@ -179,6 +155,7 @@ class EventsController < ApplicationController
       end
 
       if @event.recurrence != "onetime"
+        @event.fixed_date = true
         event_scheduler = MultipleEventScheduler.new(@event)
         events = event_scheduler.create_events(date_param, time_param)
       end
@@ -223,8 +200,6 @@ class EventsController < ApplicationController
     ActiveRecord::Base.transaction do
       changes = get_changes
 
-      Timeslot.update_bordering_timeslots_before_destroying(@event)
-
       if changes.key?("start_time") || changes.key?("end_time") || changes.key?("duration")
         date = Date.parse(params[:event][:date]) if params[:event][:date].present?
         time = Time.parse(params[:event][:time]) if params[:event][:time].present?
@@ -242,8 +217,8 @@ class EventsController < ApplicationController
         elsif date.blank? && time.blank?
           @event.end_time = @event.start_time = nil
 
-          event_scheduler = SingleEventScheduler.new(@event)
-          @event = event_scheduler.schedule
+          event_class_array = EventScheduler.new([@event]).call
+          @event = event_class_array.first
         elsif date.present? && time.blank?
           @event.end_time = @event.start_time = nil
 
