@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_07_22_211603) do
+ActiveRecord::Schema[7.1].define(version: 2024_07_23_162406) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -63,6 +63,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_07_22_211603) do
     t.text "result"
     t.integer "motivation_level", default: 50
     t.string "lack_of_motivation_reason"
+    t.boolean "fixed_time", default: false
   end
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
