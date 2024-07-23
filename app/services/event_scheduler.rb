@@ -1,6 +1,6 @@
 class EventScheduler
   def initialize(events)
-    @events = events
+    @events = events.to_a
     p "time current 1.1: #{Time.current.strftime("%Y-%m-%d %H:%M:%S.%L %z")}"
     @calendar = Calendar.new
     p "time current 1.2: #{Time.current.strftime("%Y-%m-%d %H:%M:%S.%L %z")}"
