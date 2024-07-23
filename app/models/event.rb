@@ -44,6 +44,10 @@ class Event < ApplicationRecord
     end
   end
 
+  def self.project_names
+    pluck(:project).compact.uniq.select { |element| !element.empty? }
+  end
+
   def set_default_priority
     if priority.blank?
       self.priority = 50
@@ -76,9 +80,5 @@ class Event < ApplicationRecord
         self.start_time = self.end_time = self.duration = nil
       end
     end
-  end
-
-  def self.project_names
-    pluck(:project).compact.uniq.select { |element| !element.empty? }
   end
 end
