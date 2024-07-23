@@ -14,14 +14,8 @@ class EventsController < ApplicationController
   def archive_done_events
     ActiveRecord::Base.transaction do
       events_to_archive = Event.future.done
-      archived_events = []
 
       events_to_archive.each do |event|
-        archived_events << event.dup
-        event.destroy
-      end
-
-      archived_events.each do |event|
         event.start_time = event.end_time = event.duration = nil
         event.archived = true
         event.save
