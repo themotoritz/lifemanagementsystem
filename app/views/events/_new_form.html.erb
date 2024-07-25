@@ -57,12 +57,10 @@
         <%= form.label "duration in minutes", style: "display: block", class: "block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" %>
         <%= form.number_field :duration_in_minutes, placeholder: "Standardwert: 15 Minuten", class: "appearance-none block bg-gray-200 text-gray-700 border rounded py-3 px-4 mb-2 leading-tight focus:outline-none focus:bg-white", value: convert_seconds_to_minutes(event.duration) || nil, step: 1 %>
       </div>
-      <% if params[:action] == "new" %>
-        <div class="px-3 mb-2">
-          <%= form.label :recurrence, style: "display: block", class: "block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" %>
-          <%= form.select :recurrence, Event.recurrences.keys.map { |recurrence| [recurrence.titleize, recurrence] }, {},  class: "appearance-none block bg-gray-200 text-gray-700 border rounded py-3 px-4 mb-2 leading-tight focus:outline-none focus:bg-white" %>
-        </div>
-      <% end %>
+      <div class="px-3 mb-2">
+        <%= form.label :recurrence, style: "display: block", class: "block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" %>
+        <%= form.select :recurrence, Event.recurrences.keys.map { |recurrence| [recurrence.titleize, recurrence] }, {},  class: "appearance-none block bg-gray-200 text-gray-700 border rounded py-3 px-4 mb-2 leading-tight focus:outline-none focus:bg-white" %>
+      </div>
       <div class="px-3 mb-2">
         <%= form.label :priority, style: "display: block", class: "block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" %>
         <%= form.number_field :priority, class: "appearance-none block bg-gray-200 text-gray-700 border rounded py-3 px-4 mb-2 leading-tight focus:outline-none focus:bg-white" %>
