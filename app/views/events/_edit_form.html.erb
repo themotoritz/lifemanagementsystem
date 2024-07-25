@@ -31,12 +31,12 @@
           <%= form.date_field :starts_at_date, class: "appearance-none block bg-gray-200 text-gray-700 border rounded py-3 px-4 mb-2 leading-tight focus:outline-none focus:bg-white" %>
         </div>
         <div class="px-3 mb-2">
-          <%= form.label :starts_at_hour, "STARTS AT HOUR", class: "block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"  %>
-          <%= form.select :starts_at_hour, options_for_select([["-", ""]] + (0..24).map { |hour| [hour, hour] }, event.starts_at_hour), {}, class: "appearance-none block bg-gray-200 text-gray-700 border rounded py-3 mb-2 leading-tight focus:outline-none focus:bg-white" %>
+          <%= form.label :starts_at_hour, "HOUR (0-24)", class: "block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"  %>
+          <%= form.number_field :starts_at_hour, in: 0..24, step: 1, required: false, class: "appearance-none block bg-gray-200 text-gray-700 border rounded py-3 px-4 mb-2 leading-tight focus:outline-none focus:bg-white" %>
         </div>
         <div class="px-3 mb-2">
-          <%= form.label :starts_at_minute, "STARTS AT MINUTE", class: "block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"  %>
-          <%= form.select :starts_at_minute, options_for_select([["-", ""]] + (0..59).map { |min| [min, min] }, event.starts_at_minute), {}, class: "appearance-none block bg-gray-200 text-gray-700 border rounded py-3 mb-2 leading-tight focus:outline-none focus:bg-white" %>
+          <%= form.label :starts_at_minute, "MINUTE (0-60)", class: "block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"  %>
+          <%= form.number_field :starts_at_minute, in: 0..60, step: 1, required: false, class: "appearance-none block bg-gray-200 text-gray-700 border rounded py-3 px-4 mb-2 leading-tight focus:outline-none focus:bg-white" %>
         </div>
       </div>
       <div class="flex items-center">
@@ -45,12 +45,12 @@
           <%= form.date_field :ends_at_date, class: "appearance-none block bg-gray-200 text-gray-700 border rounded py-3 px-4 mb-2 leading-tight focus:outline-none focus:bg-white" %>
         </div>
         <div class="px-3 mb-2">
-          <%= form.label :ends_at_hour, "ENDS AT HOUR", class: "block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"  %>
-          <%= form.select :ends_at_hour, options_for_select([["-", ""]] + (0..24).map { |hour| [hour, hour] }, event.ends_at_hour), {}, class: "appearance-none block bg-gray-200 text-gray-700 border rounded py-3 mb-2 leading-tight focus:outline-none focus:bg-white" %>
+          <%= form.label :ends_at_hour, "HOUR (0-24)", class: "block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"  %>
+          <%= form.number_field :ends_at_hour, in: 0..24, step: 1, required: false, class: "appearance-none block bg-gray-200 text-gray-700 border rounded py-3 px-4 mb-2 leading-tight focus:outline-none focus:bg-white" %>
         </div>
         <div class="px-3 mb-2">
-          <%= form.label :ends_at_minute, "ENDS AT MINUTE", class: "block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"  %>
-          <%= form.select :ends_at_minute, options_for_select([["-", ""]] + (0..59).map { |min| [min, min] }, event.ends_at_minute), {}, class: "appearance-none block bg-gray-200 text-gray-700 border rounded py-3 mb-2 leading-tight focus:outline-none focus:bg-white" %>
+          <%= form.label :ends_at_minute, "MINUTE (0-60)", class: "block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"  %>
+          <%= form.number_field :ends_at_minute, in: 0..60, step: 1, required: false, class: "appearance-none block bg-gray-200 text-gray-700 border rounded py-3 px-4 mb-2 leading-tight focus:outline-none focus:bg-white" %>
         </div>
       </div>
       <div class="px-3 mb-2">

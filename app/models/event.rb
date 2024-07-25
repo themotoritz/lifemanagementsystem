@@ -7,6 +7,9 @@ class Event < ApplicationRecord
 
   validate :duration_positiv, if: -> { duration_changed? }, unless: :archived?
   validate :no_overlapping_events_exist, if: -> { start_time_changed? || end_time_changed? || duration_changed? }, unless: :archived?
+  validates :starts_at_hour, numericality: { only_integer: true, greater_than_or_equal_to: 0, less_than_or_equal_to: 24 }, if: -> { starts_at_hour.present? }
+  validates :starts_at_minute, numericality: { only_integer: true, greater_than_or_equal_to: 0, less_than_or_equal_to: 60 }, if: -> { starts_at_minute.present? }
+
   before_save :set_default_priority, unless: :archived?
 
   scope :done, -> { where(done: true) }

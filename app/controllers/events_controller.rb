@@ -139,7 +139,6 @@ class EventsController < ApplicationController
         redirect_to new_event_path
         return
       end
-
       
       @event.duration = event_params[:duration].to_i if event_params[:duration].present?
       @event.duration ||= 900
