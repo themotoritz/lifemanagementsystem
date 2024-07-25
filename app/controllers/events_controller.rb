@@ -143,34 +143,8 @@ class EventsController < ApplicationController
       
       @event.duration = event_params[:duration].to_i if event_params[:duration].present?
       @event.duration ||= 900
-      @event.recurrence = params[:event][:recurrence]
-      #@event.done_at = Time.current if params[:event][:done] == "1"
-
-      
+      @event.recurrence = params[:event][:recurrence]     
       @event = EventScheduler.new(@event).call
-
-      # if date_param.present? && time_param.present?
-      #   time_zone = Time.zone
-      #   datetime_str = "#{date_param} #{time_param}"
-      #   datetime_with_zone = Time.zone.parse(datetime_str)
-      #   @event.start_time = datetime_with_zone
-
-      #   event_scheduler = SingleEventScheduler.new(@event)
-      #   @event = event_scheduler.schedule
-      # elsif time_param.blank? && date_param.present?
-      #   date = Date.parse(params[:event][:date])
-      #   @event.start_time = date
-      #   @event.fixed_date = true
-      #   event_class_array = EventScheduler.new(@event).call
-      #   @event = event_class_array.first
-      # elsif date_param.blank? && time_param.blank?
-      #   event_class_array = EventScheduler.new(@event).call
-      #   @event = event_class_array.first
-      # else
-      #   raise "unknown case"
-      #   event_scheduler = SingleEventScheduler.new(@event)
-      #   @event = event_scheduler.schedule
-      # end
 
       if @event.recurrence != "onetime"
         @event.fixed_date = true
