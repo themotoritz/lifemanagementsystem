@@ -1,6 +1,7 @@
 class EventScheduler
-  def initialize(events)
-    @events = events.to_a
+  def initialize(events)    
+    @events = Array(events)
+    
     p "time current 1.1: #{Time.current.strftime("%Y-%m-%d %H:%M:%S.%L %z")}"
     @calendar = Calendar.new
     p "time current 1.2: #{Time.current.strftime("%Y-%m-%d %H:%M:%S.%L %z")}"
@@ -16,7 +17,11 @@ class EventScheduler
     #p "time current 3.2: #{Time.current.strftime("%Y-%m-%d %H:%M:%S.%L %z")}"
     save_events
 
-    @events
+    if @events.length == 1
+      return @events.first
+    else
+      return @events
+    end
   end
 
   def unschedule_events_from_calendar

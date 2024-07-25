@@ -1,0 +1,98 @@
+<%= form_with(model: event) do |form| %>
+  <% if event.errors.any? %>
+    <div style="color: red">
+      <h2><%= pluralize(event.errors.count, "error") %> prohibited this event from being saved:</h2>
+
+      <ul>
+        <% event.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <form class="w-40">
+    <div class="flex flex-wrap flex-col -mx-3 mb-2">
+      <div class="px-3 mb-2">
+        <%= form.label :title, style: "display: block", class: "block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" %>
+        <%= form.text_field :title, required: true, class: "appearance-none block bg-gray-200 text-gray-700 border rounded py-3 px-4 mb-2 leading-tight focus:outline-none focus:bg-white" %>
+      </div>
+      <div class="px-3 mb-2">
+        <%= form.label :project, style: "display: block", class: "block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" %>
+        <%= form.select :project, options_for_select(@project_names, event.project), {}, class: "appearance-none block bg-gray-200 text-gray-700 border rounded py-3 px-4 mb-2 leading-tight focus:outline-none focus:bg-white" %>
+      </div>
+      <div class="px-3 mb-2">
+        <%= form.label :description, style: "display: block", class: "block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" %>
+        <%= form.text_area :description, style: "width:500px;height:250px", class: "appearance-none block bg-gray-200 text-gray-700 border rounded py-3 px-4 mb-2 leading-tight focus:outline-none focus:bg-white" %>
+      </div>
+      <div class="flex items-center">
+        <div class="px-3 mb-2">
+          <%= form.label :starts_at_date, "STARTS AT DATE", class: "block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"  %>
+          <%= form.date_field :starts_at_date, class: "appearance-none block bg-gray-200 text-gray-700 border rounded py-3 px-4 mb-2 leading-tight focus:outline-none focus:bg-white" %>
+        </div>
+        <div class="px-3 mb-2">
+          <%= form.label :starts_at_hour, "STARTS AT HOUR", class: "block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"  %>
+          <%= form.select :starts_at_hour, options_for_select([["-", ""]] + (0..24).map { |hour| [hour, hour] }, event.starts_at_hour), {}, class: "appearance-none block bg-gray-200 text-gray-700 border rounded py-3 mb-2 leading-tight focus:outline-none focus:bg-white" %>
+        </div>
+        <div class="px-3 mb-2">
+          <%= form.label :starts_at_minute, "STARTS AT MINUTE", class: "block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"  %>
+          <%= form.select :starts_at_minute, options_for_select([["-", ""]] + (0..59).map { |min| [min, min] }, event.starts_at_minute), {}, class: "appearance-none block bg-gray-200 text-gray-700 border rounded py-3 mb-2 leading-tight focus:outline-none focus:bg-white" %>
+        </div>
+      </div>
+      <div class="flex items-center">
+        <div class="px-3 mb-2">
+          <%= form.label :ends_at_date, "ENDS AT DATE", class: "block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"  %>
+          <%= form.date_field :ends_at_date, class: "appearance-none block bg-gray-200 text-gray-700 border rounded py-3 px-4 mb-2 leading-tight focus:outline-none focus:bg-white" %>
+        </div>
+        <div class="px-3 mb-2">
+          <%= form.label :ends_at_hour, "ENDS AT HOUR", class: "block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"  %>
+          <%= form.select :ends_at_hour, options_for_select([["-", ""]] + (0..24).map { |hour| [hour, hour] }, event.ends_at_hour), {}, class: "appearance-none block bg-gray-200 text-gray-700 border rounded py-3 mb-2 leading-tight focus:outline-none focus:bg-white" %>
+        </div>
+        <div class="px-3 mb-2">
+          <%= form.label :ends_at_minute, "ENDS AT MINUTE", class: "block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"  %>
+          <%= form.select :ends_at_minute, options_for_select([["-", ""]] + (0..59).map { |min| [min, min] }, event.ends_at_minute), {}, class: "appearance-none block bg-gray-200 text-gray-700 border rounded py-3 mb-2 leading-tight focus:outline-none focus:bg-white" %>
+        </div>
+      </div>
+      <div class="px-3 mb-2">
+        <%= form.label "duration in minutes", style: "display: block", class: "block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" %>
+        <%= form.number_field :duration_in_minutes, placeholder: "Standardwert: 15 Minuten", class: "appearance-none block bg-gray-200 text-gray-700 border rounded py-3 px-4 mb-2 leading-tight focus:outline-none focus:bg-white", value: convert_seconds_to_minutes(event.duration) || nil, step: 1 %>
+      </div>
+      <% if params[:action] == "new" %>
+        <div class="px-3 mb-2">
+          <%= form.label :recurrence, style: "display: block", class: "block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" %>
+          <%= form.select :recurrence, Event.recurrences.keys.map { |recurrence| [recurrence.titleize, recurrence] }, {},  class: "appearance-none block bg-gray-200 text-gray-700 border rounded py-3 px-4 mb-2 leading-tight focus:outline-none focus:bg-white" %>
+        </div>
+      <% end %>
+      <div class="px-3 mb-2">
+        <%= form.label :priority, style: "display: block", class: "block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" %>
+        <%= form.number_field :priority, class: "appearance-none block bg-gray-200 text-gray-700 border rounded py-3 px-4 mb-2 leading-tight focus:outline-none focus:bg-white" %>
+      </div>
+      <div class="px-3 mb-2">
+        <%= form.label :motivation_level, style: "display: block", class: "block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" %>
+        <%= form.number_field :motivation_level, class: "appearance-none block bg-gray-200 text-gray-700 border rounded py-3 px-4 mb-2 leading-tight focus:outline-none focus:bg-white" %>
+      </div>
+      <div class="px-3 mb-2">
+        <%= form.label :lack_of_motivation_reason, style: "display: block", class: "block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" %>
+        <%= form.text_area :lack_of_motivation_reason, style: "width:500px;height:250px", class: "appearance-none block bg-gray-200 text-gray-700 border rounded py-3 px-4 mb-2 leading-tight focus:outline-none focus:bg-white" %>
+      </div>
+      <div class="px-3 mb-2">
+        <%= form.label :done, style: "display: block", class: "block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" %>
+        <%= form.check_box :done, class: "appearance-none block bg-gray-200 text-gray-700 border rounded py-3 px-4 mb-2 leading-tight focus:outline-none focus:bg-white" %>
+      </div>
+      <div class="px-3 mb-2">
+        <%= form.label :upload %>
+        <%= form.file_field :upload %>
+      </div>
+      <div class="px-3 mb-2">
+        <%= form.label :result, style: "display: block", class: "block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" %>
+        <%= form.text_area :result, style: "width:500px;height:250px", class: "appearance-none block bg-gray-200 text-gray-700 border rounded py-3 px-4 mb-2 leading-tight focus:outline-none focus:bg-white" %>
+      </div>
+      <div class="px-3 mb-6">
+        <% if event.persisted? %>
+          <%= form.submit "Eintrag aktualisieren", class: "cursor-pointer bg-transparent hover:bg-blue-500 text-blue-500 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded mt-12" %>
+        <% else %>
+          <%= form.submit "Eintrag erstellen", class: "cursor-pointer bg-transparent hover:bg-blue-500 text-blue-500 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded mt-12" %>
+        <% end %>
+      </div>
+  </form>
+<% end %>

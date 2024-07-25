@@ -81,4 +81,52 @@ class Event < ApplicationRecord
       end
     end
   end
+
+  def starts_at_date
+    start_time&.to_date
+  end
+
+  def starts_at_hour
+    start_time&.strftime('%H')
+  end
+
+  def starts_at_minute
+    start_time&.strftime('%M')
+  end
+
+  def starts_at_date=(date)
+    self.start_time = date if date.present?
+  end
+
+  def starts_at_hour=(hour)
+    self.start_time = self.start_time.change(hour: hour) if hour.present?
+  end
+
+  def starts_at_minute=(minute)
+    self.start_time = self.start_time.change(min: minute) if minute.present?
+  end
+  
+  def ends_at_date
+    end_time&.to_date
+  end
+
+  def ends_at_hour
+    end_time&.strftime('%H')
+  end
+
+  def ends_at_minute
+    end_time&.strftime('%M')
+  end
+
+  def ends_at_date=(date)
+    @ends_at_date = date
+  end
+  
+  def ends_at_hour=(hour)
+    @ends_at_hour = hour
+  end
+  
+  def ends_at_minute=(minute)
+    @ends_at_minute = minute
+  end  
 end

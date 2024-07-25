@@ -107,8 +107,29 @@ class EventsController < ApplicationController
     redirect_to(events_path)
   end
 
+  def prepare_date_and_time
+    starts_at_date = event_params[:starts_at_date]
+    starts_at_hour = event_params[:starts_at_hour]
+    starts_at_minute = event_params[:starts_at_minute]
+
+    if starts_at_date.blank? && starts_at_hour.blank? && starts_at_minute.blank?
+      "do nothing"
+    elsif starts_at_date.present? && starts_at_hour.blank? && starts_at_minute.blank?
+      @event.fixed_date = true
+      @event.fixed_date_at = @event.start_time.to_date
+    elsif starts_at_date.present? && starts_at_hour.present? && starts_at_minute.present?
+      @event.fixed_time = true
+      @event.fixed_datetime_at = @event.start_time
+    else
+      # TODO: add error message to view for now. Implement those "special" cases later
+    end
+  end
+
   # POST /events or /events.json
   def create
+    @event = Event.new(event_params)
+    prepare_date_and_time
+
     ActiveRecord::Base.transaction do
       date_param = params[:event][:date]
       time_param = params[:event][:time]
@@ -119,34 +140,37 @@ class EventsController < ApplicationController
         return
       end
 
-      @event = Event.new(event_params)
+      
       @event.duration = event_params[:duration].to_i if event_params[:duration].present?
       @event.duration ||= 900
       @event.recurrence = params[:event][:recurrence]
-      @event.done_at = Time.current if params[:event][:done] == "1"
+      #@event.done_at = Time.current if params[:event][:done] == "1"
 
-      if date_param.present? && time_param.present?
-        time_zone = Time.zone
-        datetime_str = "#{date_param} #{time_param}"
-        datetime_with_zone = Time.zone.parse(datetime_str)
-        @event.start_time = datetime_with_zone
+      
+      @event = EventScheduler.new(@event).call
 
-        event_scheduler = SingleEventScheduler.new(@event)
-        @event = event_scheduler.schedule
-      elsif time_param.blank? && date_param.present?
-        date = Date.parse(params[:event][:date])
-        @event.start_time = date
-        @event.fixed_date = true
-        event_class_array = EventScheduler.new([@event]).call
-        @event = event_class_array.first
-      elsif date_param.blank? && time_param.blank?
-        event_class_array = EventScheduler.new([@event]).call
-        @event = event_class_array.first
-      else
-        raise "unknown case"
-        event_scheduler = SingleEventScheduler.new(@event)
-        @event = event_scheduler.schedule
-      end
+      # if date_param.present? && time_param.present?
+      #   time_zone = Time.zone
+      #   datetime_str = "#{date_param} #{time_param}"
+      #   datetime_with_zone = Time.zone.parse(datetime_str)
+      #   @event.start_time = datetime_with_zone
+
+      #   event_scheduler = SingleEventScheduler.new(@event)
+      #   @event = event_scheduler.schedule
+      # elsif time_param.blank? && date_param.present?
+      #   date = Date.parse(params[:event][:date])
+      #   @event.start_time = date
+      #   @event.fixed_date = true
+      #   event_class_array = EventScheduler.new(@event).call
+      #   @event = event_class_array.first
+      # elsif date_param.blank? && time_param.blank?
+      #   event_class_array = EventScheduler.new(@event).call
+      #   @event = event_class_array.first
+      # else
+      #   raise "unknown case"
+      #   event_scheduler = SingleEventScheduler.new(@event)
+      #   @event = event_scheduler.schedule
+      # end
 
       if @event.recurrence != "onetime"
         @event.fixed_date = true
@@ -211,7 +235,7 @@ class EventsController < ApplicationController
         elsif date.blank? && time.blank?
           @event.end_time = @event.start_time = nil
 
-          event_class_array = EventScheduler.new([@event]).call
+          event_class_array = EventScheduler.new(@event).call
           @event = event_class_array.first
         elsif date.present? && time.blank?
           @event.end_time = @event.start_time = nil
@@ -334,7 +358,7 @@ class EventsController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def event_params
-      params.require(:event).permit(:kind, :start_time, :duration_in_minutes, :duration, :fixed, :title, :end_time, :description, :done, :recurrence, :priority, :project, :fixed_date, :upload, :result, :motivation_level, :lack_of_motivation_reason)
+      params.require(:event).permit(:kind, :start_time, :duration_in_minutes, :duration, :fixed, :title, :end_time, :description, :done, :recurrence, :priority, :project, :fixed_date, :upload, :result, :motivation_level, :lack_of_motivation_reason, :starts_at_date, :starts_at_hour, :starts_at_minute, :ends_at_date, :ends_at_hour, :ends_at_minute)
     end
 
     def get_changes
