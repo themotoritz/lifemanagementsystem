@@ -31,7 +31,7 @@ class EventScheduler
   def schedule_events
     count_spent_time = 0
     @events.each do |event|
-      if event.fixed_date == true
+      if event.fixed_date == true || event.fixed_time == true
         timeslot, timeslot_index = @calendar.get_next_suitable_timeslot(size: event.duration, date: event.start_time.to_date)
       else
         timeslot, timeslot_index = @calendar.get_next_suitable_timeslot(size: event.duration)

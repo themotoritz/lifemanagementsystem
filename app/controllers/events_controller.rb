@@ -142,7 +142,7 @@ class EventsController < ApplicationController
       
       @event.duration = event_params[:duration].to_i if event_params[:duration].present?
       @event.duration ||= 900
-      @event.recurrence = params[:event][:recurrence]     
+      @event.recurrence = params[:event][:recurrence]
       @event = EventScheduler.new(@event).call
 
       if @event.recurrence != "onetime"
