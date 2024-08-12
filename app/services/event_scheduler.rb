@@ -33,11 +33,20 @@ class EventScheduler
     @events.each do |event|
       if event.fixed_date == true || event.fixed_time == true
         timeslot, timeslot_index = @calendar.get_next_suitable_timeslot(size: event.duration, date: event.start_time.to_date)
+
+        if timeslot.present?
+          event.start_time = event.fixed_datetime_at
+          event.end_time = event.start_time + event.duration
+        else
+          raise "no timeslot found"
+        end
       else
         timeslot, timeslot_index = @calendar.get_next_suitable_timeslot(size: event.duration)
+
+        event.start_time = timeslot.start_time
+        event.end_time = timeslot.start_time + event.duration
       end
-      event.start_time = timeslot.start_time
-      event.end_time = timeslot.start_time + event.duration
+      
       #p "time current 3.1.1.1: #{Time.current.strftime("%Y-%m-%d %H:%M:%S.%L %z")}"
       closest_event, index = @calendar.get_closest_event(events: @calendar.events, given_time: event.start_time)
       #p "time current 3.1.1.2: #{Time.current.strftime("%Y-%m-%d %H:%M:%S.%L %z")}"
