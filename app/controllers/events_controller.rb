@@ -200,7 +200,11 @@ class EventsController < ApplicationController
           @event.end_time = @event.start_time = nil
 
           event_class_array = EventScheduler.new(@event).call
-          @event = event_class_array.first
+          if event_class_array.is_a?(Array)
+            @event = event_class_array.first
+          elsif event_class_array.is_a?(Event)
+            @event = event_class_array
+          end
         elsif date.present? && time.blank?
           @event.end_time = @event.start_time = nil
 
