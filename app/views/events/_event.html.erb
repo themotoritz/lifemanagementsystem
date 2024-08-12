@@ -7,23 +7,21 @@
         </p>
       </div>
       <div class="w-1/4">
-        <% unless event.kind == "blocking" %>
-          <div class="flex justify-end">
-            <% unless event.done_at? %>
-              <%= form_with(model: event, url: mark_as_done_path(event), method: :patch) do |form| %>
-                <%= button_tag(type: 'submit') do %>
-                  <span class="material-symbols-outlined text-green-600">check_circle</span>
-                <% end %>
+        <div class="flex justify-end">
+          <% unless event.done_at? %>
+            <%= form_with(model: event, url: mark_as_done_path(event), method: :patch) do |form| %>
+              <%= button_tag(type: 'submit') do %>
+                <span class="material-symbols-outlined text-green-600">check_circle</span>
               <% end %>
             <% end %>
-            <%= link_to edit_event_path(event) do %>
-              <span class="material-symbols-outlined text-blue-600">edit</span>
-            <% end %>
-            <%= link_to event_path(event), data: { "turbo-method": :delete, "turbo-confirm": "Are you sure you want to delete this event?" } do %>
-              <span class="material-symbols-outlined text-red-600">delete</span>
-            <% end %>
-          </div>
-        <% end %>
+          <% end %>
+          <%= link_to edit_event_path(event) do %>
+            <span class="material-symbols-outlined text-blue-600">edit</span>
+          <% end %>
+          <%= link_to event_path(event), data: { "turbo-method": :delete, "turbo-confirm": "Are you sure you want to delete this event?" } do %>
+            <span class="material-symbols-outlined text-red-600">delete</span>
+          <% end %>
+        </div>
       </div>
     </div>
   </td>
