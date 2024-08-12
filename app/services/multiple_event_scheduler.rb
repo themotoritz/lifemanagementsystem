@@ -3,7 +3,7 @@ class MultipleEventScheduler
     @event = event
   end
 
-  def create_events(date_param, time_param)
+  def create_events
     events = []
     group_id = Event.get_group_id
     if group_id == nil || Event.where(group_id: group_id).present?

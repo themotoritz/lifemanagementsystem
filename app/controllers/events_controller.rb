@@ -130,16 +130,7 @@ class EventsController < ApplicationController
     @event = Event.new(event_params)
     prepare_date_and_time
 
-    ActiveRecord::Base.transaction do
-      date_param = params[:event][:date]
-      time_param = params[:event][:time]
-
-      if date_param.present? && time_param.present? && Time.zone.parse("#{date_param} #{time_param}") < Time.current
-        flash[:error] = "Date cannot be in the past"
-        redirect_to new_event_path
-        return
-      end
-      
+    ActiveRecord::Base.transaction do     
       @event.duration = event_params[:duration].to_i if event_params[:duration].present?
       @event.duration ||= 900
       @event.recurrence = params[:event][:recurrence]
@@ -148,7 +139,7 @@ class EventsController < ApplicationController
       if @event.recurrence != "onetime"
         @event.fixed_date = true
         event_scheduler = MultipleEventScheduler.new(@event)
-        events = event_scheduler.create_events(date_param, time_param)
+        events = event_scheduler.create_events
       end
 
       respond_to do |format|
