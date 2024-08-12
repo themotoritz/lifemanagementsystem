@@ -30,25 +30,27 @@
               <% end %>
             </div>
           </tr>
-          <% @events_of_this_day = @events_hash.fetch(day) %>
-          <% if @events_of_this_day.present? %>
-            <% @events_of_this_day.each_with_index do |event, i| %>
-              <tr class="<%= today_css_background_color_for(event) %>">
-                <div id="eventAccordion" class="my-2">
-                  <%= render event %>
+          <% if @events_hash.has_key?(day) %>
+            <% @events_of_this_day = @events_hash.fetch(day) %>
+            <% if @events_of_this_day.present? %>
+              <% @events_of_this_day.each_with_index do |event, i| %>
+                <tr class="<%= today_css_background_color_for(event) %>">
+                  <div id="eventAccordion" class="my-2">
+                    <%= render event %>
+                  </div>
+                </tr>
+              <% end %>
+            <% else %>
+              <tr>
+                <div>
+                  <td class="px-8 py-4 text-slate-500 dark:text-slate-400">
+                    <p>
+                      Keine Einträge vorhanden
+                    </p>
+                  </td>
                 </div>
               </tr>
             <% end %>
-          <% else %>
-            <tr>
-              <div>
-                <td class="px-8 py-4 text-slate-500 dark:text-slate-400">
-                  <p>
-                    Keine Einträge vorhanden
-                  </p>
-                </td>
-              </div>
-            </tr>
           <% end %>
         <% end %>
       <% else %>
