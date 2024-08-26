@@ -32,16 +32,18 @@ class EventScheduler
     count_spent_time = 0
     @events.each do |event|
       if event.fixed_date == true || event.fixed_time == true
-        timeslot, timeslot_index = @calendar.get_next_suitable_timeslot(size: event.duration, date: event.start_time.to_date)
+        if event.start_time >= Time.current
+          timeslot, timeslot_index = @calendar.get_next_suitable_timeslot(event: event, date: event.start_time.to_date)
 
-        if timeslot.present?
-          event.start_time = event.fixed_datetime_at
-          event.end_time = event.start_time + event.duration
-        else
-          raise "no timeslot found"
+          if timeslot.present?
+            event.start_time = event.fixed_datetime_at
+            event.end_time = event.start_time + event.duration
+          else
+            raise "no timeslot found"
+          end
         end
       else
-        timeslot, timeslot_index = @calendar.get_next_suitable_timeslot(size: event.duration)
+        timeslot, timeslot_index = @calendar.get_next_suitable_timeslot(event: event)
 
         event.start_time = timeslot.start_time
         event.end_time = timeslot.start_time + event.duration

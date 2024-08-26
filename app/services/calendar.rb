@@ -32,21 +32,22 @@ class Calendar
     end
   end
 
-  def get_next_suitable_timeslot(size:, date: nil)
+  def get_next_suitable_timeslot(event:, date: nil)
+    size = event.duration
     get_timeslots if @timeslots.empty?
-    i = nil
+    i = next_suitable_timeslot = nil
 
     @timeslots.each_with_index do |timeslot, index|
       if date.present?
         if timeslot.size >= size && (timeslot.start_time.to_date <= date && timeslot.end_time.to_date >= date)
-          @next_suitable_timeslot = timeslot
+          next_suitable_timeslot = timeslot
           i = index
 
           break
         end
       else
         if timeslot.size >= size
-          @next_suitable_timeslot = timeslot
+          next_suitable_timeslot = timeslot
           i = index
           
           break
@@ -54,11 +55,11 @@ class Calendar
       end
     end
 
-    unless @next_suitable_timeslot.present?
+    unless next_suitable_timeslot.present?
       raise "error, no timeslot found"
     end
 
-    [@next_suitable_timeslot, i]
+    [next_suitable_timeslot, i]
   end
 
   def get_closest_event(events:, given_time:)
