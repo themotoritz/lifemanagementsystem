@@ -44,6 +44,7 @@ Misc:
 - display only events with prio > 90
 - today view: tag einklappbar machen
 - hab ich bock drauf krtierium ähnlich zu priorität hinzufügen
+- adminbereich
 
 Simple:
 - erledigte Tasks anzeigen
