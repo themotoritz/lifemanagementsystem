@@ -1,7 +1,7 @@
 class EventScheduler
   def initialize(events)    
     @events = Array(events)
-    
+
     p "time current 1.1: #{Time.current.strftime("%Y-%m-%d %H:%M:%S.%L %z")}"
     @calendar = Calendar.new
     p "time current 1.2: #{Time.current.strftime("%Y-%m-%d %H:%M:%S.%L %z")}"
@@ -30,13 +30,15 @@ class EventScheduler
 
   def schedule_events
     count_spent_time = 0
+
     @events.each do |event|
       if event.fixed_date == true || event.fixed_time == true
         if event.start_time >= Time.current
           timeslot, timeslot_index = @calendar.get_next_suitable_timeslot(event: event, date: event.start_time.to_date)
 
           if timeslot.present?
-            event.start_time = event.fixed_datetime_at
+            # event.start_time = event.fixed_datetime_at # not sure why I did it like that
+            event.start_time = timeslot.start_time 
             event.end_time = event.start_time + event.duration
           else
             raise "no timeslot found"

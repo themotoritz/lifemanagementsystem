@@ -239,6 +239,7 @@ class MultipleEventScheduler
       while current_time <= create_until_date
         event = @event.dup
         event.start_time = current_time
+        event.fixed_datetime_at = event.start_time
         events << event
 
         current_time += 1.year
