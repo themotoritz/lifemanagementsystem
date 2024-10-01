@@ -45,9 +45,15 @@ Misc:
 - today view: tag einklappbar machen
 - hab ich bock drauf krtierium ähnlich zu priorität hinzufügen
 - adminbereich
+- neues attribut: momentaner status
+- zeilen im list view schmaler machen
 
 Simple:
 - erledigte Tasks anzeigen
+
+Bugs:
+- updating task does not work if duration is changed
+- flash messages are not shown if form validation fails
 
 DONE:
 - group views: mark/exclude event which are in the past #DONE
